@@ -1,3 +1,5 @@
+const mapObject = require('./render-utils').mapObject
+
 function renderSchema ({ types }) {
   return `import gql from 'graphql-tag'
 
@@ -6,10 +8,6 @@ ${mapObject(types, renderTypeDef).join('\n')}
 ${renderQueryDef(types)}
 ${renderMutationDef(types)}\`
 `
-}
-
-function mapObject (object, fn) {
-  return Object.keys(object).sort().map(key => fn(key, object[key]))
 }
 
 function renderTypeDef (typeName, type) {

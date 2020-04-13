@@ -1,3 +1,5 @@
+const mapObject = require('./render-utils').mapObject
+
 function renderResolvers ({ types }) {
   return `import { createZomeCall } from './holochainClient'
 
@@ -13,10 +15,6 @@ ${renderMutationResolvers(types)}
 
 export default resolvers
 `
-}
-
-function mapObject (object, fn) {
-  return Object.keys(object).sort().map(key => fn(key, object[key]))
 }
 
 function renderQueryResolvers (types) {
