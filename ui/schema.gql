@@ -1,0 +1,50 @@
+
+    
+    type Note {
+      id: ID
+      text: String
+      title: String
+    }
+
+    input NoteInput {
+      id: ID
+      text: String
+      title: String      
+    }
+  
+
+    type User {
+      id: ID
+      avatar_url: String
+      name: String
+    }
+
+    input UserInput {
+      id: ID
+      avatar_url: String
+      name: String      
+    }
+  
+    Query {
+      
+      getNote(id: ID): Note
+      listNotes: [Note]
+  
+      getUser(id: ID): User
+      listUsers: [User]
+  
+    }
+  
+    Mutation {
+      
+      createNote(input: NoteInput): Note
+      updateNote(input: NoteInput): Note
+      deleteNote(id: ID): Note
+    
+      createUser(input: UserInput): User
+      updateUser(input: UserInput): User
+      deleteUser(id: ID): User
+    
+    }
+  
+  
