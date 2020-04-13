@@ -7,4 +7,4 @@ $ cd ui
 $ node scripts/generate-schema.js ../sample-type-spec.json
 ```
 
-This will generate a `schema.gql` file in the `ui` folder, based on the type spec in `sample-type-spec.json`
+This will generate a `schema.js` file in the `ui` folder, based on the type spec in `sample-type-spec.json`

@@ -1,14 +1,11 @@
-const typeSpecUrl = process.argv[2]
-const fs = require('fs')
-
-const typeSpec = JSON.parse(fs.readFileSync(typeSpecUrl))
-
-fs.writeFileSync('schema.gql', renderSchema(typeSpec))
-
 function renderSchema ({ types }) {
-  return `${mapObject(types, renderTypeDef).join('\n')}
+  return `import gql from 'graphql-tag'
+
+export default gql\`
+${mapObject(types, renderTypeDef).join('\n')}
 ${renderQueryDef(types)}
-${renderMutationDef(types)}`
+${renderMutationDef(types)}\`
+`
 }
 
 function mapObject (object, fn) {
@@ -60,3 +57,5 @@ function renderTypeMutations (typeName) {
   delete${typeName}(id: ID): ${typeName}
 `
 }
+
+module.exports = renderSchema
