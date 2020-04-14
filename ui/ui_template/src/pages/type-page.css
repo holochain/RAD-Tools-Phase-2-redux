@@ -1,11 +1,11 @@
-.notes-happ {
+.type-page {
   display: flex;
   padding: 50px;
   align-items: center;
   flex-direction: column;
 }
 
-.note-card {
+.type-card {
   border: 1px solid lightgray;
   border-radius: 4px;
   padding: 0px 20px 20px;
@@ -13,11 +13,15 @@
   width: 400px;
 }
 
-.note-content {
+.field-label {
   margin-bottom: 20px;
 }
 
-.note-form {
+.field-content {
+  margin-bottom: 20px;
+}
+
+.type-form {
   border: 1px solid lightgray;
   border-radius: 4px;
   padding: 0px 20px 20px;
