@@ -2,8 +2,9 @@ const typeSpecPath = process.argv[2]
 const fs = require('fs')
 const renderSchema = require('./renderSchema')
 const renderResolvers = require('./renderResolvers')
-const renderGeneratedHapp = require('./renderGeneratedHapp')
+const renderHomePage = require('./renderHomePage')
 const renderTypePage = require('./renderTypePage')
+const renderIndex = require('./renderIndex')
 const ncp = require('ncp')
 const mapObject = require('./render-utils').mapObject
 
@@ -12,13 +13,15 @@ const DESTINATION_PATH = './ui/generated_ui'
 
 const SCHEMA_PATH = './ui/generated_ui/src/schema.js'
 const RESOLVERS_PATH = './ui/generated_ui/src/resolvers.js'
-const GENERATED_HAPP_PATH = './ui/generated_ui/src/GeneratedHapp.js'
+const HOME_PAGE_PATH = './ui/generated_ui/src/HomePage.js'
+const INDEX_PATH = './ui/generated_ui/src/index.js'
 const PAGES_PATH = './ui/generated_ui/src/pages/'
 
 const renderers = [
   [renderSchema, SCHEMA_PATH],
   [renderResolvers, RESOLVERS_PATH],
-  [renderGeneratedHapp, GENERATED_HAPP_PATH]
+  [renderHomePage, HOME_PAGE_PATH],
+  [renderIndex, INDEX_PATH]
 ]
 
 const typeSpec = JSON.parse(fs.readFileSync(typeSpecPath))

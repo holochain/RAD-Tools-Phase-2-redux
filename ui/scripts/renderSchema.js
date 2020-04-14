@@ -32,7 +32,7 @@ function renderField (name, type) {
 }
 
 function renderQueryDef (types) {
-  return `Query {
+  return `type Query {
 ${mapObject(types, renderTypeQueries).join('')}}
 `
 }
@@ -44,7 +44,7 @@ function renderTypeQueries (typeName) {
 }
 
 function renderMutationDef (types) {
-  return `Mutation {
+  return `type Mutation {
 ${mapObject(types, renderTypeMutations).join('')}}
 `
 }

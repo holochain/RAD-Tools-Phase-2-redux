@@ -1,18 +1,18 @@
 const mapObject = require('./render-utils').mapObject
 
-function renderGeneratedHapp ({ types }) {
+function renderHomePage ({ types }) {
   return `import React from 'react'
-import { Link } from 'react-router'
-import './GeneratedHApp.css'
+import { Link } from 'react-router-dom'
+import './HomePage.css'
 
-function GeneratedHApp () {
-  return <div className='generated-happ'>
+function HomePage () {
+  return <div className='index-page'>
     <h3>Welcome to your generated HApp</h3>
 ${renderLinks(types)}
   </div>
 }
 
-export default GeneratedHApp
+export default HomePage
 `
 }
 
@@ -23,7 +23,7 @@ function renderLinks (types) {
 function renderLink (typeName) {
   const path = `/${typeName.toLowerCase()}s`
   const text = `${typeName}s`
-  return `    <Link to='${path}'>${text}</Link>`
+  return `    <div><Link to='${path}'>${text}</Link></div>`
 }
 
-module.exports = renderGeneratedHapp
+module.exports = renderHomePage

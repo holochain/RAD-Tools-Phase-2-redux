@@ -52,7 +52,9 @@ ${fieldsForGQL}
 \`
 
 function ${namePlural}Page () {
-  const { data: { list${namePlural} } = { list${namePlural}: [] } } = useQuery(LIST_${capsNamePlural}_QUERY)
+  const { data } = useQuery(LIST_${capsNamePlural}_QUERY)
+
+  const list${namePlural} = (data && data.list${namePlural}) || []
 
   const [create${name}] = useMutation(CREATE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
   const [update${name}] = useMutation(UPDATE_${capsName}_MUTATION)
