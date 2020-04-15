@@ -1,0 +1,88 @@
+// {
+//  Notes_DNA : {
+//   "Zomes": [{
+//     "Notes_Zome": { 
+//       "Entries": [{
+//         "Notes_Entry": {
+//           "description": "",
+//           "definition": {
+//             "id": "String",
+//             "title": "String",
+//             "author": "String",
+//             "created_at": "String"
+//           },
+//           "links": [{
+//             "linked_entry_type": "CONSTANT: entry_name || anchor_id || AGENT_ID",
+//             "link_type_name": "Animal",
+//             "link_tag_name": "Bob Cat",
+//             "direction": "ENUM: TO/FROM/BIDIRECTIONAL"
+//             }],
+//           "anchors" : [{
+//             "anchor_id": "<ENTRY_NAME>/<ANCHOR_TYPE>/<ANCHOR_TAG>",
+//             "anchor_type_name": "notes",
+//             "anchor_tag_name": "animals"
+//           }],
+//           "functions": {
+//               "create": true,
+//               "getAll": true,
+//               "get": true,
+//               "update": true,
+//               "remove": true
+//           }
+//         }
+//       }]
+//     }
+//   }]
+//  }
+// }
+
+
+// Below is the current schema/types-def structure.
+// Currently, it references 'types' instead of 'entries'
+{
+  "types": [{
+    "Notes": {
+      "description": "Create and mange notes by users.",
+      "sharing": "Public", // ENUM (Private or Public)
+      "definition": {
+        // "id": "String", // NB: We don't need to take in the defs that will automatically be generated in the dna//ui for them (ie: global, persistant IDs)
+        "title": "String",
+        "text": "String",
+        "author": "String",
+        "created_at": "String"
+      },
+      "links": [{
+        "linked_entry_type": "CONSTANT: entry_name || anchor_id || AGENT_ID",
+        "link_type_name": "Animal",
+        "link_tag_name": "Bob Cat",
+        "direction": "ENUM: TO/FROM/BIDIRECTIONAL"
+        }],
+      "anchors" : [{
+        "anchor_id": "<ENTRY_NAME>/<ANCHOR_TYPE>/<ANCHOR_TAG>",
+        "anchor_type_name": "notes",
+        "anchor_tag_name": "animals"
+      }],
+      "functions": {
+          "create": true,
+          "getAll": true,
+          "get": true,
+          "update": true,
+          "remove": true
+      }
+    }
+  }, {
+    "User": {
+      "description": "Create and mange notes by users.",
+      "sharing": "Private", // ENUM (Private or Public)
+      "definition": {
+          // "id": "String", // NB: We don't need to take in the defs that will automatically be generated in the dna//ui for them (ie: global, persistant IDs)
+        "name": "String",
+        "avatar_url": "String"
+      },
+      "links": [{}], // currently it's decided that they'll ONLY have the auto-generated links associated with generating a global, persistant ID for each zome.
+      "anchors" : [{}], // currently it's decided that they'll automatically receive the anchors for each zome and ONLY have an anchor associated with generating a global, persistant ID.
+      "functions": {} // currently it's decided that they'll automatically receive all public functions
+      // NB: if !functions return true for all pub fns.
+    }
+  }]
+}

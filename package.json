@@ -1,0 +1,28 @@
+{
+  "name": "rad-tools-phase-2",
+  "version": "0.1.0",
+  "description": "The second tier of RAD tools, automating a UI GraphQL and DNA generation based on a JSON schema file.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "hc:gen-dna": "npm run hc:gen-dna-base && npm run hc:gen-dna-content",
+    "hc:gen-dna-base": "hc init dna-src",
+    "hc:gen-dna-content": "node setup/scripts/generate-dna-entry.js",
+    "hc:gen-new-zome": "cd dna-src && hc generate zomes/<ZOME_NAME> rust-proc",
+    "hc:gen-new-entry": "cd dna-src/zomes/<ZOME_NAME>/code/src && mkdir <ENTRY_NAME> && cd <ENTRY_NAME> && touch handlers.rs mod.rs validation.rs",
+    "hc:setup-env": "cp /.env.example /.env"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holochain/RAD-Tools-Phase-2.git"
+  },
+  "authors": [
+    "jetttech",
+    "zo-el"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/holochain/RAD-Tools-Phase-2/issues"
+  },
+  "homepage": "https://github.com/holochain/RAD-Tools-Phase-2#readme"
+}
