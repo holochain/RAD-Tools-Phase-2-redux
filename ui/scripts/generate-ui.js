@@ -4,6 +4,7 @@ const renderSchema = require('./renderSchema')
 const renderResolvers = require('./renderResolvers')
 const renderHomePage = require('./renderHomePage')
 const renderTypePage = require('./renderTypePage')
+const renderTypePageTest = require('./renderTypePageTest')
 const renderIndex = require('./renderIndex')
 const ncp = require('ncp')
 const mapObject = require('./render-utils').mapObject
@@ -35,10 +36,12 @@ ncp(SOURCE_PATH, DESTINATION_PATH, err => {
   renderers.forEach(([renderFunction, path]) =>
     fs.writeFileSync(path, renderFunction(typeSpec)))
 
-  mapObject(typeSpec.types, generateTypePage)
+  mapObject(typeSpec.types, generateTypePageAndTests)
 })
 
-function generateTypePage (typeName, type) {
-  const path = PAGES_PATH + typeName + 'sPage.js'
-  fs.writeFileSync(path, renderTypePage(typeName, type))
+function generateTypePageAndTests (typeName, type) {
+  const pagePath = PAGES_PATH + typeName + 'sPage.js'
+  fs.writeFileSync(pagePath, renderTypePage(typeName, type))
+  const testPath = PAGES_PATH + typeName + 'sPage.test.js'
+  fs.writeFileSync(testPath, renderTypePageTest(typeName, type))
 }

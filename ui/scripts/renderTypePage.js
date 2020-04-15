@@ -2,7 +2,7 @@ const mapObject = require('./render-utils').mapObject
 
 function renderTypePage (typeName, fields) {
   const name = typeName
-  const namePlural = typeName + 's'
+  const namePlural = name + 's'
   const capsName = typeName.toUpperCase()
   const capsNamePlural = capsName + 'S'
   const lowerName = typeName.toLowerCase()
@@ -19,7 +19,7 @@ import { pick } from 'lodash/fp'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import './type-page.css'
 
-const LIST_${capsNamePlural}_QUERY = gql\`
+export const LIST_${capsNamePlural}_QUERY = gql\`
   query List${namePlural} {
     list${namePlural} {
 ${fieldsForGQL}
@@ -27,7 +27,7 @@ ${fieldsForGQL}
   }
 \`
 
-const CREATE_${capsName}_MUTATION = gql\`
+export const CREATE_${capsName}_MUTATION = gql\`
   mutation Create${name}($${lowerName}Input: ${name}Input) {
     create${name} (${lowerName}Input: $${lowerName}Input) {
 ${fieldsForGQL}
@@ -35,7 +35,7 @@ ${fieldsForGQL}
   }
 \`
 
-const UPDATE_${capsName}_MUTATION = gql\`
+export const UPDATE_${capsName}_MUTATION = gql\`
   mutation Update${name}($id: String, $${lowerName}Input: ${name}Input) {
     update${name} (id: $id, ${lowerName}Input: $${lowerName}Input) {
 ${fieldsForGQL}
@@ -43,9 +43,9 @@ ${fieldsForGQL}
   }
 \`
 
-const DELETE_${capsName}_MUTATION = gql\`
-  mutation Remove${name}($id: String) {
-    remove${name} (id: $id) {
+export const DELETE_${capsName}_MUTATION = gql\`
+  mutation Delete${name}($id: String) {
+    delete${name} (id: $id) {
 ${fieldsForGQL}
     }
   }
@@ -64,7 +64,7 @@ function ${namePlural}Page () {
   const [editingId, setEditingId] = useState()
 
   return <div className='type-page'>
-    <h1>${name}</h1>
+    <h1>${namePlural}</h1>
 
     <${name}Form
       formAction={({ ${lowerName}Input }) => create${name}({ variables: { ${lowerName}Input } })}
