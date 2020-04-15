@@ -1,0 +1,26 @@
+{
+  "name": "holochain-rad-phase-2",
+  "description": "The second tier of RAD tools, automating a UI GraphQL and DNA generation based on a JSON schema file.",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate:ui": "node ui/scripts/generate-ui.js",
+    "generate:clean": "rm -rf ui/generated_ui"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "handlebars": "^4.7.6",
+    "ncp": "^2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holochain/RAD-Tools-Phase-2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/holochain/RAD-Tools-Phase-2/issues"
+  },
+  "homepage": "https://github.com/holochain/RAD-Tools-Phase-2#readme"
+}
