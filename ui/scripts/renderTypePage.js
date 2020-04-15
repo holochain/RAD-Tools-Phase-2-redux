@@ -37,7 +37,7 @@ ${fieldsForGQL}
 
 const UPDATE_${capsName}_MUTATION = gql\`
   mutation Update${name}($id: String, $${lowerName}Input: ${name}Input) {
-    update${name} (${lowerName}Input: $${lowerName}Input) {
+    update${name} (id: $id, ${lowerName}Input: $${lowerName}Input) {
 ${fieldsForGQL}
     }
   }
@@ -91,7 +91,7 @@ function ${name}Row ({ ${lowerName}, editingId, setEditingId, update${name}, del
       ${lowerName}={${lowerName}}
       formTitle='Update ${name}'
       setEditingId={setEditingId}
-      formAction={({ ${lowerName}Input }) => update${name}({ variables: { ${lowerName}Input } })} />
+      formAction={({ ${lowerName}Input }) => update${name}({ variables: { id, ${lowerName}Input } })} />
   }
 
   return <${name}Card ${lowerName}={${lowerName}} setEditingId={setEditingId} delete${name}={delete${name}} />
@@ -153,7 +153,6 @@ ${mapObject(fields, fieldName => `    <div className='form-row'>
 }
 
 export default ${namePlural}Page
-
 `
 }
 

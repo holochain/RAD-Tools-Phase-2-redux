@@ -42,8 +42,8 @@ function renderMutationResolversForType (typeName) {
   return `    create${typeName}: (_, { ${inputVariableName} }) =>
       createZomeCall('/dna/zome/create_${lowerTypeName}')({ ${inputParamName}: ${inputVariableName} }),
 
-    update${typeName}: (_, { ${inputVariableName} }) =>
-      createZomeCall('/dna/zome/update_${lowerTypeName}')({ ${inputParamName}: ${inputVariableName} }),
+    update${typeName}: (_, { id, ${inputVariableName} }) =>
+      createZomeCall('/dna/zome/update_${lowerTypeName}')({ id, ${inputParamName}: ${inputVariableName} }),
 
     delete${typeName}: (_, { id }) =>
       createZomeCall('/dna/zome/delete_${lowerTypeName}')({ id }),`

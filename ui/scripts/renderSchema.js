@@ -17,7 +17,6 @@ ${mapObject(type, renderField).join('\n')}
 }
 
 input ${typeName}Input {
-  id: ID
 ${mapObject(type, renderField).join('\n')}      
 }
 `
@@ -51,7 +50,7 @@ ${mapObject(types, renderTypeMutations).join('')}}
 
 function renderTypeMutations (typeName) {
   return `  create${typeName}(input: ${typeName}Input): ${typeName}
-  update${typeName}(input: ${typeName}Input): ${typeName}
+  update${typeName}(id: ID, input: ${typeName}Input): ${typeName}
   delete${typeName}(id: ID): ${typeName}
 `
 }
