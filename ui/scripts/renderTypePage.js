@@ -100,8 +100,10 @@ function ${name}Row ({ ${lowerName}, editingId, setEditingId, update${name}, del
 function ${name}Card ({ ${lowerName}: { id, ${fieldsForObject} }, setEditingId, delete${name} }) {
   return <div className='type-card' data-testid='${lowerName}-card'>
 
-${mapObject(fields, fieldName => `    <div className='field-label'>${fieldName}</div>
-    <div className='field-content'>{${fieldName}}</div>
+${mapObject(fields, fieldName => `    <div className='field-pair'>
+      <span className='field-label'>${fieldName}: </span>
+      <span className='field-content'>{${fieldName}}</span>
+    </div>
 `).join('')}
     <button className='button' onClick={() => setEditingId(id)}>Edit</button>
     <button onClick={() => delete${name}({ variables: { id } })}>Remove</button>

@@ -58,7 +58,7 @@ function renderZomeFunctionsForType (typeName, fields) {
         }
       },
 
-      remove_${lowerName}: ({ id }) => {
+      delete_${lowerName}: ({ id }) => {
         const removed${name} = data.dna.zome.get_${lowerName}({ id })
         delete ${lowerName}Entries[id]
         return removed${name}
