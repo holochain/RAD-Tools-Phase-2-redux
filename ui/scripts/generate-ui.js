@@ -6,6 +6,7 @@ const renderHomePage = require('./renderHomePage')
 const renderTypePage = require('./renderTypePage')
 const renderTypePageTest = require('./renderTypePageTest')
 const renderIndex = require('./renderIndex')
+const renderMockData = require('./renderMockData')
 const ncp = require('ncp')
 const mapObject = require('./render-utils').mapObject
 
@@ -16,13 +17,15 @@ const SCHEMA_PATH = './ui/generated_ui/src/schema.js'
 const RESOLVERS_PATH = './ui/generated_ui/src/resolvers.js'
 const HOME_PAGE_PATH = './ui/generated_ui/src/HomePage.js'
 const INDEX_PATH = './ui/generated_ui/src/index.js'
+const MOCK_DATA_PATH = './ui/generated_ui/src/mock-dnas/mockData.js'
 const PAGES_PATH = './ui/generated_ui/src/pages/'
 
 const renderers = [
   [renderSchema, SCHEMA_PATH],
   [renderResolvers, RESOLVERS_PATH],
   [renderHomePage, HOME_PAGE_PATH],
-  [renderIndex, INDEX_PATH]
+  [renderIndex, INDEX_PATH],
+  [renderMockData, MOCK_DATA_PATH]
 ]
 
 const typeSpec = JSON.parse(fs.readFileSync(typeSpecPath))
