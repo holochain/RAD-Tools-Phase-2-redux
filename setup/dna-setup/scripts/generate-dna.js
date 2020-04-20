@@ -1,5 +1,6 @@
+ return true
  // import json file
- const typeSpec = require('../type-spec.json')
+ const typeSpec = require('../../type-spec.json')
 
  /////
      // const mapFnOverObject = (object, fn) => Object.keys(object).sort().map(key => fn(key, object[key]))
@@ -75,15 +76,15 @@
  
  
  // List of Placeholder Consts / Names:
- {ENTRY_NAME}
- {ENTRY_DEFINITION}
- {SLIM_ENTRY_DEFINITION} // (ie: entry_def - id + timestamps)
+//  {ENTRY_NAME}
+//  {ENTRY_DEFINITION}
+//  {SLIM_ENTRY_DEFINITION} // (ie: entry_def - id + timestamps)
  
- {LINK_TYPE_NAME}
- {LINK_TAG_NAME}
+//  {LINK_TYPE_NAME}
+//  {LINK_TAG_NAME}
  
- {ANCHOR_TYPE_NAME}
- {ANCHOR_TAG_NAME}
+//  {ANCHOR_TYPE_NAME}
+//  {ANCHOR_TAG_NAME}
  
  // Helper Functions
  function replaceNamePlaceHolders (file, placeHolderName, replacementName) {
