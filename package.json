@@ -8,7 +8,7 @@
     "hc-generate:dna": "node setup/scripts/hc-generate:dna-entry.js",
     "hc-generate:new-zome": "cd dna-src && hc generate zomes/<ZOME_NAME> rust-proc",
     "hc-generate:new-entry": "cd dna-src/zomes/<ZOME_NAME>/code/src && mkdir <ENTRY_NAME> && cd <ENTRY_NAME> && touch handlers.rs mod.rs validation.rs",
-    "setup-env": "cp /.env.example /.env"
+    "hc-keygen": "hc keygen -n --path ./keystores/agent1/agent1.keystore"
   },
   "repository": {
     "type": "git",
