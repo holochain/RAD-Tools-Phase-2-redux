@@ -9,7 +9,7 @@ const mapObject = require('./render-utils').mapObject
 
 const typeSpec = require('../../type-spec.json')
 
-const SOURCE_PATH = './ui-setup/ui_template'
+const SOURCE_PATH = '../ui_template'
 const DESTINATION_PATH = '../../../ui-src'
 
 const SCHEMA_PATH = `${DESTINATION_PATH}/src/schema.js`
