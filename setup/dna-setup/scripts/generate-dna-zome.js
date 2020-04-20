@@ -1,0 +1,1 @@
+// "cd dna-src && hc generate zomes/<ZOME_NAME> rust-proc"

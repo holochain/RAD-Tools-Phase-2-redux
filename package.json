@@ -1,14 +1,22 @@
 {
-  "name": "rad-tools-phase-2",
+  "name": "holochain-rad-tools-phase-2",
   "version": "0.1.0",
   "description": "The second tier of RAD tools, automating a UI GraphQL and DNA generation based on a JSON schema file.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "hc-generate:dna": "node setup/scripts/hc-generate:dna-entry.js",
-    "hc-generate:new-zome": "cd dna-src && hc generate zomes/<ZOME_NAME> rust-proc",
-    "hc-generate:new-entry": "cd dna-src/zomes/<ZOME_NAME>/code/src && mkdir <ENTRY_NAME> && cd <ENTRY_NAME> && touch handlers.rs mod.rs validation.rs",
-    "hc-keygen": "hc keygen -n --path ./keystores/agent1/agent1.keystore"
+    "generate:ui": "node ui/scripts/generate-ui.js",
+    "generate:clean": "rm -rf ui/generated_ui",
+    "hc-generate:dna": "node setup/dna-setup/scripts/generate-dna.js",
+    "hc-generate:new-zome": "node setup/dna-setup/scripts/generate-zome.js",
+    "hc-generate:new-zome-entry": "node setup/dna-setup/scripts/generate-zome-entry.js",
+    "hc-keygen": "node setup/agent-setup/scripts/create-new-agent.js",
+    "setup:config-add-agent": "node setup/agent-setup/add-agent-to-conductor.js"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "handlebars": "^4.7.6",
+    "ncp": "^2.0.0"
   },
   "repository": {
     "type": "git",
@@ -16,6 +24,7 @@
   },
   "authors": [
     "jetttech",
+    "robbiecarlton",
     "zo-el"
   ],
   "license": "ISC",
