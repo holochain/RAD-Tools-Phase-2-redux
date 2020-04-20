@@ -1,5 +1,6 @@
 const ncp = require('ncp')
 const fs = require('fs')
+const typeSpec = require('../../type-spec.json')
 const renderSchema = require('./renderSchema')
 const renderResolvers = require('./renderResolvers')
 const renderHomePage = require('./renderHomePage')
@@ -7,10 +8,8 @@ const renderTypePage = require('./renderTypePage')
 const renderIndex = require('./renderIndex')
 const mapObject = require('./render-utils').mapObject
 
-const typeSpec = require('../../type-spec.json')
-
-const SOURCE_PATH = '../ui_template'
-const DESTINATION_PATH = '../../../ui-src'
+const SOURCE_PATH = '/setup/ui-setup/ui_template'
+const DESTINATION_PATH = '/ui-src'
 
 const SCHEMA_PATH = `${DESTINATION_PATH}/src/schema.js`
 const RESOLVERS_PATH = `${DESTINATION_PATH}/src/resolvers.js`
