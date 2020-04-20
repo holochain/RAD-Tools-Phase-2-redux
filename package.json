@@ -5,12 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "hc:gen-dna": "npm run hc:gen-dna-base && npm run hc:gen-dna-content",
-    "hc:gen-dna-base": "hc init dna-src",
-    "hc:gen-dna-content": "node setup/scripts/generate-dna-entry.js",
-    "hc:gen-new-zome": "cd dna-src && hc generate zomes/<ZOME_NAME> rust-proc",
-    "hc:gen-new-entry": "cd dna-src/zomes/<ZOME_NAME>/code/src && mkdir <ENTRY_NAME> && cd <ENTRY_NAME> && touch handlers.rs mod.rs validation.rs",
-    "hc:setup-env": "cp /.env.example /.env"
+    "hc-generate:dna": "node setup/scripts/hc-generate:dna-entry.js",
+    "hc-generate:new-zome": "cd dna-src && hc generate zomes/<ZOME_NAME> rust-proc",
+    "hc-generate:new-entry": "cd dna-src/zomes/<ZOME_NAME>/code/src && mkdir <ENTRY_NAME> && cd <ENTRY_NAME> && touch handlers.rs mod.rs validation.rs",
+    "setup-env": "cp /.env.example /.env"
   },
   "repository": {
     "type": "git",
