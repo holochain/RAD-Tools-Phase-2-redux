@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "start": "npm run start:live",
-    "start:live": "REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts start",
     "start:mock": "REACT_APP_MOCK_DNA_CONNECTION='true' react-scripts start",
+    "start:live": "REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts start",
+    "start:agent-1": "PORT=3100 REACT_APP_DNA_INTERFACE_URL=ws://localhost:3400 npm run start:live",
+    "start:agent-2": "PORT=3101 REACT_APP_DNA_INTERFACE_URL=ws://localhost:3401 npm run start:live",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -23,15 +25,18 @@
     "apollo-link": "^1.2.13",
     "apollo-link-logger": "^1.2.3",
     "apollo-link-schema": "^1.2.4",
+    "child_process": "^1.0.2",
     "graphql": "^14.6.0",
     "graphql-tag": "^2.10.3",
     "graphql-tools": "^4.0.6",
     "lodash": "^4.17.15",
+    "net": "^1.0.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
+    "toml": "^3.0.0",
     "waait": "^1.0.5"
   },
   "eslintConfig": {
@@ -48,5 +53,20 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "license": "ISC",
+  "keywords": [
+    "Holochain",
+    "GraphQL",
+    "React",
+    "happ",
+    "RAD",
+    "Phase 2",
+    "Tool"
+  ],
+  "authors": [
+    "jetttech",
+    "robbiecarlton",
+    "zo-el"
+  ]
 }
