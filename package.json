@@ -5,17 +5,21 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate:ui": "node ui/scripts/generate-ui.js",
-    "generate:clean": "rm -rf ui/generated_ui",
-    "hc-generate:dna": "node setup/dna-setup/scripts/generate-dna.js",
-    "hc-generate:new-zome": "node setup/dna-setup/scripts/generate-zome.js",
-    "hc-generate:new-zome-entry": "node setup/dna-setup/scripts/generate-zome-entry.js",
-    "hc-keygen": "node setup/agent-setup/scripts/create-new-agent.js",
-    "setup:config-add-agent": "node setup/agent-setup/add-agent-to-conductor.js"
+    "generate:ui": "node setup/ui-setup/scripts/generate-ui",
+    "ui:generate-clean": "rm -rf ui-src/*",
+    "ui:connect-to-conductor": "cd ui-src && node connect-to-conductor",
+    "ui:start-live": "cd ui-src && npm start:live",
+    "hc-generate:dna": "node setup/dna-setup/scripts/generate-dna",
+    "hc-generate:new-zome": "node setup/dna-setup/scripts/generate-zome",
+    "hc-generate:new-zome-entry": "node setup/dna-setup/scripts/generate-zome-entry",
+    "hc-keygen": "node setup/agent-setup/scripts/create-new-agent",
+    "hc-config:add-agent": "node setup/agent-setup/add-agent-to-conductor",
+    "hc-test": "cd dna-src && hc test",
+    "hc-package": "cd dna-src && hc package",
+    "hc-start": "holochain -c conductor-config.toml"
   },
   "devDependencies": {},
   "dependencies": {
-    "handlebars": "^4.7.6",
     "ncp": "^2.0.0"
   },
   "repository": {
