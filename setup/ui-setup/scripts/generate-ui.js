@@ -27,7 +27,7 @@ const renderers = [
 
 ncp(SOURCE_PATH, DESTINATION_PATH, err => {
   if (err) {
-    console.err(err)
+    console.error(err)
     return
   }
 
