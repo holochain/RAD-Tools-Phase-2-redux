@@ -1,6 +1,6 @@
- return true
- // import json file
- const typeSpec = require('../../type-spec.json')
+//  return true
+
+const typeSpec = require('../../type-spec.json')
 
  /////
      // const mapFnOverObject = (object, fn) => Object.keys(object).sort().map(key => fn(key, object[key]))
