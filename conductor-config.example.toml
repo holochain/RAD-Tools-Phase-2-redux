@@ -7,13 +7,13 @@ persistence_dir = ".holochain/holo"
 
 [[agents]]
 id = "agent-1"
-keystore_file = "keystores/agent1_<AGENT_1_PUB_KEY>.keystore"
+keystore_file = "keystores/agent1_AGENT_1_PUB_KEY.keystore"
 name = "Agent 1"
-public_address = "<AGENT_1_PUB_KEY>"
+public_address = "AGENT_1_PUB_KEY"
 
 [[dnas]]
 file = "dna_src/dist/dna_src.dna.json"
-hash = "<DNA_HASH>"
+hash = "DNA_HASH"
 id = "rad-tool-dna"
 
 [[instances]]

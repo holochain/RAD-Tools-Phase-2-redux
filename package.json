@@ -4,11 +4,10 @@
   "description": "The second tier of RAD tools, automating a UI GraphQL and DNA generation based on a JSON schema file.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "generate:ui": "node setup/ui-setup/scripts/generate-ui",
     "ui:generate-clean": "rm -rf ui-src/*",
     "ui:connect-to-conductor": "cd ui-src && node connect-to-conductor",
-    "ui:start-live": "cd ui-src && npm start:live",
+    "ui:start": "cd ui-src && npm start",
     "hc-generate:dna": "node setup/dna-setup/scripts/generate-dna",
     "hc-generate:new-zome": "node setup/dna-setup/scripts/generate-zome",
     "hc-generate:new-zome-entry": "node setup/dna-setup/scripts/generate-zome-entry",
@@ -26,6 +25,15 @@
     "type": "git",
     "url": "git+https://github.com/holochain/RAD-Tools-Phase-2.git"
   },
+  "keywords": [
+    "Holochain",
+    "GraphQL",
+    "React",
+    "happ",
+    "RAD",
+    "Phase 2",
+    "Tool"
+  ],
   "authors": [
     "jetttech",
     "robbiecarlton",

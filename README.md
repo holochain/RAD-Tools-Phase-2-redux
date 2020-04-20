@@ -12,7 +12,7 @@ $ npm run generate:ui sample-type-spec.json
 This will generate your new ui in the `ui-src` directory. CD into that directory and run
 
 ```
-$ npm i && npm start
+$ npm i && npm start:mock
 ```
 
 and your UI server will start up and open the ui in a browser tab with mock data.
