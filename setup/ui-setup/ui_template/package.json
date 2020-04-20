@@ -1,7 +1,16 @@
 {
-  "name": "react-graphql-template",
-  "version": "0.0.1",
+  "name": "holochain-rad-tools-phase-2",
+  "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "npm run start:live",
+    "start:live": "REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts start",
+    "start:mock": "REACT_APP_MOCK_DNA_CONNECTION='true' react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "hc:start": "cd .. && holochain -c conductor-config.toml"
+  },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
     "@apollo/react-testing": "^3.1.3",
@@ -24,15 +33,6 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "waait": "^1.0.5"
-  },
-  "scripts": {
-    "start": "yarn start:live",
-    "start:live": "REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts start",
-    "start:mock": "REACT_APP_MOCK_DNA_CONNECTION='true' react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "hc:start": "cd .. && holochain -c conductor-config.toml"
   },
   "eslintConfig": {
     "extends": "react-app"
