@@ -19,13 +19,13 @@ const conductorConfigPath = require('../../conductor-config.example.toml')
 // }))
 
 
-const agentName = process.argv[2]
-const pathToConfig = '../../conductor-config.example.toml'
+const agentName = process.argv[2] || "agent"
+const pathToConfig = './conductor-config.example.toml'
 
 const generateAgentConfig = (agentName, agentPubKey) => `
   [[agents]]
   id = "${agentName}"
-  keystore_file = "keystores/${agentName}/${agentPubKey}>.keystore"
+  keystore_file = "keystores/${agentName}/${agentPubKey}.keystore"
   name = "${agentName}"
   public_address = "${agentPubKey}"
 `
@@ -39,25 +39,15 @@ if(agentName) {
       console.log('agentPubKey >>>> in then block: ', agentPubKey)
       // if (conductorConfig.agents.find(agent.public_address === agentPubKey)) return console.log('Agent already exists in Conductor Config')
       addAgentToConfig(generateAgentConfig(agentName, agentPubKey), pathToConfig)
+      let g = generateAgentConfig(agentName, agentPubKey)
     })
 }
 else {
   console.log(`Error: Agent Name required as argument.`)
-} 
+}
 
 async function locateAgentPubKey() {
-  try {
-      const { stderr } = await exec(`find ./keystores/${agentName} -name *.keystore  | sed -ne 's/^.*\.keystore//p'`)
-      if (stderr) console.log('stderr:', stderr)
-  } catch (err) {
-     console.error(err)
-
-     if (stderr) console.log(`stderr: ${stderr}`)
-     console.log('stdout : AGENT PUB KEY >> ', stdout)
- 
-     // const agentKey = new RegExp('(?<=_)(.*)(?=.keystore)').exec(stdout)
-     // console.log(agentKey)
-     const agentPubKey = stdout.trim()
-     return agentPubKey
-  }
+  const { stdout, stderr } = await exec(`sh ./setup/agent-setup/script/read-file.sh`)
+  if (stderr) console.log('stderr:', stderr)
+  return stdout.trim()
 }
