@@ -31,11 +31,9 @@ function renderZomeFunctionsForType (typeName, fields) {
   return `      create_${lowerName}: ({ ${lowerName}_input: ${lowerName}Input }) => {
         const ${lowerName}Index = Object.keys(${lowerName}Entries).length + 1
         const id = 'Id' + ${lowerName}Index
-        const createdAt = String(Date.now())
-        ${lowerName}Entries[id] = { id, ...${lowerName}Input, created_at: createdAt }
+        ${lowerName}Entries[id] = { id, ...${lowerName}Input }
         return {
           id,
-          created_at: createdAt,
           ...${lowerName}Input
         }
       },
@@ -68,8 +66,7 @@ function renderZomeFunctionsForType (typeName, fields) {
         .map(key => ({
           id: key,
           ...${lowerName}Entries[key]
-        }))
-        .sort((a, b) => a.created_at > b.created_at ? -1 : 1),
+        })),
 `
 }
 
