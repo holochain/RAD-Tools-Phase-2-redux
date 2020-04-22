@@ -1,8 +1,9 @@
 const fs = require('fs')
 const util = require('util')
-const toml = require('toml')
-const concat = require('concat-stream')
 const exec = util.promisify(require('child_process').exec);
+const concat = require('concat-stream')
+const toml = require('toml')
+require('toml-require').install({toml: require('toml')})
 // nb: will need to update path to: ('../../conductor-config.toml')
 const conductorConfig = require('../../conductor-config.example.toml')
 
@@ -12,7 +13,7 @@ const streamConfig = () => fs.createReadStream(conductorConfig, 'utf8').pipe(con
 }))
 
 const agentName = process.argv[2]
-const pathToConfig = '../../conductor-config/example.toml'
+const pathToConfig = '../../conductor-config.example.toml'
 
 const generateAgentConfig = (agentName, agentPubKey) => `
   id = "${agentName}"
@@ -23,6 +24,7 @@ const generateAgentConfig = (agentName, agentPubKey) => `
 
 if(agentName) {
   locateAgentPubKey()
+    .catch(e => console.log(e))
     .then(agentPubKey => addAgentToConfig(generateAgentConfig(agentName, agentPubKey), pathToConfig))
 }
 else {
@@ -37,7 +39,7 @@ async function locateAgentPubKey() {
      console.error(err)
 
      if (stderr) console.log(`stderr: ${stderr}`)
-     console.log('stdout : ', stdout)
+     console.log('stdout : AGENT PUB KEY >> ', stdout)
  
      // const agentKeys = new RegExp('(?<=_)(.*)(?=.keystore)').exec(stdout)
      // console.log(agentKeys)
@@ -47,5 +49,6 @@ async function locateAgentPubKey() {
 }
 
 const addAgentToConfig = (agentConfigTemplate, pathToConfig) => fs.writeFileSync(pathToConfig, () => {
+  console.log('about to stream...')
   streamConfig()
 })

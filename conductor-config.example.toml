@@ -1,7 +1,3 @@
-# NB: You will need to fill in two things to complete your Conductor-config:
-# 1. The Agent Pub Key for each Agent added
-# 2. The DNA Hash for each DNA added
-
 bridges = []
 persistence_dir = ".holochain/holo"
 
