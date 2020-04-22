@@ -1,14 +1,15 @@
 const fs = require('fs')
 const util = require('util')
 const exec = util.promisify(require('child_process').exec);
+const toml = require('toml')
+require('toml-require').install({ toml })
 // const concat = require('concat-stream')
-// const toml = require('toml')
 
-require('toml-require').install({toml: require('toml')})
 // nb: will need to update path to: ('../../conductor-config.toml')
-const conductorConfig = require('../../conductor-config.example.toml')
+const conductorConfigPath = require('../../conductor-config.example.toml')
+const conductorConfig = toml.parse(fs.readFileSync(conductorConfigPath, 'utf-8'))
 
-// const streamConfig = () => fs.createReadStream(conductorConfig, 'utf8').pipe(concat(data => {
+// const streamConfig = () => fs.createReadStream(conductorConfigPath, 'utf8').pipe(concat(data => {
 //   try {
 //     console.log('>>>>>>>>>>>> parsed toml: \n', toml.parse(data))
 //   } catch (e) {
@@ -16,6 +17,7 @@ const conductorConfig = require('../../conductor-config.example.toml')
 //       ": " + e.message);
 //   }
 // }))
+
 
 const agentName = process.argv[2]
 const pathToConfig = '../../conductor-config.example.toml'
@@ -33,7 +35,12 @@ const addAgentToConfig = (agentConfigTemplate, pathToConfig) => fs.appendFileSyn
 if(agentName) {
   locateAgentPubKey()
     .catch(e => console.log(e))
-    .then(agentPubKey => addAgentToConfig(generateAgentConfig(agentName, agentPubKey), pathToConfig))
+    .then(agentPubKey => {
+      console.log(agentPubKey)
+
+      if (conductorConfig.agents.find(agent.public_address === agentPubKey)) return console.log('Agent already exists in Conductor Config')
+      addAgentToConfig(generateAgentConfig(agentName, agentPubKey), pathToConfig)
+    })
 }
 else {
   console.log(`Error: Agent Name required as argument.`)
