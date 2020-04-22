@@ -7,7 +7,7 @@ require('toml-require').install({ toml })
 
 // nb: will need to update path to: ('../../conductor-config.toml')
 const conductorConfigPath = require('../../conductor-config.example.toml')
-const conductorConfig = toml.parse(fs.readFileSync(conductorConfigPath, 'utf-8'))
+// const conductorConfig = toml.parse(fs.readFileSync(conductorConfigPath, 'utf-8'))
 
 // const streamConfig = () => fs.createReadStream(conductorConfigPath, 'utf8').pipe(concat(data => {
 //   try {
@@ -36,9 +36,8 @@ if(agentName) {
   locateAgentPubKey()
     .catch(e => console.log(e))
     .then(agentPubKey => {
-      console.log(agentPubKey)
-
-      if (conductorConfig.agents.find(agent.public_address === agentPubKey)) return console.log('Agent already exists in Conductor Config')
+      console.log('agentPubKey >>>> in then block: ', agentPubKey)
+      // if (conductorConfig.agents.find(agent.public_address === agentPubKey)) return console.log('Agent already exists in Conductor Config')
       addAgentToConfig(generateAgentConfig(agentName, agentPubKey), pathToConfig)
     })
 }
@@ -48,7 +47,7 @@ else {
 
 async function locateAgentPubKey() {
   try {
-      const { stderr } = await exec(`find ./keystores/${agentName} -name *.keystore  | sed -ne 's/^(.*\)\(?=.keystore)//p'`)
+      const { stderr } = await exec(`find ./keystores/${agentName} -name *.keystore  | sed -ne 's/^.*\.keystore//p'`)
       if (stderr) console.log('stderr:', stderr)
   } catch (err) {
      console.error(err)
