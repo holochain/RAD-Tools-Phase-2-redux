@@ -3,9 +3,9 @@ const util = require('util')
 const toml = require('toml')
 const concat = require('concat-stream')
 const exec = util.promisify(require('child_process').exec);
- 
+// nb: will need to update path to: ('../../conductor-config.toml')
 const conductorConfig = require('../../conductor-config.example.toml')
-// const conductorConfig = require('../../conductor-config.toml')
+
 const streamConfig = () => fs.createReadStream(conductorConfig, 'utf8').pipe(concat(data => {
   console.log('>>>>>>>>>>>> parsed toml: \n', toml.parse(data))
   return toml.parse(data)
