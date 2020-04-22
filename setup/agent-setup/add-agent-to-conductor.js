@@ -43,7 +43,6 @@ async function locateAgentPubKey() {
      // console.log(agentKeys)
      const agentPubKey = stdout.trim()
      return agentPubKey
-     // add agentConfigTemplate to 
   }
 }
 
