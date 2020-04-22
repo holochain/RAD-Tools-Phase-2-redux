@@ -33,4 +33,4 @@ target/
 .DS_STORE
 
 conductor-config.toml
-keystore/*
+keystores

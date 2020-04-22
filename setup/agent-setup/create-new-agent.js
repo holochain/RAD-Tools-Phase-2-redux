@@ -1,7 +1,7 @@
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-const agentName = process.argv[2]
+const agentName = process.argv[2] || "agent"
 
 async function checkIfKeystoresDirExists() {
   try {
@@ -23,18 +23,13 @@ async function checkIfAgentDirExists() {
 
 async function createNewAgentKeystore() {
   try {
-      const { stdout, stderr } = await exec(`sh -c 'hc keygen -n --path ./keystores/${agentName}/AGENT_1_PUB_KEY.keystore | sed -ne 's/^Public address:|.*//p/''`)
+      const { stdout, stderr } = await exec(`hc keygen -n --path ./keystores/${agentName}/AGENT_1_PUB_KEY.keystore | sed -ne 's/^Public address: //p'`)
       if (stderr) console.log('stderr:', stderr)
-
-      console.log(stdout)
- 
-      // const findAgentPubKey = new RegExp(`sed -ne 's/^Public \.*//p'`)
-      // const agentPubKey = findAgentPubKey.exec(stdout)
-      // console.log('agentPubKey :', agentPubKey);
-      
-      // new RegExp(`mv ./keystores/${agentName}/<AGENT_PUB_KEY>.keystore ./keystores/${agentName}/${agentPubKey}.keystore`)
-      
-      //  | sed -ne 's/^Public address:\.*//p' | xargs -I {} mv ./keystores/${agentName}/agentkey.keystore ./keystores/${agentName}/{}.keystore
+      let agentPubKey = stdout.trim()
+      console.log("Succesfully created new agent keystore. \n")
+      console.log("Created Public Address: ", agentPubKey)
+      console.log("Keystore written to: ", `./keystores/${agentName}/${agentPubKey}.keystore`)
+      await exec(`mv ./keystores/${agentName}/AGENT_1_PUB_KEY.keystore ./keystores/${agentName}/${agentPubKey}.keystore`)
   } catch (err) {
      console.error(err)
   }
