@@ -1,0 +1,10 @@
+.home-page {
+  display: flex;
+  padding: 50px;
+  align-items: center;
+  flex-direction: column;
+}
+
+.type-page-link {
+  margin: 20px 0px;
+}

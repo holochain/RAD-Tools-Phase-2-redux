@@ -9,7 +9,7 @@ $ yarn generate:ui sample-type-spec.json
 This will generate a `generated_ui` directory in the `ui` directory. CD into that directory and run
 
 ```
-$ yarn install && yarn start
+$ yarn install && yarn start:mock
 ```
 
-and your UI server will start up and open the ui in a browser tab.
+and your UI server will start up and open the ui in a browser tab. In this mode you can play with the UI using a mock dna.
