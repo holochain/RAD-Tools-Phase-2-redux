@@ -19,7 +19,9 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "concat-stream": "^2.0.0",
     "ncp": "^2.0.0",
+    "toml": "^3.0.0",
     "util": "^0.12.2"
   },
   "repository": {
