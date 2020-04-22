@@ -11,7 +11,7 @@
     "hc-generate:dna": "node setup/dna-setup/scripts/generate-dna",
     "hc-generate:new-zome": "node setup/dna-setup/scripts/generate-zome",
     "hc-generate:new-zome-entry": "node setup/dna-setup/scripts/generate-zome-entry",
-    "hc-keygen": "node setup/agent-setup/scripts/create-new-agent",
+    "hc-keygen": "node setup/agent-setup/create-new-agent",
     "hc-config:add-agent": "node setup/agent-setup/add-agent-to-conductor",
     "hc-test": "cd dna-src && hc test",
     "hc-package": "cd dna-src && hc package",
@@ -19,7 +19,8 @@
   },
   "devDependencies": {},
   "dependencies": {
-    "ncp": "^2.0.0"
+    "ncp": "^2.0.0",
+    "util": "^0.12.2"
   },
   "repository": {
     "type": "git",
