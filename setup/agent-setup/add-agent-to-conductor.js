@@ -7,6 +7,8 @@ require('toml-require').install({ toml })
 
 // nb: will need to update path to: ('../../conductor-config.toml')
 const conductorConfigPath = require('../../conductor-config.example.toml')
+
+// todo: determine sync needs
 // const conductorConfig = toml.parse(fs.readFileSync(conductorConfigPath, 'utf-8'))
 
 // const streamConfig = () => fs.createReadStream(conductorConfigPath, 'utf8').pipe(concat(data => {
@@ -36,7 +38,7 @@ if(agentName) {
   locateAgentPubKey()
     .catch(e => console.log(e))
     .then(agentPubKey => {
-      console.log('agentPubKey >>>> in then block: ', agentPubKey)
+      // console.log('agentPubKey >>>> in then block: ', agentPubKey)
       // if (conductorConfig.agents.find(agent.public_address === agentPubKey)) return console.log('Agent already exists in Conductor Config')
       addAgentToConfig(generateAgentConfig(agentName, agentPubKey), pathToConfig)
       let g = generateAgentConfig(agentName, agentPubKey)
