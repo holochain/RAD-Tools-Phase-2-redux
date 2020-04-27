@@ -5,21 +5,38 @@ const { ENTRY_IMPORTS, ENTRY_DEFINITIONS, ENTRY_FUNCTION_DEFINITIONS } = require
 const zomeIndexTemplatePath = path.resolve("setup/dna-setup/zome-template", "index.rs");
 const zomeIndexTemplate = fs.readFileSync(zomeIndexTemplatePath, 'utf8')
 
-function renderZomeIndex (zomeName, zomeEntryTypes) {
-    console.log(` >>> rendering file ${zomeName}/index.rs, zomeEntryTypes : `, zomeEntryTypes)
-    const completedZomeIndex = mapFnOverObject(zomeEntryTypes, renderIndex).join('\n')
-    // console.log(`>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AFTERWARD: \n ${completedZomeIndex} \n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<`)
-    // fs.writeFileSync(resolvePath(filename), completedZomeIndex)
-    return `# NB: ${zomeName}/index.rs: \n ## Zome Entries: ${JSON.stringify(zomeEntryTypes)} \n`
+
+let zomeEntryImports, zomeEntryDefs, zomeEntryFns
+const zomeIndexContents = [
+  [() => zomeEntryImports, ENTRY_IMPORTS],
+  [() => zomeEntryDefs, ENTRY_DEFINITIONS],
+  [() => zomeEntryFns, ENTRY_FUNCTION_DEFINITIONS]
+]
+
+const cleanSlate = () => {
+  zomeEntryImports = ''
+  zomeEntryDefs = ''
+  zomeEntryFns = ''
+  return true
 }
 
-const renderIndex = (zomeEntryType, zomeEntry) => {
-  const zomeIndexContents = [
-    [renderZomeEntryImports(zomeEntryType), ENTRY_IMPORTS],
-    [renderZomeEntryDefs(zomeEntryType), ENTRY_DEFINITIONS],
-    [renderZomeEntryFns(zomeEntryType, zomeEntry), ENTRY_FUNCTION_DEFINITIONS]
-  ]
+function renderZomeIndex (zomeName, zomeEntryTypes, zomeDir) {
+  cleanSlate()
+  mapFnOverObject(zomeEntryTypes, renderIndexContent)
+  const completedZomeIndex = renderIndexFile(zomeIndexContents)
+  fs.writeFileSync(`${zomeDir}/lib.rs`, completedZomeIndex)
+  return console.log(`\n >>> Created ${zomeName}/index.rs`)
+}
 
+const renderIndexContent = (zomeEntryType, zomeEntry) => {
+  // console.log(`>>>><<<<<>>>>><<<<<<<<<<<>>>>>><<<<< Rendering Content for ${zomeEntryType} \n`, zomeIndexContents)
+  zomeEntryImports = zomeEntryImports.concat(renderZomeEntryImports(zomeEntryType))
+  zomeEntryDefs = zomeEntryDefs.concat(renderZomeEntryDefs(zomeEntryType))
+  zomeEntryFns = zomeEntryFns.concat(renderZomeEntryFns(zomeEntryType, zomeEntry))
+  return zomeIndexContents
+}
+
+const renderIndexFile = zomeIndexContents => {
   let newFile = zomeIndexTemplate
   zomeIndexContents.forEach(([zomeEntryContent, placeHolderContent]) => {
     newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
@@ -27,53 +44,35 @@ const renderIndex = (zomeEntryType, zomeEntry) => {
   return newFile
 }
 
-
 const renderZomeEntryImports = zomeEntryType => {
-  console.log('creating renderZomeEntryImports def for : ', zomeEntryType)
-  return `use crate::${zomeEntryType.toLowerCase()}::${capitalize(zomeEntryType)}Entry;
-  use crate::${zomeEntryType.toLowerCase()}::${capitalize(zomeEntryType)};
-  pub mod ${zomeEntryType.toLowerCase()};
+  return `
+use crate::${zomeEntryType.toLowerCase()}::${capitalize(zomeEntryType)}Entry;
+use crate::${zomeEntryType.toLowerCase()}::${capitalize(zomeEntryType)};
+pub mod ${zomeEntryType.toLowerCase()};
   `
 }
 
 const renderZomeEntryDefs = zomeEntryType => {
-  console.log('creating zomeEntryType def for : ', zomeEntryType)
-  return `#[entry_def]
-  fn ${zomeEntryType.toLowerCase()}_def() -> ValidatingEntryType {
-    ${zomeEntryType.toLowerCase()}::definition()
-  }
+  return `
+    #[entry_def]
+    fn ${zomeEntryType.toLowerCase()}_def() -> ValidatingEntryType {
+      ${zomeEntryType.toLowerCase()}::definition()
+    }
   `
 }
 
 const renderZomeEntryFns = (zomeEntryType, { functions }) => {
-  console.log('creating zomeEntry Function defs for : ', zomeEntryType)
-  return mapFnOverObject(functions, renderFnDef, zomeEntryType)
-
-  // return `#[zome_fn("hc_public")]
-  // fn create_${zomeEntryType.toLowerCase()}(${zomeEntryType.toLowerCase()}_input: ${capitalize(zomeEntryType)}Entry) -> ZomeApiResult<${capitalize(zomeEntryType)}> {
-  //     ${zomeEntryType.toLowerCase()}::handlers::create_${zomeEntryType.toLowerCase()}(${zomeEntryType.toLowerCase()}_input)
-  // }
-
-  // #[zome_fn("hc_public")]
-  // fn get_${zomeEntryType.toLowerCase()}(id: Address) -> ZomeApiResult<${capitalize(zomeEntryType)}> {
-  //     ${zomeEntryType.toLowerCase()}::handlers::get_${zomeEntryType.toLowerCase()}(id)
-  // }
-
-  // #[zome_fn("hc_public")]
-  // fn update_${zomeEntryType.toLowerCase()}(id: Address, ${zomeEntryType.toLowerCase()}_input: ${capitalize(zomeEntryType)}Entry) -> ZomeApiResult<${capitalize(zomeEntryType)}> {
-  //     ${zomeEntryType.toLowerCase()}::handlers::update_${zomeEntryType.toLowerCase()}(id, ${zomeEntryType.toLowerCase()}_input)
-  // }
-
-  // #[zome_fn("hc_public")]
-  // fn remove_${zomeEntryType.toLowerCase()}(id: Address) -> ZomeApiResult<${capitalize(zomeEntryType)}> {
-  //     ${zomeEntryType.toLowerCase()}::handlers::remove_${zomeEntryType.toLowerCase()}(id)
-  // }
-
-  // #[zome_fn("hc_public")]
-  // fn list_${zomeEntryType.toLowerCase()}() -> ZomeApiResult<${capitalize(zomeEntryType)}> {
-  //     ${zomeEntryType.toLowerCase()}::handlers::list_${zomeEntryType.toLowerCase()}()
-  // }
-  // `
+  // placeholder for before type-schema format is updated :
+  if(!functions) {
+    functions = {
+      "create": true,
+      "get": true,
+      "update": true,
+      "remove": true,
+      "list": true
+    }
+  }
+  return mapFnOverObject(functions, renderFnDef, zomeEntryType).join('')
 }
 
 
@@ -104,10 +103,11 @@ const renderFnDef = (crudFn, shouldFnRender, zomeEntryType) => {
     default: return new Error(`Error: No CRUD function matched. CRUD fn received : ${crudFn}.`)
   }
 
-  return `#[zome_fn("hc_public")]
-  fn ${crudFn}_${zomeEntryType.toLowerCase()}${args} -> ZomeApiResult<${capitalize(zomeEntryType)}> {
-      ${zomeEntryType.toLowerCase()}::handlers::${crudFn}_${zomeEntryType.toLowerCase()}(${zomeEntryType.toLowerCase()}_input)
-  }
+  return `
+    #[zome_fn("hc_public")]
+    fn ${crudFn}_${zomeEntryType.toLowerCase()}${args} -> ZomeApiResult<${capitalize(zomeEntryType)}> {
+        ${zomeEntryType.toLowerCase()}::handlers::${crudFn}_${zomeEntryType.toLowerCase()}(${zomeEntryType.toLowerCase()}_input)
+    }
   `
 }
 

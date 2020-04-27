@@ -22,7 +22,6 @@ mod notes {
     pub fn validate_agent(validation_data: EntryValidationData<AgentId>) {
         Ok(())
     }
-
     
     #[entry_def]
     fn anchor_def() -> ValidatingEntryType {
@@ -30,6 +29,5 @@ mod notes {
     }
 
     let ENTRY_DEFINITIONS
-
     let ENTRY_FUNCTION_DEFINITIONS
 }

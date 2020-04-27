@@ -32,9 +32,7 @@ function replaceNamePlaceHolders (file, placeHolderName, replacementName) {
 
 function replaceContentPlaceHolders (file, placeHolderContent, replacementContent) {
   const placeHolderContentAllCaps = `let ${placeHolderContent.toUpperCase()}`
-  const newFile =  file.replace(new RegExp(placeHolderContentAllCaps, 'g'), replacementContent)
-  console.log(`>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n ${newFile} \n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<`)
-  return newFile
+  return file.replace(new RegExp(placeHolderContentAllCaps, 'g'), replacementContent)
 }
 
 module.exports = {

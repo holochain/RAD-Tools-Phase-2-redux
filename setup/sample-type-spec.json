@@ -1,17 +1,34 @@
 {
   "zomes": {
+    "Notes": {
+      "types": { 
+        "Note": {
+          "title": "string",
+          "text": "string",
+          "author": "string"
+        },
+        "Lisa": {
+          "text": "string",
+          "author": "string",
+          "ranking": "string"
+        },
+        "Comment": {
+          "text": "string",
+          "author": "string",
+          "ranking": "string"
+        },
+        "jack": {
+          "text": "string",
+          "author": "string",
+          "ranking": "string"
+        }
+      }
+    },
     "Profile": {
       "types": {
         "User": {
           "name": "string",
-          "avatar_url": "string",
-          "functions": {
-            "create": true,
-            "get": true,
-            "update": true,
-            "remove": true,
-            "list": true
-          }
+          "avatar_url": "string"
         }
       }
     }

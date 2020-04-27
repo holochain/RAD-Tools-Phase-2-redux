@@ -10,14 +10,14 @@ const renderTest = require('./render-entry-test')
 async function createEntryDir(zomeName, entryName) {
   const { stdout, stderr } = await exec(`cd dna-src/zomes/${zomeName}/code/src; [ ! -d ${entryName} ] && mkdir ${entryName}; cd ${entryName} && echo $(pwd -P)`)
   if(stderr) console.error('stderr:', stderr)      
-  console.log(` > Created ${zomeName.toUpperCase()}/${entryName.toUpperCase()} ENTRY path at: ${stdout} \n`)
+  console.log(` > Created ${entryName.toUpperCase()} Entry file at: ${stdout}`)
   return stdout.trim()
 }
 
 async function createEntryTestDir(entryName) {
   let {stdout, stderr } = await exec(`cd dna-src/test; [ ! -d ${entryName} ] && mkdir ${entryName}; cd ${entryName} && echo $(pwd -P)`)
   if (stderr) console.error('stderr:', stderr)  
-  console.log(` >> Created ${entryName.toUpperCase()} ENTRY TEST path at: ${stdout}`)
+  console.log(` >> Created ${entryName.toUpperCase()} Entry Test file at: ${stdout}`)
   return stdout.trim()
 }
 
