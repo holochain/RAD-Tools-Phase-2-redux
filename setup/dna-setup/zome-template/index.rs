@@ -8,7 +8,7 @@ use hdk::{
     error::ZomeApiResult,
     holochain_persistence_api::cas::content::Address
 };
-let ENTRY_IMPORTS
+{ENTRY_IMPORTS}
 
 #[zome]
 mod notes {
@@ -28,6 +28,6 @@ mod notes {
         holochain_anchors::anchor_definition()
     }
 
-    let ENTRY_DEFINITIONS
-    let ENTRY_FUNCTION_DEFINITIONS
+    {ENTRY_DEFINITIONS}
+    {ENTRY_FUNCTION_DEFINITIONS}
 }

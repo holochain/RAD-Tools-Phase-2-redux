@@ -1,4 +1,10 @@
-const { mapFnOverObject } = require('../../utils.js')
+const fs = require('fs')
+const path = require('path')
+const { replaceContentPlaceHolders, mapFnOverObject, capitalize } = require('../../utils.js')
+const { ENTRY_IMPORTS, ENTRY_DEFINITIONS, ENTRY_FUNCTION_DEFINITIONS } = require('../variables/index')
+const entryModTemplatePath = path.resolve("setup/dna-setup/zome-template/entry-template", "mod.rs");
+const entryModTemplate = fs.readFileSync(entryModTemplatePath, 'utf8')
+
 
 function renderMod (zomeName, zomeEntryName, zomeEntry) {
     console.log(` >>> rendering file ${zomeName}/${zomeEntryName} mod.rs `)
@@ -11,41 +17,4 @@ function renderMod (zomeName, zomeEntryName, zomeEntry) {
 }
 
 module.exports = renderMod
-
-// {
-//     "zomes": {
-//       "Notes": {
-//         "types": { 
-//           "Note": {
-//             "title": "string",
-//             "text": "string",
-//             "author": "string"
-//           },
-//           "Lisa": {
-//             "text": "string",
-//             "author": "string",
-//             "ranking": "string"
-//           },
-//           "Comment": {
-//             "text": "string",
-//             "author": "string",
-//             "ranking": "string"
-//           },
-//           "jack": {
-//             "text": "string",
-//             "author": "string",
-//             "ranking": "string"
-//           }
-//         }
-//       },
-//       "Profile": {
-//         "types": {
-//           "User": {
-//             "name": "string",
-//             "avatar_url": "string"
-//           }
-//         }
-//       }
-//     }
-//   }
   

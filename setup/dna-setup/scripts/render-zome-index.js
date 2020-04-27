@@ -29,7 +29,6 @@ function renderZomeIndex (zomeName, zomeEntryTypes, zomeDir) {
 }
 
 const renderIndexContent = (zomeEntryType, zomeEntry) => {
-  // console.log(`>>>><<<<<>>>>><<<<<<<<<<<>>>>>><<<<< Rendering Content for ${zomeEntryType} \n`, zomeIndexContents)
   zomeEntryImports = zomeEntryImports.concat(renderZomeEntryImports(zomeEntryType))
   zomeEntryDefs = zomeEntryDefs.concat(renderZomeEntryDefs(zomeEntryType))
   zomeEntryFns = zomeEntryFns.concat(renderZomeEntryFns(zomeEntryType, zomeEntry))
