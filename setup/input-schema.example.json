@@ -24,10 +24,10 @@
 //           }],
 //           "functions": {
 //               "create": true,
-//               "getAll": true,
 //               "get": true,
 //               "update": true,
-//               "remove": true
+//               "remove": true,
+//               "list": true
 //           }
 //         }
 //       }]

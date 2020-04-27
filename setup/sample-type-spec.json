@@ -1,12 +1,19 @@
 {
-  "types": { 
-    "Note": {
-      "title": "string",
-      "text": "string"
-    },
-    "User": {
-      "name": "string",
-      "avatar_url": "string"
+  "zomes": {
+    "Profile": {
+      "types": {
+        "User": {
+          "name": "string",
+          "avatar_url": "string",
+          "functions": {
+            "create": true,
+            "get": true,
+            "update": true,
+            "remove": true,
+            "list": true
+          }
+        }
+      }
     }
   }
 }

@@ -32,13 +32,13 @@ async function initAndGetHolochainClient () {
   }
 }
 
-export function parseZomeCallPath (zomeCallPath) {
+function parseZomeCallPath (zomeCallPath) {
   const [zomeFunc, zome, instanceId] = zomeCallPath.split('/').reverse()
 
   return { instanceId, zome, zomeFunc }
 }
 
-export function createZomeCall (zomeCallPath, callOpts = {}) {
+function createZomeCall (zomeCallPath, callOpts = {}) {
   const DEFAULT_OPTS = {
     logging: HOLOCHAIN_LOGGING
   }

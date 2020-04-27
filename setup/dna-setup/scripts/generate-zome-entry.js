@@ -1,1 +1,0 @@
-// "cd dna-src/zomes/<ZOME_NAME>/code/src && mkdir <ENTRY_NAME> && cd <ENTRY_NAME> && touch handlers.rs mod.rs validation.rs"
