@@ -30,9 +30,9 @@ const entryContents = [
 
 let linkDef, linkNameDefs, anchorNameDefs
 const bulkEntryContents = [
-  [() => anchorNameDefs, ANCHOR_NAME_DEFINITIONS],
   [() => linkDef, LINK_DEFINITION],
-  [() => linkNameDefs, LINK_NAME_DEFINITIONS]
+  [() => linkNameDefs, LINK_NAME_DEFINITIONS],
+  [() => anchorNameDefs, ANCHOR_NAME_DEFINITIONS]
 ]
 
 function renderMod (zomeEntryName, zomeEntry) {
@@ -126,8 +126,6 @@ const renderEntryLink = (linkDetailName, linkDetailValue) => {
     console.log(' >>> linkNameDefinition', linkNameDefinition)
     console.log(' <<<<<< linkDefinition', linkDefinition)
 
-  // linkDef = linkDefinition
-  // linkNameDefs = linkNameDefinition
   return [linkDefinition, linkNameDefinition]
 }
 
@@ -227,7 +225,12 @@ const renderModFile = (templateFile, zomeEntryName, entryContents, bulkEntryCont
   })
 
   bulkEntryContents.forEach(([zomeEntryContentArrayFn, placeHolderContent]) => {
+    console.log('===================== \n')
+    console.log('zomeEntryContentArrayFn : ', zomeEntryContentArrayFn())    
+
     const zomeEntryContentArray = zomeEntryContentArrayFn()
+    console.log('zomeEntryContentArray : ', zomeEntryContentArray)    
+
     zomeEntryContentArray.forEach(zomeEntryContent => {
       const zomeEntryValue = zomeEntryContent[0]
       newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryValue)
@@ -235,6 +238,8 @@ const renderModFile = (templateFile, zomeEntryName, entryContents, bulkEntryCont
       linkNameDefs = [['']]
       linkDef = [['']]
       anchorNameDefs = [['']]
+      // console.log('anchorNameDefs : ', anchorNameDefs);
+      
     })
   })
   return newFile

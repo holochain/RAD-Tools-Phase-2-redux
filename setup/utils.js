@@ -17,10 +17,10 @@ function promiseMapFnOverObject (object, fn, args = {}) {
 }
 
 function toCamelCase (snakeCaseString) {
-  const cleanSnakeCaseString = snakeCaseString.trim()
+  let cleanSnakeCaseString = snakeCaseString.trim().toLowerCase()
   const hyphen = /(-)/g
-  if (hyphen.test(snakeCaseString)) {
-    capitalizedCleanedString = cleanSnakeCaseString.split('-').map(capitalize).join('')
+  if (hyphen.test(cleanSnakeCaseString)) {
+    const capitalizedCleanedString = cleanSnakeCaseString.split('-').map(capitalize).join('')
     cleanSnakeCaseString = capitalizedCleanedString
   }
   const allCapitalized = cleanSnakeCaseString.split('_').map(capitalize).join('')
@@ -29,21 +29,24 @@ function toCamelCase (snakeCaseString) {
 }
 
 function toSnakeCase (camelCaseString) {
+  const cleanCamelCaseString = decapitalize(camelCaseString).trim()
   const lodash = /(_)/g
   const hyphen = /(-)/g
-  if (lodash.test(camelCaseString) || hyphen.test(camelCaseString)) {
-    nonCamelCaseString = camelCaseString
-    console.error(' Provided string is not in CamelCase.\n  Converting String to CamelCase now...')
+  if (lodash.test(cleanCamelCaseString) || hyphen.test(cleanCamelCaseString)) {
+    const nonCamelCaseString = cleanCamelCaseString
+    console.error(`\nProvided string is not in CamelCase: ${nonCamelCaseString}`)
     camelCaseString = toCamelCase(nonCamelCaseString)
-    console.log('toCamelCase(nonCamelCaseString): ', camelCaseString, hyphen.test(camelCaseString), toCamelCase(nonCamelCaseString))
+    console.log(`Converted String to CamelCase : ${camelCaseString}\n`)
   }
-  const cleanCamelCaseString = decapitalize(camelCaseString) // .trim()
   const capLetter = /([A-Z]+)/g
   const snakeCase = cleanCamelCaseString.replace(capLetter, (match) => '_'.concat(match.toLowerCase()))
   return snakeCase
 }
 
 function replaceNamePlaceHolders (file, placeHolderName, replacementName) {
+  console.log('placeholder NAME : ', placeHolderName);
+  console.log('replacement NAME : ', replacementName);
+  
   // placeholders
   const placeHolderAllCaps = `{${toSnakeCase(placeHolderName).toUpperCase()}}`
   const placeHolderLowerCase = `{${toSnakeCase(placeHolderName).toLowerCase()}}`
@@ -63,6 +66,9 @@ function replaceNamePlaceHolders (file, placeHolderName, replacementName) {
 }
 
 function replaceContentPlaceHolders (file, placeHolderContent, replacementContent) {
+  console.log('placeholder CONTENT : ', placeHolderContent)
+  console.log('replacement CONTENT : ', typeof replacementContent === 'function' ? replacementContent() : replacementContent)
+  
   const placeHolderContentAllCaps = `{${toSnakeCase(placeHolderContent).toUpperCase()}}`
   return file.replace(new RegExp(placeHolderContentAllCaps, 'g'), replacementContent)
 }

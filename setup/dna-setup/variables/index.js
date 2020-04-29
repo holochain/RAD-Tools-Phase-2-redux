@@ -49,7 +49,7 @@ const LINK_NAME_DEFINITIONS = 'linkNameDefinitions'
 // ie: 
 // const {LINK_TYPE_NAME}_LINK_TYPE: &str = "{link_type_name}_link";
 // const {LINK_TAG_NAME}_LINK_TAG: &str = "{link_tag_name}";
-const ANCHOR_NAME_DEFINITIONS = 'anchorDefinition'
+const ANCHOR_NAME_DEFINITIONS = 'anchorNameDefinitions'
 // ie: 
 // const {ANCHOR_TYPE_NAME}_ANCHOR_TYPE: &str = "{anchor_type_name};
 // const {ANCHOR_TAG_NAME}_ANCHOR_TEXT: &str = "{anchor_tag_name};

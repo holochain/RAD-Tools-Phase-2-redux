@@ -28,7 +28,7 @@ const USER_ANCHOR_TYPE: &str = "user";
 const USER_ANCHOR_TEXT: &str = "user";
 
 
-{ANCHOR_NAME_DEFINITIONS}
+
 
 #[derive(Serialize, Deserialize, Debug, DefaultJson,Clone)]
 #[serde(rename_all = "camelCase")]
