@@ -1,10 +1,6 @@
 const capitalize = string => string.charAt(0).toUpperCase() + string.substring(1)
 const decapitalize = string => string.charAt(0).toLowerCase() + string.substring(1)
 
-function createObjectMap (object) {
-  return Object.keys(object).sort().map(key => ({ [key]: object[key] }))
-}
-
 function mapFnOverObject (object, fn, args = {}) {
   return Object.keys(object).sort().map(key => fn(key, object[key], args))
 }
@@ -21,9 +17,14 @@ function promiseMapFnOverObject (object, fn, args = {}) {
 }
 
 function toCamelCase (snakeCaseString) {
-  const cleanSnakeCaseString = snakeCaseString.trim().split('-').join('')
-  const allUpperCase = cleanSnakeCaseString.split('_').map(capitalize).join('')
-  const camelCase = decapitalize(allUpperCase)
+  const cleanSnakeCaseString = snakeCaseString.trim()
+  const hyphen = /(-)/g
+  if (hyphen.test(snakeCaseString)) {
+    capitalizedCleanedString = cleanSnakeCaseString.split('-').map(capitalize).join('')
+    cleanSnakeCaseString = capitalizedCleanedString
+  }
+  const allCapitalized = cleanSnakeCaseString.split('_').map(capitalize).join('')
+  const camelCase = decapitalize(allCapitalized)
   return camelCase
 }
 
@@ -34,20 +35,31 @@ function toSnakeCase (camelCaseString) {
     nonCamelCaseString = camelCaseString
     console.error(' Provided string is not in CamelCase.\n  Converting String to CamelCase now...')
     camelCaseString = toCamelCase(nonCamelCaseString)
+    console.log('toCamelCase(nonCamelCaseString): ', camelCaseString, hyphen.test(camelCaseString), toCamelCase(nonCamelCaseString))
   }
-  const cleanCamelCaseString = decapitalize(camelCaseString).trim()
+  const cleanCamelCaseString = decapitalize(camelCaseString) // .trim()
   const capLetter = /([A-Z]+)/g
   const snakeCase = cleanCamelCaseString.replace(capLetter, (match) => '_'.concat(match.toLowerCase()))
   return snakeCase
 }
 
-
 function replaceNamePlaceHolders (file, placeHolderName, replacementName) {
-  const placeHolderAllCaps = `{${placeHolderName.toUpperCase()}}`
-  const placeHoldercapitalized = `{${placeHolderName.charAt(0).toUpperCase() + placeHolderName.substring(1)}}`
-  const replacementAllCaps = replacementName.toUpperCase()
-  const replacementCapitalized = replacementName.charAt(0).toUpperCase() + replacementName.substring(1)
-  return file.replace(new RegExp(placeHolderName, 'g'), replacementName).replace(new RegExp(placeHolderAllCaps, 'g'), replacementAllCaps).replace(new RegExp(placeHolderCapitalized, 'g'), replacementCapitalized)
+  // placeholders
+  const placeHolderAllCaps = `{${toSnakeCase(placeHolderName).toUpperCase()}}`
+  const placeHolderLowerCase = `{${toSnakeCase(placeHolderName).toLowerCase()}}`
+  const placeHolderCamelCase = `{${toCamelCase(placeHolderName)}}`
+  const placeHolderCapitalized = `{${capitalize(placeHolderName)}}`
+  // relacements
+  const replacementAllCaps = toSnakeCase(replacementName).toUpperCase()
+  const replacementLowerCase = toSnakeCase(replacementName).toLowerCase()
+  const replacementCamelCase = toCamelCase(replacementName)
+  const replacementCapitalized = capitalize(replacementName)
+
+  return file.replace(new RegExp(placeHolderName, 'g'), replacementName)
+    .replace(new RegExp(placeHolderAllCaps, 'g'), replacementAllCaps)
+    .replace(new RegExp(placeHolderLowerCase, 'g'), replacementLowerCase)
+    .replace(new RegExp(placeHolderCamelCase, 'g'), replacementCamelCase)
+    .replace(new RegExp(placeHolderCapitalized, 'g'), replacementCapitalized)
 }
 
 function replaceContentPlaceHolders (file, placeHolderContent, replacementContent) {
@@ -57,7 +69,6 @@ function replaceContentPlaceHolders (file, placeHolderContent, replacementConten
 
 module.exports = {
   capitalize,
-  createObjectMap,
   mapFnOverObject,
   promiseMap,
   promiseMapFnOverObject,
@@ -66,15 +77,3 @@ module.exports = {
   replaceNamePlaceHolders,
   replaceContentPlaceHolders
 }
-
-/////
-  // const mapFnOverObject = (object, fn) => Object.keys(object).sort().map(key => fn(key, object[key]))
-  // const renderField = (key, value) => {
-  //     console.log(`${key}: ${value}`)
-  // }
-  // mapFnOverObject(object, renderField).join('\n')
-  // // vs:
-  // for (let [key, value] of Object.entries(object)) {
-  //     console.log(`${key}: ${value}`).concat('\n')
-  // }
- /////

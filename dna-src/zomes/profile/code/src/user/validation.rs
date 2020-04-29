@@ -1,2 +1,2 @@
-// NB: profile/user validation.rs: 
- // Entry Content: {"name":"string","avatar_url":"string"}
+// NB: user/[object Object] validation.rs: 
+ // Entry Content: undefined

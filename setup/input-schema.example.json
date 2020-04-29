@@ -52,7 +52,7 @@
         "created_at": "String"
       },
       "links": [{
-        "linked_entry_type": "CONSTANT: entry_name || anchor_id || AGENT_ID",
+        "linked_entry_type": "CONSTANT: entry_name || %agent_id || anchor (imported from crate >> ie: holochain_anchors::ANCHOR_TYPE)",
         "link_type_name": "Animal",
         "link_tag_name": "Bob Cat",
         "direction": "ENUM: TO/FROM/BIDIRECTIONAL"

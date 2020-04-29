@@ -1,2 +1,2 @@
-// NB: profile/user handlers.rs: 
- // Entry Content: {"name":"string","avatar_url":"string"}
+// NB: user/[object Object] handlers.rs: 
+ // Entry Content: undefined

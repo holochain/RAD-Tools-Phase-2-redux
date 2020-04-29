@@ -7,6 +7,7 @@
     "Notes": {
       "description": "Create and mange notes by users.",
       "sharing": "public",
+      // "ui_facing": "true", // if true, then trigger the ID anchor/link method
       "definition": {
         "title": "string",
         "text": "string",

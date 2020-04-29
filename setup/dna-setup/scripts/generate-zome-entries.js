@@ -1,7 +1,7 @@
 const fs = require('fs')
 const { promisify } = require('util')
 const exec = promisify(require('child_process').exec)
-const { promiseMapFnOverObject } = require('../../utils.js')
+const { promiseMapFnOverObject, toSnakeCase } = require('../../utils.js')
 const renderMod = require('./render-entry-module')
 const renderHandlers = require('./render-entry-handlers')
 const renderValidation = require('./render-entry-validation')
@@ -28,15 +28,15 @@ const renderers = [
   [renderTest, 'index']
 ]
 
-const renderEntry = async (zomeEntrytype, zomeEntry, zomeName) => {
-  const zomeEntryName = zomeEntrytype.toLowerCase()
+const renderEntry = async (zomeEntryType, zomeEntry, zomeName) => {
+  const zomeEntryName = toSnakeCase(zomeEntryType).toLowerCase()
   const ZOME_ENTRY_PATH = await createEntryDir(zomeName, zomeEntryName)
   const TEST_PATH = await createEntryTestDir(zomeEntryName)
   const resolvePath = fileName => `${fileName === 'index' ? TEST_PATH : ZOME_ENTRY_PATH}/${fileName}.rs`
 
-  renderers.forEach(async([renderFunction, filename]) => {
-    fs.writeFileSync(resolvePath(filename), renderFunction(zomeName, zomeEntryName, zomeEntry))
-    console.log(` >>> Created file: ${zomeName.toUpperCase()}/${zomeEntryName.toUpperCase()}/${filename.toUpperCase()}.rs \n`)
+  renderers.forEach(([renderFunction, filename]) => {
+    fs.writeFileSync(resolvePath(filename), renderFunction(zomeEntryName, zomeEntry))
+    console.log(` >>> Created file: ${zomeName.toUpperCase()}/${zomeEntryName.toUpperCase()}/${filename.toUpperCase()}.rs at : ${resolvePath(filename)} \n`)
   })
   return console.log(`------------------------------\n Created ${zomeEntryName.toUpperCase()} Entry : ${JSON.stringify(zomeEntry)}\n------------------------------\n\n`)
 }

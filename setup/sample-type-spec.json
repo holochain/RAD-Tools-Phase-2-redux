@@ -1,34 +1,15 @@
 {
   "zomes": {
-    "Notes": {
-      "types": { 
-        "Note": {
-          "title": "string",
-          "text": "string",
-          "author": "string"
-        },
-        "Lisa": {
-          "text": "string",
-          "author": "string",
-          "ranking": "string"
-        },
-        "Comment": {
-          "text": "string",
-          "author": "string",
-          "ranking": "string"
-        },
-        "jack": {
-          "text": "string",
-          "author": "string",
-          "ranking": "string"
-        }
-      }
-    },
     "Profile": {
       "types": {
         "User": {
-          "name": "string",
-          "avatar_url": "string"
+          "description": "Create and mange notes by users.",
+          "sharing": "public",
+          "definition": {
+            "name": "string",
+            "avatar_url": "string"
+          },
+          "functions": {}
         }
       }
     }

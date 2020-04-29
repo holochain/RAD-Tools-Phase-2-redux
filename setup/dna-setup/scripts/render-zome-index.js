@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const { isEmpty } = require('lodash/fp')
 const { replaceContentPlaceHolders, mapFnOverObject, capitalize } = require('../../utils.js')
 const { ENTRY_IMPORTS, ENTRY_DEFINITIONS, ENTRY_FUNCTION_DEFINITIONS } = require('../variables/index')
 const zomeIndexTemplatePath = path.resolve("setup/dna-setup/zome-template", "index.rs");
@@ -23,9 +24,9 @@ const cleanSlate = () => {
 function renderZomeIndex (zomeName, zomeEntryTypes, zomeDir) {
   cleanSlate()
   mapFnOverObject(zomeEntryTypes, renderIndexContent)
-  const completedZomeIndex = renderIndexFile(zomeIndexContents)
+  const completedZomeIndex = renderIndexFile(zomeIndexTemplate, zomeIndexContents)
   fs.writeFileSync(`${zomeDir}/lib.rs`, completedZomeIndex)
-  return console.log(`\n >>> Created ${zomeName}/index.rs`)
+  return console.log(`>>> Created ${zomeName}/index.rs \n\n`)
 }
 
 const renderIndexContent = (zomeEntryType, zomeEntry) => {
@@ -35,8 +36,8 @@ const renderIndexContent = (zomeEntryType, zomeEntry) => {
   return zomeIndexContents
 }
 
-const renderIndexFile = zomeIndexContents => {
-  let newFile = zomeIndexTemplate
+const renderIndexFile = (templateFile, zomeIndexContents) => {
+  let newFile = templateFile
   zomeIndexContents.forEach(([zomeEntryContent, placeHolderContent]) => {
     newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
   })
@@ -61,8 +62,8 @@ const renderZomeEntryDefs = zomeEntryType => {
 }
 
 const renderZomeEntryFns = (zomeEntryType, { functions }) => {
-  // placeholder for before type-schema format is updated :
-  if(!functions) {
+  // { functions } placeholder for before type-schema format is updated :
+  if(isEmpty(functions)) {
     functions = {
       "create": true,
       "get": true,
