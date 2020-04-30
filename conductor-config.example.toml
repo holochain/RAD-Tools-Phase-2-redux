@@ -7,15 +7,15 @@ public_address = "<AGENT_1_PUB_KEY>"
 [[dnas]]
 file = "dna_src/dist/dna_src.dna.json"
 hash = "<DNA_HASH>"
-id = "rad-tool-dna"
+id = "<DNA_NAME>-reference"
 
 [[instances]]
 agent = "agent-1"
-dna = "rad-tool-dna"
-id = "rad-tool-1"
+dna = "<DNA_NAME>-reference"
+id = "<DNA_NAME>-instance-1"
 
 [instances.storage]
-path = ".holochain/holo/storage/agent-1/rad-tool-dna"
+path = ".holochain/holo/storage/agent-1/<DNA_NAME>-reference"
 type = "file"
 
 [[interfaces]]
@@ -26,7 +26,7 @@ port = 3400
 type = "websocket"
 
 [[interfaces.instances]]
-id = "rad-tool-1"
+id = "<DNA_NAME>-instance-1"
 
 [[interfaces]]
 admin = true
@@ -37,7 +37,7 @@ port = 3300
 type = "http"
 
 [[interfaces.instances]]
-id = "rad-tool-1"
+id = "<DNA_NAME>-instance-1"
 
 [logger]
 type = "debug"

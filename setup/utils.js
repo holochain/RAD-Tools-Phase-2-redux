@@ -16,9 +16,73 @@ function promiseMapFnOverObject (object, fn, args = {}) {
   return promiseMap(Object.keys(object).sort(), key => fn(key, object[key], args))
 }
 
+function insertSpacesInString (string, spaceDelimiter) {
+  const capLetter = /([A-Z]+)/g
+  const hyphen = /(-)/g
+  const underscore = /(_)/g
+
+  let delimiter
+  switch (spaceDelimiter) {
+    case 'capLetter': {
+      delimiter = capLetter
+      break
+    }
+    case 'hyphen': {
+      delimiter = hyphen
+      break
+    }
+    case 'underscore': {
+      delimiter = underscore
+      break
+    }
+    default: return new Error(`Error: Did not receive known space delimiter, found instead :  ${spaceDelimiter}.`)
+  }
+
+  if (delimiter.test(string)) {
+   return string.replace(space, match => ' '.concat(match.toLowerCase()))
+  } else {
+    return console.error(`No ${delimiter}s to replace in provided string.`)
+  }
+}
+
+function replaceSpacesInString (string, replacement) {
+  const space = /( )/g
+  if (space.test(string)) {
+   return string.replace(space, match => replacement.concat(match.toLowerCase()))
+  } else {
+    return console.error('No spaces to replace in provided string.')
+  }
+}
+
+function testForSpaces (string) {
+  const space = /( )/g
+  if (space.test(string)) return true
+  else return false
+}
+
+function toKebabCase (snakeCaseString) {
+  const capLetter = /([A-Z]+)/g
+  if (testForSpaces) {
+    snakeCaseString = replaceSpacesInString
+  }
+  if (capLetter.test(snakeCaseString)) {
+    const nonSnakeCaseString = snakeCaseString
+    console.error(`\nProvided string is not in snake_case: ${nonSnakeCaseString}`)
+    snakeCaseString = toSnakeCase(nonSnakeCaseString)
+    console.log(`Converted String to snake_case : ${snakeCaseString}\n`)
+  }
+  let cleanSnakeCaseString = snakeCaseString.trim().toLowerCase()
+  const underscore = /(_)/g
+  const snakeCase = cleanSnakeCaseString.replace(underscore, match => '-'.concat(match.toLowerCase()))
+  return snakeCase
+}
+
 function toCamelCase (snakeCaseString) {
   let cleanSnakeCaseString = snakeCaseString.trim().toLowerCase()
   const hyphen = /(-)/g
+  if (testForSpaces) {
+    snakeCaseString = replaceSpacesInString
+  }
   if (hyphen.test(cleanSnakeCaseString)) {
     const capitalizedCleanedString = cleanSnakeCaseString.split('-').map(capitalize).join('')
     cleanSnakeCaseString = capitalizedCleanedString
@@ -30,16 +94,19 @@ function toCamelCase (snakeCaseString) {
 
 function toSnakeCase (camelCaseString) {
   const cleanCamelCaseString = decapitalize(camelCaseString).trim()
-  const lodash = /(_)/g
+  const underscore = /(_)/g
   const hyphen = /(-)/g
-  if (lodash.test(cleanCamelCaseString) || hyphen.test(cleanCamelCaseString)) {
+  if (testForSpaces) {
+    snakeCaseString = replaceSpacesInString
+  }
+  if (underscore.test(cleanCamelCaseString) || hyphen.test(cleanCamelCaseString)) {
     const nonCamelCaseString = cleanCamelCaseString
-    console.error(`\nProvided string is not in CamelCase: ${nonCamelCaseString}`)
+    console.error(`\nProvided string is not in camelCase: ${nonCamelCaseString}`)
     camelCaseString = toCamelCase(nonCamelCaseString)
-    console.log(`Converted String to CamelCase : ${camelCaseString}\n`)
+    console.log(`Converted String to camelCase : ${camelCaseString}\n`)
   }
   const capLetter = /([A-Z]+)/g
-  const snakeCase = cleanCamelCaseString.replace(capLetter, (match) => '_'.concat(match.toLowerCase()))
+  const snakeCase = cleanCamelCaseString.replace(capLetter, match => '_'.concat(match.toLowerCase()))
   return snakeCase
 }
 
@@ -77,6 +144,9 @@ module.exports = {
   mapFnOverObject,
   promiseMap,
   promiseMapFnOverObject,
+  insertSpacesInString,
+  replaceSpacesInString,
+  toKebabCase,
   toCamelCase,
   toSnakeCase,
   replaceNamePlaceHolders,

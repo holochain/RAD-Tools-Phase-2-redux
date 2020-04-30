@@ -3,15 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "npm run start:live",
-    "start:mock": "REACT_APP_MOCK_DNA_CONNECTION='true' react-scripts start",
-    "start:live": "REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts start",
-    "start:agent-1": "PORT=3100 REACT_APP_DNA_INTERFACE_URL=ws://localhost:3400 npm run start:live",
-    "start:agent-2": "PORT=3101 REACT_APP_DNA_INTERFACE_URL=ws://localhost:3401 npm run start:live",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "hc:start": "cd .. && holochain -c conductor-config.toml"
+    "start": "npm run hc:start && npm run ui:start && ",
+    "start:sim2h": "sim2h_server -p 9000",
+    "ui:start": "cd ui-src && npm run ui:start-live",
+    "ui:start-mock": "cd ui-src && REACT_APP_MOCK_DNA_CONNECTION='true' react-scripts start",
+    "ui:start-live": "cd ui-src && REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts start",
+    "ui:start-agent-1": "cd ui-src && PORT=3100 REACT_APP_DNA_INTERFACE_URL=ws://localhost:3400 npm run start:live",
+    "ui:start-agent-2": "cd ui-src && PORT=3101 REACT_APP_DNA_INTERFACE_URL=ws://localhost:3401 npm run start:live",
+    "ui:build": "cd ui-src && react-scripts build",
+    "ui:test": "cd ui-src && react-scripts test",
+    "ui:eject": "cd ui-src && react-scripts eject",
+    "ui:connect-to-conductor": "cd ui-src && node connect-to-conductor",
+    "hc:clean-storage": "rm -rf ./.holochain/holo/storage",
+    "hc:keygen": "node setup/agent-setup/create-new-agent",
+    "hc:config-add-agent": "node setup/agent-setup/add-agent-to-conductor",
+    "hc:package": "cd dna-src && hc package",
+    "hc:build": "npm run hc:package",
+    "hc:test": "cd dna-src && hc test",
+    "hc:start": "holochain -c conductor-config.toml"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
@@ -55,18 +64,6 @@
     ]
   },
   "license": "ISC",
-  "keywords": [
-    "Holochain",
-    "GraphQL",
-    "React",
-    "happ",
-    "RAD",
-    "Phase 2",
-    "Tool"
-  ],
-  "authors": [
-    "jetttech",
-    "robbiecarlton",
-    "zo-el"
-  ]
+  "keywords": [],
+  "authors": []
 }

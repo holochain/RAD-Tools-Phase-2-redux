@@ -2,6 +2,7 @@ const fs = require('fs')
 const util = require('util')
 const exec = util.promisify(require('child_process').exec);
 const toml = require('toml')
+const { toSnakeCase, toKebabCase } = require('../../utils.js')
 
 // nb: will need to update path to: ('../../conductor-config.toml')
 const conductorConfigPath = '../../conductor-config.example.toml'
@@ -10,9 +11,9 @@ const agentName = process.argv[2]
 
 const generateAgentConfig = (agentName, agentPubKey) => `
   [[agents]]
-  id = "${agentName}"
+  id = "${toKebabCase(agentName)}"
   keystore_file = "keystores/${agentName}/${agentPubKey}.keystore"
-  name = "${agentName}"
+  name = "${insertSpacesInString(toSnakeCase(agentName), 'underscore')}"
   public_address = "${agentPubKey}"
 `
 
