@@ -5,7 +5,7 @@
 const { Orchestrator, Config, combine, callSync, singleConductor, localOnly, tapeExecutor } = require('@holochain/tryorama')
 const path = require('path')
 const dnaPath = path.join(__dirname, "../dist/dna-src.dna.json")
-const dnaId = "{dnaName}Happ"
+const dnaId = "{dnaName}HappInstance"
 
 process.on('unhandledRejection', error => {
   // Will print "unhandledRejection err is not defined"
@@ -71,7 +71,7 @@ const logger = {
 }
 
 const dna = Config.dna(dnaPath, dnaId)
-const conductorConfig = Config.gen({{dnaName}Instance: dna}, {
+const conductorConfig = Config.gen({myInstanceName: dna}, {
   logger,
   network: {
     type: 'sim2h',

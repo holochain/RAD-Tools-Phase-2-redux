@@ -68,3 +68,6 @@ module.exports = (scenario, conductorConfig) => {
     })
   }
   
+  ${toSnakeCase(zomeEntryName).toLowerCase()}
+
+  ${capitalize(toCamelCase(zomeEntryName))}

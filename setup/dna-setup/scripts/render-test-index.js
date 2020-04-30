@@ -1,6 +1,5 @@
 const fs = require('fs')
 const path = require('path')
-const { isEmpty } = require('lodash/fp')
 const { replaceContentPlaceHolders,
   replaceNamePlaceHolders,
   mapFnOverObject,
