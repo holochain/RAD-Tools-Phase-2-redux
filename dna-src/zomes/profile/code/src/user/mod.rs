@@ -27,30 +27,39 @@ const USER_LINK_TYPE: &str = "user_link";
 const USER_ANCHOR_TYPE: &str = "user";
 const USER_ANCHOR_TEXT: &str = "user";
 
-
-
+undefined
+undefined
 
 #[derive(Serialize, Deserialize, Debug, DefaultJson,Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct UserEntry {
-      avatar_url: string,
-  name: string,
+    
+    avatar_url: string,
+  
+    name: string,
+  
 }
 
 #[derive(Serialize, Deserialize, Debug, DefaultJson,Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct User {
     id: Address,
-      avatar_url: string,
-  name: string,
+    
+    avatar_url: string,
+  
+    name: string,
+  
 }
 
 impl User {
     pub fn new(id: Address, user_entry: UserEntry) -> ZomeApiResult<User> {
         Ok(User{
             id: Address,
-              avatar_url: string,
-  name: string,
+            
+    avatar_url: string,
+  
+    name: string,
+  
         })
     }
 }
@@ -66,22 +75,7 @@ pub fn definition() -> ValidatingEntryType {
         validation: | validation_data: hdk::EntryValidationData<UserEntry}>| {
             match validation_data
             {
-                
-          hdk::EntryValidationData::Create{entry, validation_data} =>
-          {
-              validation::validate_entry_create(entry, validation_data)
-          }
-  
-          hdk::EntryValidationData::Remove{old_entry, old_entry_header, validation_data} =>
-          {
-              validation::validate_entry_remove(old_entry, old_entry_header, validation_data)
-          }
-  
-          hdk::EntryValidationData::Update{new_entry, old_entry, old_entry_header, validation_data} =>
-          {
-              validation::validate_entry_update(new_entry, old_entry, old_entry_header, validation_data)
-          }
-  
+                {ENTRY_VALIDATION_DEFINITIONS}
             }
         },
         links: [
@@ -105,7 +99,7 @@ pub fn definition() -> ValidatingEntryType {
                     }
                 }
             )
-            
+            {LINK_DEFINITION}
         ]
     )
 }

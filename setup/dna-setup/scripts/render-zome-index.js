@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const { isEmpty } = require('lodash/fp')
 const { replaceContentPlaceHolders, mapFnOverObject, capitalize } = require('../../utils.js')
-const { ENTRY_IMPORTS, ENTRY_DEFINITIONS, ENTRY_FUNCTION_DEFINITIONS } = require('../variables/index')
+const { ENTRY_IMPORTS, ENTRY_DEFINITIONS, ENTRY_FUNCTION_DEFINITIONS } = require('../variables.js')
 const zomeIndexTemplatePath = path.resolve("setup/dna-setup/zome-template", "index.rs");
 const zomeIndexTemplate = fs.readFileSync(zomeIndexTemplatePath, 'utf8')
 

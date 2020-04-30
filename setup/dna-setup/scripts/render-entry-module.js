@@ -5,6 +5,7 @@ const { replaceContentPlaceHolders,
   replaceNamePlaceHolders,
   mapFnOverObject,
   toSnakeCase,
+  toCamelCase,
   capitalize
 } = require('../../utils.js')
 const {
@@ -12,38 +13,131 @@ const {
   ENTRY_DEFINITION,
   ENTRY_DESCRIPTION,
   SHARING_TYPE,
-  CRUD_VALIDATION_DEFINITION,
-  LINK_DEFINITION,
+  ENTRY_VALIDATION_DEFINITIONS,
+  LINK_DEFINITIONS,
   LINK_NAME_DEFINITIONS,
   ANCHOR_NAME_DEFINITIONS
-} = require('../variables/index')
+} = require('../variables.js')
+
 const entryModTemplatePath = path.resolve("setup/dna-setup/zome-template/entry-template", "mod.rs");
 const entryModTemplate = fs.readFileSync(entryModTemplatePath, 'utf8')
 
-let entryDef, entryDescription, sharingType, crudValidationDefs
+let entryDef, entryDescription, sharingType, entryValidationDefs
 const entryContents = [
   [() => entryDef, ENTRY_DEFINITION],
   [() => entryDescription, ENTRY_DESCRIPTION],
   [() => sharingType, SHARING_TYPE],
-  [() => crudValidationDefs, CRUD_VALIDATION_DEFINITION]
+  [() => entryValidationDefs, ENTRY_VALIDATION_DEFINITIONS]
 ]
 
-let linkDef, linkNameDefs, anchorNameDefs
+let linkDefs, linkNameDefs, anchorNameDefs
 const bulkEntryContents = [
-  [() => linkDef, LINK_DEFINITION],
+  [() => linkDefs, LINK_DEFINITIONS],
   [() => linkNameDefs, LINK_NAME_DEFINITIONS],
   [() => anchorNameDefs, ANCHOR_NAME_DEFINITIONS]
 ]
 
+const cleanSlate = () => {
+  linkNameDefs = ['']
+  linkDefs = ['']
+  anchorNameDefs = ['']
+  entryDef = ''
+  entryDescription = ''
+  sharingType = ''
+  entryValidationDefs = ''
+  return entryContents
+}
+
 function renderMod (zomeEntryName, zomeEntry) {
-  renderModContent(zomeEntry, zomeEntryName)
+  cleanSlate()
+  renderModContent(zomeEntry)
   const completedModFile = renderModFile(entryModTemplate, zomeEntryName, entryContents, bulkEntryContents)
   return completedModFile
 }
 
-const renderEntryDef = (entryDefName, entryDefType) => `  ${entryDefName}: ${entryDefType},`
+const renderModContent = zomeEntry => {
+  const { sharing, description, links, anchors } = zomeEntry
+  let { definition, functions } = zomeEntry
+  
+  if(!isEmpty(links)) {
+    const entryLinks = Object.values(links)
+    const { linkDefinition, linkNameDefinition } = entryLinks.map(entryLink => mapFnOverObject(entryLink, renderLink).join('')[0])
+    
+    console.log(' >>> linkNameDefinition', linkNameDefinition)
+    console.log(' <<<<<< linkDefinition', linkDefinition)
+    linkDefs = linkDefinition
+    linkNameDefs = linkNameDefinition
+  } else {
+    // clear placeholders in template
+    linkNameDefs = ['']
+    linkDefs = ['']
+  }
 
-const renderCrudValDefs = (crudFn, shouldFnRender) => {
+  if(!isEmpty(anchors)) {
+    const entryAnchors = Object.values(anchors)
+    const anchorNameDefinition = entryAnchors.map(entryAnchor => mapFnOverObject(entryAnchor, renderAnchorNameDefinitions).join('')[0])
+    
+    console.log('anchorNameDefinition : ', anchorNameDefinition)
+    anchorNameDefs = anchorNameDefinition
+  } else {
+    // clear placeholder in template
+    anchorNameDefs = ['']
+  }
+  
+  // { functions } placeholder for before type-schema format is updated :
+  if(isEmpty(functions)) {
+    functions = {
+      "create": true,
+      "get": true,
+      "update": true,
+      "remove": true,
+      "list": true
+    }
+  }
+  // { definition } placeholder for before type-schema format is updated :
+  if(isEmpty(definition)) {
+    const entryDefinitionFields =  { ...zomeEntry, description, sharing }
+    definition = { entryDefinitionFields }
+  }
+
+  sharingType = capitalize(sharing.toLowerCase())
+  entryDescription = description
+  entryValidationDefs = mapFnOverObject(functions, renderCrudValidationDefinition).join('')
+  entryDef = mapFnOverObject(definition, renderEntryDefinition).join('')
+
+  return { entryContents, bulkEntryContents }
+}
+
+const renderModFile = (templateFile, zomeEntryName, entryContents, bulkEntryContents) => {  
+  let newFile = templateFile
+  newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
+
+  entryContents.forEach(([zomeEntryContent, placeHolderContent]) => {
+      newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
+  })
+
+  console.log('=========== MODULE ========== \n')
+  for (let [zomeEntryContentArrState, placeHolderContent] of bulkEntryContents) {
+    console.log('placeHolderContent : ', placeHolderContent)
+    const zomeEntryContentArray = zomeEntryContentArrState()
+    
+    console.log('zomeEntryContentArray : ', zomeEntryContentArray)
+    for (let zomeEntryContent of zomeEntryContentArray) {
+      const zomeEntryValue = zomeEntryContent[0]
+      newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryValue)     
+    }
+  }
+  return newFile
+}
+
+const renderEntryDefinition = (entryDefName, entryDefType) => {
+  // TODO: add spacing var to better manage indentation and track index/#-of-entries to manage commas
+  return `
+    ${entryDefName}: ${entryDefType},
+  `
+}
+
+const renderCrudValidationDefinition = (crudFn, shouldFnRender) => {
   if (!shouldFnRender) return
   else if (crudFn === "get" || crudFn === "list") return
     
@@ -64,20 +158,21 @@ const renderCrudValDefs = (crudFn, shouldFnRender) => {
     default: return new Error(`Error: Found invalid CRUD function for validation. CRUD fn received : ${crudFn}.`)
   }
   
+  // TODO: add spacing var to better manage indentation
   return `
-          hdk::EntryValidationData::${capitalize(crudFn)}{${validationParams}} =>
-          {
-              validation::validate_entry_${toSnakeCase(crudFn).toLowerCase()}(${validationParams})
-          }
+                hdk::EntryValidationData::${capitalize(toCamelCase(crudFn))}{${validationParams}} =>
+                {
+                    validation::validate_entry_${toSnakeCase(crudFn).toLowerCase()}(${validationParams})
+                }
   `
 }
 
-const renderEntryLink = (linkDetailName, linkDetailValue) => {
+const renderLink = (linkDetailName, linkDetailValue) => {
   let linkTypeName, linkTagName, linkDirection, linkedEntryType
   switch (linkDetailName) {
     case 'linked_entry_type': {
       linkedEntryType = linkDetailValue
-      // TODO: Type check the value for linked_entry_type to ensure that this is either an anchor, agentId, or entry
+      // TODO: Validation/Type check the value for linked_entry_type to ensure that this is either an anchor, agentId, or entry
       // ie: anchor (import crate): `holochain_anchors::ANCHOR_TYPE,`
       //     agentId (constant): "%agent_id"
       // or  entry(declared as module in Zome): eg: "notes_entry"
@@ -123,19 +218,14 @@ const renderEntryLink = (linkDetailName, linkDetailValue) => {
     }
   )
   `
-    console.log(' >>> linkNameDefinition', linkNameDefinition)
-    console.log(' <<<<<< linkDefinition', linkDefinition)
-
-  return [linkDefinition, linkNameDefinition]
+  // console.log(' >>> linkNameDefinition', linkNameDefinition)
+  // console.log(' <<<<<< linkDefinition', linkDefinition)
+  return { linkDefinition, linkNameDefinition }
 }
 
-const renderEntryAnchor = (anchorDetailName, anchorDetailValue) => {
-  let anchorId, anchorTypeName, anchorTagName
+const renderAnchorNameDefinitions = (anchorDetailName, anchorDetailValue) => {
+  let anchorTypeName, anchorTagName
   switch (anchorDetailName) {
-    case 'anchor_id': {
-      anchorId = anchorDetailValue
-      break
-    }
     case 'anchor_type_name': {
       anchorTypeName = anchorDetailValue
       break
@@ -156,94 +246,9 @@ const renderEntryAnchor = (anchorDetailName, anchorDetailValue) => {
   const ${toSnakeCase(anchorTypeName).toUpperCase()}_ANCHOR_TYPE: &str = "${toSnakeCase(anchorTypeName).toLowerCase}_anchor";
   const ${toSnakeCase(anchorTagName).toUpperCase()}_ANCHOR_TEXT: &str = "${toSnakeCase(anchorTagName).toLowerCase}";
   `
-  // anchorNameDefs = anchorNameDefinition
+
+  console.log(' <<<<<< anchorNameDefinition', anchorNameDefinition)
   return anchorNameDefinition
 }
 
-const renderModContent = (zomeEntry, zomeEntryName) => {
-  const { sharing, description, links, anchors } = zomeEntry
-  let { definition, functions } = zomeEntry
-  
-  if(!isEmpty(links)) {
-    const entryLinks = Object.values(links)
-    const [linkDefinition, linkNameDefinition] = entryLinks.map(entryLink => mapFnOverObject(entryLink, renderEntryLink).join(''))
-    
-    console.log(' >>> linkNameDefinition', linkNameDefinition)
-    console.log(' <<<<<< linkDefinition', linkDefinition)
-
-    linkDef = linkDefinition
-    linkNameDefs = linkNameDefinition
-  } else {
-    // clear placeholders in template
-    linkNameDefs = [['']]
-    linkDef = [['']]
-  }
-
-  if(!isEmpty(anchors)) {
-    const entryAnchors = Object.values(anchors)
-    const anchorNameDefinition = entryAnchors.map(entryAnchor => mapFnOverObject(entryAnchor, renderEntryAnchor).join(''))
-    console.log('anchorNameDefinition : ', anchorNameDefinition)
-    anchorNameDefs = anchorNameDefinition
-  } else {
-    // clear placeholder in template
-    anchorNameDefs = [['']]
-  }
-  
-  // { functions } placeholder for before type-schema format is updated :
-  if(isEmpty(functions)) {
-    functions = {
-      "create": true,
-      "get": true,
-      "update": true,
-      "remove": true,
-      "list": true
-    }
-  }
-  // { definition } placeholder for before type-schema format is updated :
-  if(isEmpty(definition)) {
-    const entryDefinitionFields =  { ...zomeEntry, description, sharing }
-    console.log('entryDefinitionFields : ', entryDefinitionFields)
-    definition = { entryDefinitionFields }
-  }
-
-  entryName = zomeEntryName
-  sharingType = capitalize(sharing.toLowerCase())
-  entryDescription = description
-  crudValidationDefs = mapFnOverObject(functions, renderCrudValDefs).join('')
-  entryDef = mapFnOverObject(definition, renderEntryDef).join('\n')
-
-  return entryContents
-}
-
-
-const renderModFile = (templateFile, zomeEntryName, entryContents, bulkEntryContents) => {  
-  let newFile = templateFile
-  newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
-
-  entryContents.forEach(([zomeEntryContent, placeHolderContent]) => {
-      newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
-  })
-
-  bulkEntryContents.forEach(([zomeEntryContentArrayFn, placeHolderContent]) => {
-    console.log('===================== \n')
-    console.log('zomeEntryContentArrayFn : ', zomeEntryContentArrayFn())    
-
-    const zomeEntryContentArray = zomeEntryContentArrayFn()
-    console.log('zomeEntryContentArray : ', zomeEntryContentArray)    
-
-    zomeEntryContentArray.forEach(zomeEntryContent => {
-      const zomeEntryValue = zomeEntryContent[0]
-      newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryValue)
-      // refresh placeholders in template
-      linkNameDefs = [['']]
-      linkDef = [['']]
-      anchorNameDefs = [['']]
-      // console.log('anchorNameDefs : ', anchorNameDefs);
-      
-    })
-  })
-  return newFile
-}
-
 module.exports = renderMod
-  

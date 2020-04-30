@@ -58,7 +58,7 @@
         "direction": "ENUM: TO/FROM/BIDIRECTIONAL"
         }],
       "anchors" : [{
-        "anchor_id": "<ENTRY_NAME>/<ANCHOR_TYPE>/<ANCHOR_TAG>",
+        // "anchor_id": "<ENTRY_NAME>/<ANCHOR_TYPE>/<ANCHOR_TAG>",
         "anchor_type_name": "notes",
         "anchor_tag_name": "animals"
       }],
@@ -86,3 +86,31 @@
     }
   }]
 }
+
+
+// {
+//   "Author": {
+//     "description": "Create and mange Authors of notes.",
+//     "sharing": "public",
+//     "definition": {
+//       "name": "string",
+//       "nickname": "string",
+//       "avatar": "string"
+//     },
+//     "links": [{}],
+//     "anchors" : [{}],
+//     "functions": {}
+//   }
+// }, {
+//   "Comments": {
+//     "description": "Create and mange comments on notes by users.",
+//     "sharing": "public",
+//     "definition": {
+//       "text": "string",
+//       "author": "string"
+//     },
+//     "links": [{}],
+//     "anchors" : [{}],
+//     "functions": {}
+//   }
+// }

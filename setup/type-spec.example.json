@@ -12,7 +12,7 @@
         "title": "string",
         "text": "string",
         "author": "string",
-        "created_at": "string"
+        "created_at": "string" // ANYTHING REGARDING TIME SHOULD BE DEMARCATED AS A 'SPECIAL FIELD', and create the timestamp fn...
       },
       "links": [{}],
       "anchors" : [{}],

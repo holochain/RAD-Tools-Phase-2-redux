@@ -7,10 +7,10 @@
 //   require('./<ENTRY_NAME>')(orchestrator.registerScenario, conductorConfig)
 // // 
 
-function renderEntryTest (zomeName, zomeEntryName, zomeEntry) {
-    console.log(` >>> rendering file ${zomeName}/${zomeEntryName} index.rs `)
+function renderEntryTest (zomeEntryName, zomeEntry) {
+    console.log(` >>> rendering file ${zomeEntryName} index.rs `)
 
-    return `// NB: ${zomeName}/${zomeEntryName} index.rs: \n // Entry Test Content: ${JSON.stringify(zomeEntry)}`
+    return `// NB: ${zomeEntryName} index.rs: \n // Entry Test Content: ${JSON.stringify(zomeEntry)}`
 }
 
 module.exports = renderEntryTest

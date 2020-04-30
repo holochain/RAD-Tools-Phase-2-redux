@@ -63,7 +63,7 @@ pub fn definition() -> ValidatingEntryType {
         validation: | validation_data: hdk::EntryValidationData<{EntryName}Entry}>| {
             match validation_data
             {
-                {CRUD_VALIDATION_DEFINITION}
+                {ENTRY_VALIDATION_DEFINITIONS}
             }
         },
         links: [

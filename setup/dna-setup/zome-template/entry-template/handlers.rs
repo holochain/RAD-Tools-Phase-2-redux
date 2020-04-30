@@ -10,16 +10,20 @@ use hdk::{
     prelude::*,
 };
 use holochain_anchors::anchor;
-use crate::{EntryName}::{
+use crate::{entry_name}::{
     {EntryName}Entry,
     {EntryName},
     {ENTRY_NAME}_ENTRY_NAME,
-    {LINK_TYPE_NAME}_LINK_TYPE_NAME
+    {ENTRY_NAME}_LINK_TYPE,
+    {LINK_NAME_CONSTANTS}
+    {ENTRY_NAME}_ANCHOR_TYPE,
+    {ENTRY_NAME}_ANCHOR_TEXT,
+    {ANCHOR_NAME_CONSTANTS}
 };
 
+fn {entry_name}_anchor() -> ZomeApiResult<Address> {
+    anchor({ENTRY_NAME}_ANCHOR_TYPE.to_string(), {ENTRY_NAME}_ANCHOR_TEXT.to_string())
+}
+{ANCHOR_DEFINITIONS}
 
-let {CREATE_ENTRY};
-let {GET_ENTRY};
-let {UPDATE_ENTRY};
-let {REMOVE_ENTRY};
-let {LIST_ENTRIES};
+{CRUD_DEFINITION}
