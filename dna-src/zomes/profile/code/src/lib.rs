@@ -1,19 +1,20 @@
-// see https://developer.holochain.org/api/0.0.42-alpha5/hdk/ for info on using the hdk library
+#![feature(proc_macro_hygiene)]
 
-// #![feature(proc_macro_hygiene)]
-use hdk::{
-    entry_definition::ValidatingEntryType, error::ZomeApiResult,
-    holochain_persistence_api::cas::content::Address,
-};
+use hdk::prelude::*;
 use hdk_proc_macros::zome;
-use serde_derive::{Deserialize, Serialize};
 
-use crate::user::User;
-use crate::user::UserEntry;
-pub mod user;
+// see https://developer.holochain.org/api/0.0.47-alpha1/hdk/ for info on using the hdk library
+
+// This is a sample zome that defines an entry type "MyEntry" that can be committed to the
+// agent's chain via the exposed function create_my_entry
+
+#[derive(Serialize, Deserialize, Debug, DefaultJson, Clone)]
+pub struct MyEntry {
+    content: String,
+}
 
 #[zome]
-mod notes {
+mod my_zome {
 
     #[init]
     fn init() {
@@ -26,37 +27,29 @@ mod notes {
     }
 
     #[entry_def]
-    fn anchor_def() -> ValidatingEntryType {
-        holochain_anchors::anchor_definition()
-    }
-
-    #[entry_def]
-    fn user_def() -> ValidatingEntryType {
-        user::definition()
-    }
-
-    #[zome_fn("hc_public")]
-    fn create_user(user_input: UserEntry) -> ZomeApiResult<User> {
-        user::handlers::create_user(user_input)
-    }
-
-    #[zome_fn("hc_public")]
-    fn get_user(id: Address) -> ZomeApiResult<User> {
-        user::handlers::get_user(user_input)
+    fn my_entry_def() -> ValidatingEntryType {
+        entry!(
+            name: "my_entry",
+            description: "this is a same entry defintion",
+            sharing: Sharing::Public,
+            validation_package: || {
+                hdk::ValidationPackageDefinition::Entry
+            },
+            validation: | _validation_data: hdk::EntryValidationData<MyEntry>| {
+                Ok(())
+            }
+        )
     }
 
     #[zome_fn("hc_public")]
-    fn list_user() -> ZomeApiResult<User> {
-        user::handlers::list_user(user_input)
+    fn create_my_entry(entry: MyEntry) -> ZomeApiResult<Address> {
+        let entry = Entry::App("my_entry".into(), entry.into());
+        let address = hdk::commit_entry(&entry)?;
+        Ok(address)
     }
 
     #[zome_fn("hc_public")]
-    fn remove_user(id: Address) -> ZomeApiResult<User> {
-        user::handlers::remove_user(user_input)
-    }
-
-    #[zome_fn("hc_public")]
-    fn update_user(id: Address, user_input: UserEntry) -> ZomeApiResult<User> {
-        user::handlers::update_user(user_input)
+    fn get_my_entry(address: Address) -> ZomeApiResult<Option<Entry>> {
+        hdk::get_entry(&address)
     }
 }

@@ -13,30 +13,31 @@ const { ENTRY_NAME, CRUD_TESTING, VALIDATION_TESTING, DNA_NAME, INSTANCE_NAME } 
 const entryTestingIndexTemplatePath = path.resolve("setup/dna-setup/test-template/entry-test-template", "index.js");
 const entryTestingIndexTemplate = fs.readFileSync(entryTestingIndexTemplatePath, 'utf8')
 
-let dnaId, instanceId, entryName
+let dnaName, instanceId, entryName
 const entryTestPlaceholders = [
-  [() => dnaId, DNA_NAME],
+  [() => dnaName, DNA_NAME],
   [() => instanceId, INSTANCE_NAME],
   [() => entryName, ENTRY_NAME]
 ]
 
 let crudTesting, validationTesting
-const entryTestPlaceholders = [
+const entryTestContent = [
   [() => crudTesting, CRUD_TESTING],
   [() => validationTesting, VALIDATION_TESTING]
 ]
 
-function renderTestEntry (zomeEntryName, zomeEntry, dnaName) {
+function renderEntryTest (zomeEntryName, zomeEntry, dna = 'DNA') {
   console.log(` >>> rendering file ${zomeEntryName} Entry Test - index.js `)
 
-  dnaId = `${dnaName}HappInstance`
+  dnaName = dna
+  instanceId = `${dna}HappInstance`
 
-  const { crudTesting, validationTesting } = renderTestEntryContent(zomeEntry, zomeEntryName)
+  const { crudTesting, validationTesting } = renderEntryTestContent(zomeEntry, zomeEntryName)
   const completedTestEntryFile = renderTestEntryFile(entryTestingIndexTemplate, zomeEntryName, crudTesting, validationTesting)
   return completedTestEntryFile
 }
 
-const renderEntryTest = (zomeEntry, zomeEntryName) => {
+const renderEntryTestContent = (zomeEntry, zomeEntryName) => {
   let { functions } = zomeEntry
   // { functions } placeholder for before type-schema format is updated :
   if(isEmpty(functions)) {
@@ -48,40 +49,67 @@ const renderEntryTest = (zomeEntry, zomeEntryName) => {
       "list": true
     }
   }
-  crudTesting = mapFnOverObject(functions, renderCrudDefinition, [zomeEntryName, zomeEntry]).join('')
+  crudTesting = mapFnOverObject(functions, renderCrudTesting, { zomeEntryName, zomeEntry }).join('')
   console.log(' >>> crudTesting', crudTesting)
+  
+  validationTesting = [] //mapFnOverObject(functions, renderCrudTesting, { zomeEntryName, zomeEntry }).join('')
+  console.log(' >>> validationTesting', validationTesting)
   return { crudTesting, validationTesting }
 }
 
-const renderTestEntryFile = (templateFile, zomeEntryName, crudTesting, validationTesting) => {  
-  console.log('========== TestEntry =========== \n')
+const renderTestEntryFile = templateFile => {  
+  console.log(`========== Entry TEST =========== \n`)
   let newFile = templateFile
-  newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
-  newFile = replaceContentPlaceHolders(newFile, CRUD_TestEntry_DEFINITIONS, crudTestEntryDefs)
+
+  entryTestPlaceholders.forEach(([zomeEntryContent, placeHolderContent]) => {
+    newFile = replaceNamePlaceHolders(newFile, placeHolderContent, zomeEntryContent)
+  })
+
+  entryTestContent.forEach(([zomeEntryContent, placeHolderContent]) => {
+    newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
+  })
+
   return newFile
 }
 
-const renderEntryDefinition = (entryDefName, entryDefType, callVolume) => {
+const renderEntryDefinition = (entryDefName, entryDefType, { zomeEntryName, id }) => {
+  console.log('')
 
+  const testValue = typeof entryDefType === 'string'
+    ? `${capitalize(zomeEntryName.toLowerCase())} test content for the ${entryDefName.toLowerCase()} feild in entry definition. No ${id}`
+    : typeof entryDefType === 'number'
+      ? id
+      : typeof entryDefType === 'function'
+        ? `() => ${capitalize(zomeEntryName.toLowerCase())} test content for the ${entryDefName.toLowerCase()} feild in entry definition. No ${id}`
+        : console.error(`Received unexpected value type for ${capitalize(zomeEntryName.toLowerCase())} entry, field ${entryDefName.toLowerCase()}`)
 
+  return `[${entryDefName}, ${testValue}]`
 }
 
-const renderCrudDefinition = (crudFn, shouldFnRender, [zomeEntryName, zomeEntry]) => {
-  if (!shouldFnRender) return
-  else if (crudFn === "get") return
-
-  const { definition } = zomeEntry
-  genEntryArgs = (callVolume, definition) => {
+const genEntryArgs = (callVolume, definition, zomeEntryName) => {
   if(isEmpty(definition)) {
     const entryDefinitionFields =  { ...zomeEntry, description, sharing }
     definition = { entryDefinitionFields }
   }
-    const entryArgs = mapFnOverObject(definition, renderEntryDefinition).join('')
-    console.log('entryArgs : ', entryArgs)
-    return entryArgs
-  }
 
-  const callStringBase = `'${dnaId}', '${instanceId}'`
+  let entryArgs
+  for (let i = 0; i < callVolume; i++) {
+    const entryArgsMap = mapFnOverObject(definition, renderEntryDefinition, { zomeEntryName, i }).join('')
+    console.log('entryArgArray, {zomeEntryName, i}: ', entryArgArray, JSON.stringify({ zomeEntryName, i }))
+    entryArgs = Object.fromEntries(entryArgsMap);
+  }
+  
+  console.log('entryArgs: ', entryArgs)
+  return entryArgs
+}
+
+
+const renderCrudTesting = (crudFn, shouldFnRender, { zomeEntryName, zomeEntry }) => {
+  if (!shouldFnRender) return
+  else if (crudFn === "get") return
+
+  const { definition } = zomeEntry
+  const callStringBase = `'${dnaName}', '${instanceId}'`
 
   let crudTestEntryDef = ''
   switch (crudFn) {
