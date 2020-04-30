@@ -20,7 +20,7 @@ const addAgentToConfig = (agentConfigTemplate, conductorConfigPath) => fs.append
 
 async function locateAgentPubKey() {
   try {
-    const { stderr, stdout } = await exec(`find ./keystores/${agentName} -name *.keystore  | xargs -I {} dirname {}`)
+    const { stderr, stdout } = await exec(`find ./keystores/${agentName} -name *.keystore | xargs -I {} basename {}`)
     if (stderr) console.log('stderr:', stderr)
     else {
       const agentPubKey = stdout.trim()	
