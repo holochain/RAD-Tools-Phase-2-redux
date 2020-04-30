@@ -93,7 +93,7 @@ const renderFnDef = (crudFn, shouldFnRender, zomeEntryType) => {
       break
     }
     case 'remove': {
-      args =  `{id: Address}`
+      args =  `(id: Address)`
       break    
     }
     case 'list': {

@@ -93,7 +93,7 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
           hdk::debug(format!("validate_entry_delete_old_entry: {:?}", old_entry)).ok();
           hdk::debug(format!("validate_entry_delete_old_entry_header: {:?}", old_entry_header)).ok();
           hdk::debug(format!("validate_entry_delete_validation_data: {:?}", validation_data)).ok();
-          crudFn
+
           if let (Some(o), Some(p)) = (old_entry_header.provenances().get(0), validation_data.package.chain_header.provenances().get(0)) {
               if o.source() == p.source() {
                 Ok(())

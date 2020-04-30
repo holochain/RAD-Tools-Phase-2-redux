@@ -3,8 +3,29 @@ const exec = promisify(require('child_process').exec)
 const { promiseMapFnOverObject, toSnakeCase } = require('../../utils.js')
 const generateZomeEntries = require('./generate-zome-entries')
 const renderZomeIndex = require('./render-zome-index')
-
+const renderTestIndex = require('./render-test-index')
 const { isEmpty } = require('lodash/fp')
+
+
+async function findDnaName (zomeDir) {
+  const { stderr, stdout } = await exec(`cd ${zomeDir}/../../../.. && dirname $(pwd) | xargs -I {} basename {} directory`)
+  if(stderr) console.error('stderr:', stderr)      
+  else return stdout.trim()
+}
+
+async function findTestDirPath (zomeDir) {
+  const { stderr, stdout } = await exec(`cd ${zomeDir} && cd ../../../../test && echo $(pwd -P)`)
+  if(stderr) console.error('stderr:', stderr)      
+  else return testDirectoryPath = stdout.trim()
+}
+
+async function formatZome (zomeDir) {
+  const { stderr, stdout } = await exec(`cd ${zomeDir} && cd ../../../../ && nix-shell; cd ${zomeDir} && cargo fmt && cd ../../../..`)
+  if(stderr) console.error('stderr:', stderr)      
+  else {
+    return console.log('Successfully formated code. +1')
+  }
+}
 
 async function createZomeDir (currentZomeName, entryTypes) {
   const zomeName = toSnakeCase(currentZomeName).toLowerCase()
@@ -20,6 +41,15 @@ async function createZomeDir (currentZomeName, entryTypes) {
     const zomeEntryTypes = entryTypeWrapper[0]
     const zomeEntries = await generateZomeEntries(zomeName, zomeEntryTypes)
     await renderZomeIndex(zomeName, zomeEntryTypes, zomeDir)
+    
+    const dnaName = await findDnaName(zomeDir)
+    const testDir = await findTestDirPath(zomeDir)
+
+    console.log('dnaName: ', dnaName)
+    console.log('TEST DIRECTORY PATH !!!!!!!: ', testDirectoryPath)
+
+    await renderTestIndex(dnaName, zomeEntryTypes, testDir)
+    await formatZome(zomeDir)
     console.log(`>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n Finished creating ${zomeName.toUpperCase()} ZOME \n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< \n\n\n`)
     return zomeEntries
   }

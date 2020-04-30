@@ -69,10 +69,16 @@ const ANCHOR_NAME_CONSTANTS = 'anchorNameConstants'
 // validation.rs file
 // reference {ENTRY_NAME}
 const CRUD_VALIDATION_DEFINITIONS = 'crudValidationDefinitions'
-// ================================================================
-// TESTING: index.rs file
-// reference {ENTRY_NAME}
 
+// ================================================================
+// TESTING: root index.rs file
+// reference {ENTRY_NAME}
+const DNA_NAME = 'dnaName'
+const ENTRY_TEST_IMPORTS = 'entryTestImports'
+
+// ================================================================
+// ENTRY TESTING: entry test index.rs file
+// reference {ENTRY_NAME}
 
 module.exports = {
   // entry content:
@@ -95,11 +101,15 @@ module.exports = {
   ANCHOR_NAME_CONSTANTS,
   CRUD_DEFINITION,
   // validation.rs
-  CRUD_VALIDATION_DEFINITIONS
+  CRUD_VALIDATION_DEFINITIONS,
 
+  // Testing:
+  // root index.js
+  DNA_NAME,
+  ENTRY_TEST_IMPORTS
   // entry testing:
   // index.rs
-
+//
 }
 
 

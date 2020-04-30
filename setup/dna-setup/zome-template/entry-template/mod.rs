@@ -60,7 +60,7 @@ pub fn definition() -> ValidatingEntryType {
         validation_package: || {
             hdk::ValidationPackageDefinition::Entry
         },
-        validation: | validation_data: hdk::EntryValidationData<{EntryName}Entry}>| {
+        validation: | validation_data: hdk::EntryValidationData<{EntryName}Entry>| {
             match validation_data
             {
                 {ENTRY_VALIDATION_DEFINITIONS}

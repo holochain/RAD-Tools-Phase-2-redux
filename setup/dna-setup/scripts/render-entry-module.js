@@ -49,7 +49,7 @@ const cleanSlate = () => {
 }
 
 function renderMod (zomeEntryName, zomeEntry) {
-  cleanSlate()
+  // cleanSlate()
   renderModContent(zomeEntry)
   const completedModFile = renderModFile(entryModTemplate, zomeEntryName, entryContents, bulkEntryContents)
   return completedModFile
@@ -123,7 +123,7 @@ const renderModFile = (templateFile, zomeEntryName, entryContents, bulkEntryCont
     
     console.log('zomeEntryContentArray : ', zomeEntryContentArray)
     for (let zomeEntryContent of zomeEntryContentArray) {
-      const zomeEntryValue = zomeEntryContent[0]
+      const zomeEntryValue = zomeEntryContent
       newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryValue)     
     }
   }
