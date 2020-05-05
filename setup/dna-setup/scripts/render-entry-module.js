@@ -45,6 +45,7 @@ const cleanSlate = () => {
   linkDefs = ['']
   anchorNameDefs = ['']
   entryDef = ''
+  entryDefImpl = ''
   entryDescription = ''
   sharingType = ''
   entryValidationDefs = ''
@@ -53,12 +54,12 @@ const cleanSlate = () => {
 
 function renderMod (zomeEntryName, zomeEntry) {
   // cleanSlate()
-  renderModContent(zomeEntry)
+  renderModContent(zomeEntryName, zomeEntry)
   const completedModFile = renderModFile(entryModTemplate, zomeEntryName, entryContents, bulkEntryContents)
   return completedModFile
 }
 
-const renderModContent = zomeEntry => {
+const renderModContent = (zomeEntryName, zomeEntry) => {
   const { sharing, description, links, anchors } = zomeEntry
   let { definition, functions } = zomeEntry
   
@@ -104,7 +105,7 @@ const renderModContent = zomeEntry => {
   entryDescription = description
   entryValidationDefs = mapFnOverObject(functions, renderCrudValidationDefinition).join('')
   entryDef = mapFnOverObject(definition, renderEntryDefinition).join('')
-
+  entryDefImpl = mapFnOverObject(definition, renderEntryDefinitionImplementation, zomeEntryName).join('')
   return { entryContents, bulkEntryContents }
 }
 
@@ -129,6 +130,12 @@ const renderModFile = (templateFile, zomeEntryName, entryContents, bulkEntryCont
 const renderEntryDefinition = (entryDefName, entryDefType) => {
   return `
     ${entryDefName}: ${entryDefType},
+  `
+}
+
+const renderEntryDefinitionImplementation = (entryDefName, entryDefType, zomeEntryName) => {
+  return `
+    ${entryDefName}: ${zomeEntryName}_entry.${entryDefName},
   `
 }
 

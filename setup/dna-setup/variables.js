@@ -25,7 +25,7 @@ const ENTRY_DEFINITION = 'entryDefinition'
 //       }
 //   }
 // }
-const ENTRY_DEFINITION_IMPLEMENTATION = 'entry_definition_implementation'
+const ENTRY_DEFINITION_IMPLEMENTATION = 'entryDefinitionImplementation'
 const ENTRY_DESCRIPTION = 'entryDescription'
 const SHARING_TYPE = 'sharingType'
 const ENTRY_VALIDATION_DEFINITIONS = 'entryValidationDefinitions'

@@ -39,7 +39,13 @@ pub struct User {
 
 impl User {
     pub fn new(id: Address, user_entry: UserEntry) -> ZomeApiResult<User> {
-        Ok(User { id: id.clone() })
+        Ok(User {
+            id: id.clone(),
+
+            avatar_url: user_entry.avatar_url,
+
+            name: user_entry.name,
+        })
     }
 }
 
