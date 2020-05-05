@@ -21,16 +21,16 @@ const orchestrator = new Orchestrator({
     // Specify that all "players" in the test are on the local machine, rather than
     // on remote machines.
     localOnly,
-    
-    callSync,
 
     // OPTIONAL:
     // Squash all instances from all conductors down into a single conductor,
     // for in-memory testing purposes.
     // Remove this middleware for other "real" network types which can actually
-    // send messages across conductors.
-    //
+    // send messages across conductors:
     // singleConductor,
+    //
+    // Force synchronous calls:
+    // callSync,
   ),
 })
 

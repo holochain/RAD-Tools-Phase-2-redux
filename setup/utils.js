@@ -62,8 +62,8 @@ function testForSpaces (string) {
 
 function toKebabCase (snakeCaseString) {
   const capLetter = /([A-Z]+)/g
-  if (testForSpaces) {
-    snakeCaseString = replaceSpacesInString
+  if (testForSpaces(snakeCaseString)) {
+    snakeCaseString = replaceSpacesInString(snakeCaseString, '_')
   }
   if (capLetter.test(snakeCaseString)) {
     const nonSnakeCaseString = snakeCaseString
@@ -80,8 +80,8 @@ function toKebabCase (snakeCaseString) {
 function toCamelCase (snakeCaseString) {
   let cleanSnakeCaseString = snakeCaseString.trim().toLowerCase()
   const hyphen = /(-)/g
-  if (testForSpaces) {
-    snakeCaseString = replaceSpacesInString
+  if (testForSpaces(snakeCaseString)) {
+    snakeCaseString = replaceSpacesInString(snakeCaseString, '-')
   }
   if (hyphen.test(cleanSnakeCaseString)) {
     const capitalizedCleanedString = cleanSnakeCaseString.split('-').map(capitalize).join('')
@@ -96,8 +96,8 @@ function toSnakeCase (camelCaseString) {
   const cleanCamelCaseString = decapitalize(camelCaseString).trim()
   const underscore = /(_)/g
   const hyphen = /(-)/g
-  if (testForSpaces) {
-    snakeCaseString = replaceSpacesInString
+  if (testForSpaces(camelCaseString)) {
+    snakeCaseString = replaceSpacesInString(camelCaseString, '_')
   }
   if (underscore.test(cleanCamelCaseString) || hyphen.test(cleanCamelCaseString)) {
     const nonCamelCaseString = cleanCamelCaseString
@@ -113,7 +113,6 @@ function toSnakeCase (camelCaseString) {
 function replaceNamePlaceHolders (file, placeHolderName, replacementName) {
   console.log('placeholder NAME : ', placeHolderName);
   console.log('replacement NAME : ', replacementName);
-  
   // placeholders
   const placeHolderAllCaps = `{${toSnakeCase(placeHolderName).toUpperCase()}}`
   const placeHolderLowerCase = `{${toSnakeCase(placeHolderName).toLowerCase()}}`
