@@ -111,8 +111,8 @@ function toSnakeCase (camelCaseString) {
 }
 
 function replaceNamePlaceHolders (file, placeHolderName, replacementName) {
-  console.log('placeholder NAME : ', placeHolderName);
-  console.log('replacement NAME : ', replacementName);
+  // console.log('placeholder NAME : ', placeHolderName);
+  // console.log('replacement NAME : ', replacementName);
   // placeholders
   const placeHolderAllCaps = `{${toSnakeCase(placeHolderName).toUpperCase()}}`
   const placeHolderLowerCase = `{${toSnakeCase(placeHolderName).toLowerCase()}}`

@@ -35,7 +35,6 @@ const renderEntryTestContent = (zomeEntry, zomeEntryName) => {
 }
 
 const renderTestEntryFile = (templateFile, zomeEntryName, crudTesting) => {  
-  console.log(`------- Entry TEST------- \n`)
   let newFile = templateFile
   newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
   newFile = replaceContentPlaceHolders(newFile, CRUD_TESTING, crudTesting)

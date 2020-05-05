@@ -46,8 +46,8 @@ pub struct {EntryName} {
 impl {EntryName} {
     pub fn new(id: Address, {entry_name}_entry: {EntryName}Entry) -> ZomeApiResult<{EntryName}> {
         Ok({EntryName}{
-            id: Address,
-            {ENTRY_DEFINITION}
+            id: id.clone(),
+            {ENTRY_DEFINITION_IMPLEMENTATION}
         })
     }
 }

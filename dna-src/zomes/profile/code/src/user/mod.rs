@@ -39,13 +39,7 @@ pub struct User {
 
 impl User {
     pub fn new(id: Address, user_entry: UserEntry) -> ZomeApiResult<User> {
-        Ok(User {
-            id: Address,
-
-            avatar_url: string,
-
-            name: string,
-        })
+        Ok(User { id: id.clone() })
     }
 }
 
@@ -60,7 +54,22 @@ pub fn definition() -> ValidatingEntryType {
         validation: | validation_data: hdk::EntryValidationData<UserEntry>| {
             match validation_data
             {
-                {ENTRY_VALIDATION_DEFINITIONS}
+
+    hdk::EntryValidationData::Create{entry, validation_data} =>
+    {
+        validation::validate_entry_create(entry, validation_data)
+    }
+
+    hdk::EntryValidationData::Remove{old_entry, old_entry_header, validation_data} =>
+    {
+        validation::validate_entry_remove(old_entry, old_entry_header, validation_data)
+    }
+
+    hdk::EntryValidationData::Update{new_entry, old_entry, old_entry_header, validation_data} =>
+    {
+        validation::validate_entry_update(new_entry, old_entry, old_entry_header, validation_data)
+    }
+
             }
         },
         links: [
@@ -84,7 +93,7 @@ pub fn definition() -> ValidatingEntryType {
                     }
                 }
             )
-            {LINK_DEFINITION}
+
         ]
     )
 }

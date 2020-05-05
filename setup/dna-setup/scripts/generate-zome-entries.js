@@ -36,7 +36,7 @@ const renderEntry = async (zomeEntryType, zomeEntry, zomeName) => {
 
   renderers.forEach(([renderFunction, filename]) => {
     fs.writeFileSync(resolvePath(filename), renderFunction(zomeEntryName, zomeEntry))
-    console.log(`\n===================== Created file: ${zomeName.toUpperCase()}/${zomeEntryName.toUpperCase()}/${filename.toUpperCase()} =====================\n`)
+    console.log(`\n>>> Created file: ${zomeName.toUpperCase()}/${zomeEntryName.toUpperCase()}/${filename.toUpperCase()} <<<\n`)
   })
   return console.log(`====================================\n Finished creating ${zomeEntryName.toUpperCase()} ENTRY\n===================================\n`)
 }

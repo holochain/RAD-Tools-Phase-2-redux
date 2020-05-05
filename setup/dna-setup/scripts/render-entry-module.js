@@ -11,10 +11,11 @@ const { replaceContentPlaceHolders,
 const {
   ENTRY_NAME,
   ENTRY_DEFINITION,
+  ENTRY_DEFINITION_IMPLEMENTATION,
   ENTRY_DESCRIPTION,
   SHARING_TYPE,
   ENTRY_VALIDATION_DEFINITIONS,
-  LINK_DEFINITIONS,
+  LINK_DEFINITION,
   LINK_NAME_DEFINITIONS,
   ANCHOR_NAME_DEFINITIONS
 } = require('../variables.js')
@@ -22,9 +23,10 @@ const {
 const entryModTemplatePath = path.resolve("setup/dna-setup/zome-template/entry-template", "mod.rs");
 const entryModTemplate = fs.readFileSync(entryModTemplatePath, 'utf8')
 
-let entryDef, entryDescription, sharingType, entryValidationDefs
+let entryDef, entryDefImpl = '', entryDescription, sharingType, entryValidationDefs
 const entryContents = [
   [() => entryDef, ENTRY_DEFINITION],
+  [() => entryDefImpl, ENTRY_DEFINITION_IMPLEMENTATION],
   [() => entryDescription, ENTRY_DESCRIPTION],
   [() => sharingType, SHARING_TYPE],
   [() => entryValidationDefs, ENTRY_VALIDATION_DEFINITIONS]
@@ -32,7 +34,7 @@ const entryContents = [
 
 let linkDefs, linkNameDefs, anchorNameDefs
 const bulkEntryContents = [
-  [() => linkDefs, LINK_DEFINITIONS],
+  [() => linkDefs, LINK_DEFINITION],
   [() => linkNameDefs, LINK_NAME_DEFINITIONS],
   [() => anchorNameDefs, ANCHOR_NAME_DEFINITIONS]
 ]
@@ -63,9 +65,6 @@ const renderModContent = zomeEntry => {
   if(!isEmpty(links)) {
     const entryLinks = Object.values(links)
     const { linkDefinition, linkNameDefinition } = entryLinks.map(entryLink => mapFnOverObject(entryLink, renderLink).join('')[0])
-    
-    console.log(' >>> linkNameDefinition', linkNameDefinition)
-    console.log(' <<<<<< linkDefinition', linkDefinition)
     linkDefs = linkDefinition
     linkNameDefs = linkNameDefinition
   } else {
@@ -117,12 +116,8 @@ const renderModFile = (templateFile, zomeEntryName, entryContents, bulkEntryCont
       newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
   })
 
-  console.log('------- MODULE ------- \n')
   for (let [zomeEntryContentArrState, placeHolderContent] of bulkEntryContents) {
-    console.log('placeHolderContent : ', placeHolderContent)
     const zomeEntryContentArray = zomeEntryContentArrState()
-    
-    console.log('zomeEntryContentArray : ', zomeEntryContentArray)
     for (let zomeEntryContent of zomeEntryContentArray) {
       const zomeEntryValue = zomeEntryContent
       newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryValue)     
@@ -132,7 +127,6 @@ const renderModFile = (templateFile, zomeEntryName, entryContents, bulkEntryCont
 }
 
 const renderEntryDefinition = (entryDefName, entryDefType) => {
-  // TODO: add spacing var to better manage indentation and track index/#-of-entries to manage commas
   return `
     ${entryDefName}: ${entryDefType},
   `
@@ -158,13 +152,12 @@ const renderCrudValidationDefinition = (crudFn, shouldFnRender) => {
     }
     default: return new Error(`Error: Found invalid CRUD function for validation. CRUD fn received : ${crudFn}.`)
   }
-  
-  // TODO: add spacing var to better manage indentation
+
   return `
-                hdk::EntryValidationData::${capitalize(toCamelCase(crudFn))}{${validationParams}} =>
-                {
-                    validation::validate_entry_${toSnakeCase(crudFn).toLowerCase()}(${validationParams})
-                }
+    hdk::EntryValidationData::${capitalize(toCamelCase(crudFn))}{${validationParams}} =>
+    {
+        validation::validate_entry_${toSnakeCase(crudFn).toLowerCase()}(${validationParams})
+    }
   `
 }
 
@@ -219,8 +212,6 @@ const renderLink = (linkDetailName, linkDetailValue) => {
     }
   )
   `
-  // console.log(' >>> linkNameDefinition', linkNameDefinition)
-  // console.log(' <<<<<< linkDefinition', linkDefinition)
   return { linkDefinition, linkNameDefinition }
 }
 
@@ -247,8 +238,6 @@ const renderAnchorNameDefinitions = (anchorDetailName, anchorDetailValue) => {
   const ${toSnakeCase(anchorTypeName).toUpperCase()}_ANCHOR_TYPE: &str = "${toSnakeCase(anchorTypeName).toLowerCase}_anchor";
   const ${toSnakeCase(anchorTagName).toUpperCase()}_ANCHOR_TEXT: &str = "${toSnakeCase(anchorTagName).toLowerCase}";
   `
-
-  console.log(' <<<<<< anchorNameDefinition', anchorNameDefinition)
   return anchorNameDefinition
 }
 

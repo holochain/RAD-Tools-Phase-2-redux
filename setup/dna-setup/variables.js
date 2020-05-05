@@ -13,7 +13,19 @@ const ENTRY_FUNCTION_DEFINITIONS = 'entryFunctionDefinitions'
 const ENTRY_DEFINITION = 'entryDefinition'
 // TODO: ANYTHING REGARDING TIME SHOULD BE DEMARCATED AS A 'SPECIAL FIELD', and create the timestamp fn...
 //  eg: "created_at": "string"
-
+//  >> fn timestamp(address: Address) -> ZomeApiResult<Iso8601> {
+//   let options = GetEntryOptions{status_request: StatusRequestKind::Initial, entry: false, headers: true, timeout: Timeout::new(10000)};
+//   let entry_result = hdk::get_entry_result(&address, options)?;
+//   match entry_result.result {
+//       GetEntryResultType::Single(entry) => {
+//           Ok(entry.headers[0].timestamp().clone())
+//       },
+//       _ => {
+//           unreachable!()
+//       }
+//   }
+// }
+const ENTRY_DEFINITION_IMPLEMENTATION = 'entry_definition_implementation'
 const ENTRY_DESCRIPTION = 'entryDescription'
 const SHARING_TYPE = 'sharingType'
 const ENTRY_VALIDATION_DEFINITIONS = 'entryValidationDefinitions'
@@ -91,6 +103,7 @@ module.exports = {
   ENTRY_FUNCTION_DEFINITIONS,
   // mod.rs
   ENTRY_DEFINITION,
+  ENTRY_DEFINITION_IMPLEMENTATION,
   ENTRY_DESCRIPTION,
   SHARING_TYPE,
   ENTRY_VALIDATION_DEFINITIONS,
