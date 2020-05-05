@@ -16,8 +16,8 @@ const ENTRY_DEFINITION = 'entryDefinition'
 
 const ENTRY_DESCRIPTION = 'entryDescription'
 const SHARING_TYPE = 'sharingType'
-const ENTRY_VALIDATION_DEFINITIONS = 'crudValidationDefinition'
-const LINK_DEFINITIONS = 'linkDefinitions'
+const ENTRY_VALIDATION_DEFINITIONS = 'entryValidationDefinitions'
+const LINK_DEFINITION = 'linkDefinition'
 // eg: 
 // AGENT ID EXAMPLE:            ,
 // to!(
@@ -94,7 +94,7 @@ module.exports = {
   ENTRY_DESCRIPTION,
   SHARING_TYPE,
   ENTRY_VALIDATION_DEFINITIONS,
-  LINK_DEFINITIONS,
+  LINK_DEFINITION,
   LINK_NAME_DEFINITIONS,
   ANCHOR_NAME_DEFINITIONS,
   // handlers.rs
