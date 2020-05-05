@@ -71,6 +71,7 @@ const logger = {
 }
 
 const dna = Config.dna(dnaPath, dnaId)
+// To test with networking and logs
 const conductorConfig = Config.gen({myInstanceName: dna}, {
   logger,
   network: {
@@ -78,6 +79,8 @@ const conductorConfig = Config.gen({myInstanceName: dna}, {
     sim2h_url: 'ws://localhost:9000'
   }
 })
+// To test without networking and logs
+// const conductorConfig = Config.gen({myInstanceName: dna})
 
 require('./{entry_name}')(orchestrator.registerScenario, conductorConfig)
 {ENTRY_TEST_IMPORTS}
