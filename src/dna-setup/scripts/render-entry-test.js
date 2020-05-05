@@ -9,7 +9,7 @@ const { replaceContentPlaceHolders,
 } = require('../../utils.js')
 const { ENTRY_NAME, CRUD_TESTING } = require('../variables.js')
 
-const entryTestingIndexTemplatePath = path.resolve("setup/dna-setup/test-template/entry-test-template", "index.js");
+const entryTestingIndexTemplatePath = path.resolve("src/dna-setup/test-template/entry-test-template", "index.js");
 const entryTestingIndexTemplate = fs.readFileSync(entryTestingIndexTemplatePath, 'utf8')
 
 function renderEntryTest (zomeEntryName, zomeEntry) {

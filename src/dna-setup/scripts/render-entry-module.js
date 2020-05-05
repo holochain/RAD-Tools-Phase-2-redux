@@ -20,7 +20,7 @@ const {
   ANCHOR_NAME_DEFINITIONS
 } = require('../variables.js')
 
-const entryModTemplatePath = path.resolve("setup/dna-setup/zome-template/entry-template", "mod.rs");
+const entryModTemplatePath = path.resolve("src/dna-setup/zome-template/entry-template", "mod.rs");
 const entryModTemplate = fs.readFileSync(entryModTemplatePath, 'utf8')
 
 let entryDef, entryDefImpl = '', entryDescription, sharingType, entryValidationDefs

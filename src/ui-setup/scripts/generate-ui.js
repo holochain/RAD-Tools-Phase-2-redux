@@ -8,7 +8,7 @@ const renderTypePage = require('./renderTypePage')
 const renderIndex = require('./renderIndex')
 const mapObject = require('./render-utils').mapObject
 
-const SOURCE_PATH = './setup/ui-setup/ui_template'
+const SOURCE_PATH = './src/ui-setup/ui-template'
 const DESTINATION_PATH = './ui-src'
 
 const SCHEMA_PATH = `${DESTINATION_PATH}/src/schema.js`

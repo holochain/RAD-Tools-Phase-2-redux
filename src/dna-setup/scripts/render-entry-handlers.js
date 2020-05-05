@@ -16,7 +16,7 @@ const {
   CRUD_DEFINITION
 } = require('../variables.js')
 
-const entryHandlersTemplatePath = path.resolve("setup/dna-setup/zome-template/entry-template", "handlers.rs");
+const entryHandlersTemplatePath = path.resolve("src/dna-setup/zome-template/entry-template", "handlers.rs");
 const entryHandlersTemplate = fs.readFileSync(entryHandlersTemplatePath, 'utf8')
 
 let linkNameConsts, anchorNameConsts, anchorDefs

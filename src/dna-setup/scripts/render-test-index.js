@@ -7,7 +7,7 @@ const { replaceContentPlaceHolders,
 } = require('../../utils.js')
 const { ENTRY_TEST_IMPORTS, DNA_NAME } = require('../variables.js')
 
-const testIndexTemplatePath = path.resolve("setup/dna-setup/test-template", "index.js");
+const testIndexTemplatePath = path.resolve("src/dna-setup/test-template", "index.js");
 const testIndexTemplate = fs.readFileSync(testIndexTemplatePath, 'utf8')
 let testImports = ''
 

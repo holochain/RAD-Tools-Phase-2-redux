@@ -10,7 +10,7 @@ const { replaceContentPlaceHolders,
 } = require('../../utils.js')
 const { ENTRY_NAME, CRUD_VALIDATION_DEFINITIONS } = require('../variables.js')
 
-const entryValidationTemplatePath = path.resolve("setup/dna-setup/zome-template/entry-template", "validation.rs");
+const entryValidationTemplatePath = path.resolve("src/dna-setup/zome-template/entry-template", "validation.rs");
 const entryValidationTemplate = fs.readFileSync(entryValidationTemplatePath, 'utf8')
 
 function renderValidation (zomeEntryName, zomeEntry) {
