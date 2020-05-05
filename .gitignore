@@ -34,5 +34,3 @@ target/
 
 conductor-config.toml
 keystores
-dna-src/
-ui-src/
