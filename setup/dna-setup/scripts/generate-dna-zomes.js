@@ -20,10 +20,10 @@ async function findTestDirPath (zomeDir) {
 }
 
 async function formatZome (zomeDir) {
-  const { stderr, stdout } = await exec(`cd ${zomeDir} && cd ../../../../ && nix-shell; cd ${zomeDir} && cargo fmt && cd ../../../..`)
+  const { stderr } = await exec(`cd ${zomeDir} && cd ../../../../ && nix-shell; cd ${zomeDir} && cargo fmt && cd ../../../..`)
   if(stderr) console.error('stderr:', stderr)      
   else {
-    return console.log('Successfully formated code. +1')
+    return console.log('Successfully formated code. +1 \n--------------------------------------  \n')
   }
 }
 
@@ -41,14 +41,11 @@ async function createZomeDir (currentZomeName, entryTypes) {
     const zomeEntryTypes = entryTypeWrapper[0]
     const zomeEntries = await generateZomeEntries(zomeName, zomeEntryTypes)
     await renderZomeIndex(zomeName, zomeEntryTypes, zomeDir)
-    
+  
     const dnaName = await findDnaName(zomeDir)
     const testDir = await findTestDirPath(zomeDir)
-
-    console.log('dnaName: ', dnaName)
-    console.log('TEST DIRECTORY PATH !!!!!!!: ', testDirectoryPath)
-
     await renderTestIndex(dnaName, zomeEntryTypes, testDir)
+    console.log('-------------------------------------- \nFormatting Zome Codebase... ')
     await formatZome(zomeDir)
     console.log(`>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n Finished creating ${zomeName.toUpperCase()} ZOME \n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< \n\n\n`)
     return zomeEntries
@@ -57,12 +54,10 @@ async function createZomeDir (currentZomeName, entryTypes) {
 
 const generateDnaZomes = typeSpec => {
   let { zomes } = typeSpec
-
-  // { zomes } placeholder for before type-schema format is updated :
+  // zomes placeholder for before type-schema format is updated:
   if(isEmpty(zomes)) {
     const { types } = typeSpec
     const zomeEntries = Object.keys(types)    
-    // todo: verify && and validate snake case && lowercase
     const zomeName = zomeEntries.length > 1 ? 'my_zome' : toSnakeCase(zomeEntries[0].concat('s')).toLowerCase()
     zomes = { [zomeName]: { types } }
   }

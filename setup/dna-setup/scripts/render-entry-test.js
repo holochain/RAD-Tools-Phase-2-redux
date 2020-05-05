@@ -5,20 +5,12 @@ const { replaceContentPlaceHolders,
   replaceNamePlaceHolders,
   mapFnOverObject,
   toSnakeCase,
-  toCamelCase,
   capitalize
 } = require('../../utils.js')
-const { ENTRY_NAME, CRUD_TESTING, VALIDATION_TESTING, DNA_NAME, INSTANCE_NAME } = require('../variables.js')
+const { ENTRY_NAME, CRUD_TESTING, VALIDATION_TESTING } = require('../variables.js')
 
 const entryTestingIndexTemplatePath = path.resolve("setup/dna-setup/test-template/entry-test-template", "index.js");
 const entryTestingIndexTemplate = fs.readFileSync(entryTestingIndexTemplatePath, 'utf8')
-
-let dnaName, instanceId, entryName
-const entryTestPlaceholders = [
-  // [() => dnaName, DNA_NAME],
-  // [() => instanceId, INSTANCE_NAME],
-  [() => entryName, ENTRY_NAME]
-]
 
 let crudTesting, validationTesting
 const entryTestContent = [
@@ -26,15 +18,9 @@ const entryTestContent = [
   [() => validationTesting, VALIDATION_TESTING]
 ]
 
-function renderEntryTest (zomeEntryName, zomeEntry, dna = 'DNA') {
-  console.log(` >>> rendering file ${zomeEntryName} Entry Test - index.js `)
-
-  dnaName = dna
-  instanceId = `${dna}HappInstance`
-  entryName = zomeEntryName
-
-  const { crudTesting, validationTesting } = renderEntryTestContent(zomeEntry, zomeEntryName)
-  const completedTestEntryFile = renderTestEntryFile(entryTestingIndexTemplate, zomeEntryName, crudTesting, validationTesting)
+function renderEntryTest (zomeEntryName, zomeEntry) {
+  renderEntryTestContent(zomeEntry, zomeEntryName)
+  const completedTestEntryFile = renderTestEntryFile(entryTestingIndexTemplate, zomeEntryName)
   return completedTestEntryFile
 }
 
@@ -51,24 +37,17 @@ const renderEntryTestContent = (zomeEntry, zomeEntryName) => {
     }
   }
   crudTesting = mapFnOverObject(functions, renderCrudTesting, { zomeEntryName, zomeEntry }).join('')
-  console.log(' >>> crudTesting', crudTesting)
   
   validationTesting = [] //mapFnOverObject(functions, rendervalidationTesting, { zomeEntryName, zomeEntry }).join('')
   console.log(' >>> validationTesting', validationTesting)
   return { crudTesting, validationTesting }
 }
 
-const renderTestEntryFile = templateFile => {  
-  console.log(`========== Entry TEST =========== \n`)
+const renderTestEntryFile = (templateFile, zomeEntryName) => {  
+  console.log(`------- Entry TEST------- \n`)
   let newFile = templateFile
-
-  entryTestPlaceholders.forEach(([zomeEntryNameFn, placeHolderName]) => {
-    newFile = replaceNamePlaceHolders(newFile, placeHolderName, zomeEntryNameFn())
-  })
-
+  newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
   entryTestContent.forEach(([zomeEntryContentFn, placeHolderContent]) => {
-    console.log('placeHolderContent :', placeHolderContent);
-    console.log('zomeEntryContentFn :', zomeEntryContentFn);
     newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContentFn())
   })
   return newFile
@@ -97,7 +76,6 @@ const generateTestEntryArgs = (callVolume, definition, zomeEntryName) => {
     const entryArgsMap = new Map(mapFnOverObject(definition, renderEntryDefinition, { zomeEntryName, id }))
     entryArgs = Object.fromEntries(entryArgsMap);
   }
-  // console.log('\nentryArgs: ', entryArgs)
   return entryArgs
 }
 
@@ -106,7 +84,7 @@ const renderCrudTesting = (crudFn, shouldFnRender, { zomeEntryName, zomeEntry })
   else if (crudFn === "get") return
 
   const { definition } = zomeEntry
-  const callStringBase = `'${dnaName}', '${instanceId}'`
+  const callStringBase = 'DNA, DnaHappInstance'
 
   let crudTestEntryDef = ''
   switch (crudFn) {

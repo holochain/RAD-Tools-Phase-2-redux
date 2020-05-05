@@ -34,10 +34,8 @@ const cleanSlate = () => {
 }
 
 function renderHandlers (zomeEntryName, zomeEntry) {
-  console.log(` >>> rendering file ${zomeEntryName} handlers.rs `)
-  cleanSlate()
+  // cleanSlate()
   const handlersContent = renderHandlersContent(zomeEntryName, zomeEntry)
-  // console.log('HANDLERS_CONTENT: ', handlersContent)
   const { crudDef } = handlersContent  
   const completedHandlersFile = renderHandlersFile(entryHandlersTemplate, zomeEntryName, crudDef, entryContents)
   return completedHandlersFile
@@ -49,10 +47,7 @@ const renderHandlersContent = (zomeEntryName, zomeEntry) => {
   
   if(!isEmpty(links)) {
     const entryLinks = Object.values(links)
-    const linkNameConstants = entryLinks.map(entryLink => mapFnOverObject(entryLink, renderLinkNameConstants).join('')[0])
-    
-    console.log(' >>> linkNameConstants', linkNameConstants)
-    linkNameConsts = linkNameConstants
+    linkNameConsts = entryLinks.map(entryLink => mapFnOverObject(entryLink, renderLinkNameConstants).join('')[0])
   } else {
     // clear placeholders in template
     linkNameConsts = ['']
@@ -60,11 +55,8 @@ const renderHandlersContent = (zomeEntryName, zomeEntry) => {
 
   if(!isEmpty(anchors)) {
     const entryAnchors = Object.values(anchors)
-    const { anchorNameConstants, anchorDefinition} = entryAnchors.map(entryAnchor => mapFnOverObject(entryAnchor, renderEntryAnchor, zomeEntryName).join('')[0])
-
-    console.log('anchorNameConstants : ', anchorNameConstants)
+    const { anchorNameConstants, anchorDefinitions} = entryAnchors.map(entryAnchor => mapFnOverObject(entryAnchor, renderEntryAnchor, zomeEntryName).join('')[0])
     anchorNameConsts = anchorNameConstants
-    console.log('anchorDefinition : ', anchorDefinition)
     anchorDefs = anchorDefinitions
   } else {
     // clear placeholder in template
@@ -83,8 +75,8 @@ const renderHandlersContent = (zomeEntryName, zomeEntry) => {
     }
   }
   crudDef = mapFnOverObject(functions, renderCrudDefinition, zomeEntryName).join('')
-  console.log(' >>> anchorNameConsts', anchorNameConsts)
-  console.log(' >>> anchorDefs', anchorDefs)
+  // console.log(' >>> anchorNameConsts', anchorNameConsts)
+  // console.log(' >>> anchorDefs', anchorDefs)
   return { entryContents, crudDef }
 }
 
@@ -93,16 +85,13 @@ const renderHandlersFile = (templateFile, zomeEntryName, crudDefs, entryContents
   newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
   newFile = replaceContentPlaceHolders(newFile, CRUD_DEFINITION, crudDefs)
 
-  console.log('========== HANDLERS =========== \n')
   for (let [zomeEntryContentArrState, placeHolderContent] of entryContents) {
-    console.log('placeHolderContent : ', placeHolderContent)
     const zomeEntryContentArr = zomeEntryContentArrState()
-    console.log('zomeEntryContentArr : ', zomeEntryContentArr)
     for (let zomeEntryContent of zomeEntryContentArr) {
-      console.log('zomeEntryContent : ', zomeEntryContent)
       newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
     }
   }
+
   return newFile
 }
 
@@ -175,10 +164,8 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
       crudDef = crudDef + list
       break
     }
-
     default: return new Error(`Error: Found invalid CRUD function for validation. CRUD fn received : ${crudFn}.`)
   }
-
   return crudDef
 }
 
@@ -205,7 +192,6 @@ const renderLinkNameConstants = (linkDetailName, linkDetailValue) => {
   const ${toSnakeCase(linkTypeName).toUpperCase()}_LINK_TYPE,
   const ${toSnakeCase(linkTagName).toUpperCase()}_LINK_TAG,
   `
-  // console.log(' >>> linkNameConstants', linkNameConstants)
   return linkNameConstants
 }
 
@@ -228,12 +214,9 @@ const renderAnchorNameConstants = (anchorDetailName, anchorDetailValue) => {
     
     default: return new Error(`Error: Received unexpected entry link Detail : ${anchorDetailName}.`)
   }
-
   const anchorTypeName = `${toSnakeCase(anchorType).toUpperCase()}_ANCHOR_TYPE`
   const anchorTagName = `${toSnakeCase(anchorTag).toUpperCase()}_ANCHOR_TEXT`
   const anchorNameConstants = anchorTagName + ',\n' + anchorTypeName + ','
-
-  console.log(' <<<<<< Anchor **Name** Definitions', anchorNameConstants)
   return {
     anchorNameConstants,
     anchorTypeName,
@@ -247,7 +230,6 @@ const renderAnchorDefinition = (zomeEntryName, anchorTypeName, anchorTagName) =>
       anchor(${anchorTypeName}.to_string(), ${anchorTagName}.to_string())
   }
   `
-  console.log(' <<<<<< Anchor Definitions', anchorDefinition)
   return anchorDefinition
 }
 

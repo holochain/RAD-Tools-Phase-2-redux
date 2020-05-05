@@ -116,7 +116,7 @@ const renderModFile = (templateFile, zomeEntryName, entryContents, bulkEntryCont
       newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
   })
 
-  console.log('=========== MODULE ========== \n')
+  console.log('------- MODULE ------- \n')
   for (let [zomeEntryContentArrState, placeHolderContent] of bulkEntryContents) {
     console.log('placeHolderContent : ', placeHolderContent)
     const zomeEntryContentArray = zomeEntryContentArrState()

@@ -26,7 +26,7 @@ function renderZomeIndex (zomeName, zomeEntryTypes, zomeDir) {
   mapFnOverObject(zomeEntryTypes, renderIndexContent)
   const completedZomeIndex = renderIndexFile(zomeIndexTemplate, zomeIndexContents)
   fs.writeFileSync(`${zomeDir}/lib.rs`, completedZomeIndex)
-  return console.log(`>>> Created ${zomeName}/index.rs \n\n`)
+  return console.log(`\n========== Created ${zomeName}/lib.rs  ===========\n\n`)
 }
 
 const renderIndexContent = (zomeEntryType, zomeEntry) => {

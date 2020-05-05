@@ -133,8 +133,8 @@ function replaceNamePlaceHolders (file, placeHolderName, replacementName) {
 }
 
 function replaceContentPlaceHolders (file, placeHolderContent, replacementContent) {
-  console.log('placeholder CONTENT in utils : ', placeHolderContent)
-  console.log('replacement CONTENT in utils: ', typeof replacementContent === 'function' ? replacementContent() : replacementContent)
+  // console.log('placeholder CONTENT in utils : ', placeHolderContent)
+  // console.log('replacement CONTENT in utils: ', typeof replacementContent === 'function' ? replacementContent() : replacementContent)
   const placeHolderContentAllCaps = `{${toSnakeCase(placeHolderContent).toUpperCase()}}`
   return file.replace(new RegExp(placeHolderContentAllCaps, 'g'), replacementContent)
 }

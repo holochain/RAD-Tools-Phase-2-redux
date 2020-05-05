@@ -14,9 +14,7 @@ const entryValidationTemplatePath = path.resolve("setup/dna-setup/zome-template/
 const entryValidationTemplate = fs.readFileSync(entryValidationTemplatePath, 'utf8')
 
 function renderValidation (zomeEntryName, zomeEntry) {
-  console.log(` >>> rendering file ${zomeEntryName} validation.rs `)
   const crudValidationDefs = renderValidationContent(zomeEntry, zomeEntryName)
-  console.log('crudValidationDefs: ', crudValidationDefs) 
   const completedValidationFile = renderValidationFile(entryValidationTemplate, zomeEntryName, crudValidationDefs)
   return completedValidationFile
 }
@@ -34,7 +32,6 @@ const renderValidationContent = (zomeEntry, zomeEntryName) => {
     }
   }
   crudValidationDefs = mapFnOverObject(functions, renderCrudDefinition, zomeEntryName).join('')
-  console.log(' >>> crudValidationDefs', crudValidationDefs)
   return crudValidationDefs
 }
 

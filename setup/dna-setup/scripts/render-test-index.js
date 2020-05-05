@@ -3,54 +3,33 @@ const path = require('path')
 const { replaceContentPlaceHolders,
   replaceNamePlaceHolders,
   mapFnOverObject,
-  toCamelCase,
-  capitalize
+  toSnakeCase
 } = require('../../utils.js')
-const { ENTRY_NAME, ENTRY_TEST_IMPORTS, DNA_NAME } = require('../variables.js')
+const { ENTRY_TEST_IMPORTS, DNA_NAME } = require('../variables.js')
 
 const testIndexTemplatePath = path.resolve("setup/dna-setup/test-template", "index.js");
 const testIndexTemplate = fs.readFileSync(testIndexTemplatePath, 'utf8')
+let testImports = ''
 
-let entryTestImports, entryName, dnaName
-const testEntryPlaceholders = [
-  [() => entryName, ENTRY_NAME],
-  [() => dnaName, DNA_NAME]
-]
+function renderTestIndex (dnaName, zomeEntryNames, testDir) {
+  const entryTestImports = mapFnOverObject(zomeEntryNames, renderTestEntryContent, testImports)
+  const completedTestIndex = renderTestEntryFile(testIndexTemplate, dnaName, entryTestImports)
 
-cleanSlate = () => {
-  entryTestImports = ''
-  entryName = ''
+  fs.writeFileSync(`${testDir}/index.js`, completedTestIndex)
+  return console.log(`\n========== Created Testing root index.js ===========\n\n`)
 }
-
-// nb: testDir replaced zomeDir && dnaName replaced zomeName
-function renderTestIndex (dna, zomeEntryNames, testDir) {
-    console.log(` >>> rendering file testing root index.rs `)
-    cleanSlate()
-    dnaName = dna
-    mapFnOverObject(zomeEntryNames, renderTestEntryContent, entryTestImports)
-    const completedTestIndex = renderTestEntryFile(testIndexTemplate)
-
-    fs.writeFileSync(`${testDir}/index.js`, completedTestIndex)
-    return console.log(`>>> Created Testing root index.rs \n\n`)
-  }
   
-  const renderTestEntryContent = (zomeEntryName, _, entryTestImports) => {
-    const entryImport = `
-    require('./${capitalize(toCamelCase(zomeEntryName))}')(orchestrator.registerScenario, conductorConfig)
-    `
-    entryTestImports = entryTestImports.concat(entryImport) 
-    entryName = zomeEntryName
-    return { entryTestImports, entryName }
-  }
+const renderTestEntryContent = zomeEntryName => {
+  const entryImport = `
+require('./${toSnakeCase(zomeEntryName.toLowerCase())}')(orchestrator.registerScenario, conductorConfig)
+  `
+  testImports = testImports + entryImport
+  return testImports
+}
   
-  const renderTestEntryFile = templateFile => {  
-  console.log('========== Test Root Index =========== \n')
+const renderTestEntryFile = (templateFile, dnaName, entryTestImports) => {
   let newFile = templateFile
-  testEntryPlaceholders.forEach(([zomeEntryContentFn, placeHolderContent]) => {
-    const zomeEntryContent = zomeEntryContentFn()
-    newFile = replaceNamePlaceHolders(newFile, placeHolderContent, zomeEntryContent)
-  })
-
+  newFile = replaceNamePlaceHolders(newFile, DNA_NAME, dnaName)
   newFile = replaceContentPlaceHolders(newFile, ENTRY_TEST_IMPORTS, entryTestImports)
   return newFile
 }

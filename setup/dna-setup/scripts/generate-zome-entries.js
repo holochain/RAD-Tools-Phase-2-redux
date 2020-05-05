@@ -10,14 +10,14 @@ const renderTest = require('./render-entry-test')
 async function createEntryDir(zomeName, entryName) {
   const { stdout, stderr } = await exec(`cd dna-src/zomes/${zomeName}/code/src; [ ! -d ${entryName} ] && mkdir ${entryName}; cd ${entryName} && echo $(pwd -P)`)
   if(stderr) console.error('stderr:', stderr)      
-  console.log(` > Created ${entryName.toUpperCase()} Entry file at: ${stdout}`)
+  console.log(` > Created ${entryName.toUpperCase()} Entry Directory at: ${stdout}`)
   return stdout.trim()
 }
 
 async function createEntryTestDir(entryName) {
   let {stdout, stderr } = await exec(`cd dna-src/test; [ ! -d ${entryName} ] && mkdir ${entryName}; cd ${entryName} && echo $(pwd -P)`)
   if (stderr) console.error('stderr:', stderr)  
-  console.log(` >> Created ${entryName.toUpperCase()} Entry Test file at: ${stdout}`)
+  console.log(` >> Created ${entryName.toUpperCase()} Entry Test Directory at: ${stdout}`)
   return stdout.trim()
 }
 
@@ -36,9 +36,9 @@ const renderEntry = async (zomeEntryType, zomeEntry, zomeName) => {
 
   renderers.forEach(([renderFunction, filename]) => {
     fs.writeFileSync(resolvePath(filename), renderFunction(zomeEntryName, zomeEntry))
-    console.log(` >>> Created file: ${zomeName.toUpperCase()}/${zomeEntryName.toUpperCase()}/${filename.toUpperCase()}.rs at : ${resolvePath(filename)} \n`)
+    console.log(`\n===================== Created file: ${zomeName.toUpperCase()}/${zomeEntryName.toUpperCase()}/${filename.toUpperCase()} =====================\n`)
   })
-  return console.log(`------------------------------\n Created ${zomeEntryName.toUpperCase()} Entry : ${JSON.stringify(zomeEntry)}\n------------------------------\n\n`)
+  return console.log(`====================================\n Finished creating ${zomeEntryName.toUpperCase()} ENTRY\n===================================\n`)
 }
 
 const generateZomeEntries = (zomeName, zomeEntryTypes) => promiseMapFnOverObject(zomeEntryTypes, renderEntry, zomeName)
