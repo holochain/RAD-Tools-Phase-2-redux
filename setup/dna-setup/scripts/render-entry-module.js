@@ -37,6 +37,7 @@ const bulkEntryContents = [
   [() => anchorNameDefs, ANCHOR_NAME_DEFINITIONS]
 ]
 
+// check to see if need for multiple zomes
 const cleanSlate = () => {
   linkNameDefs = ['']
   linkDefs = ['']

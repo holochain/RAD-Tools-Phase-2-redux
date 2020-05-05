@@ -1,6 +1,6 @@
 // see https://developer.holochain.org/api/0.0.42-alpha5/hdk/ for info on using the hdk library
 
-// #![feature(proc_macro_hygiene)]
+#![feature(proc_macro_hygiene)]
 use hdk::{
     entry_definition::ValidatingEntryType, error::ZomeApiResult,
     holochain_persistence_api::cas::content::Address,
@@ -13,7 +13,7 @@ use crate::user::UserEntry;
 pub mod user;
 
 #[zome]
-mod notes {
+mod profile {
 
     #[init]
     fn init() {
@@ -46,12 +46,12 @@ mod notes {
     }
 
     #[zome_fn("hc_public")]
-    fn list_user() -> ZomeApiResult<User> {
+    fn list_user() -> ZomeApiResult<Vec<User>> {
         user::handlers::list_user(user_input)
     }
 
     #[zome_fn("hc_public")]
-    fn remove_user(id: Address) -> ZomeApiResult<User> {
+    fn remove_user(id: Address) -> ZomeApiResult<Address> {
         user::handlers::remove_user(user_input)
     }
 

@@ -1,6 +1,6 @@
 // see https://developer.holochain.org/api/0.0.42-alpha5/hdk/ for info on using the hdk library
 
-// #![feature(proc_macro_hygiene)]
+#![feature(proc_macro_hygiene)]
 use hdk_proc_macros::zome;
 use serde_derive::{Deserialize, Serialize};
 use hdk::{
@@ -11,7 +11,7 @@ use hdk::{
 {ENTRY_IMPORTS}
 
 #[zome]
-mod notes {
+mod {zome_name} {
 
     #[init]
     fn init() {

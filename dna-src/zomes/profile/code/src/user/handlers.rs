@@ -21,7 +21,7 @@ pub fn create_user(user_entry: User) -> ZomeApiResult<User> {
 }
 
 pub fn get_user(id: Address) -> ZomeApiResult<User> {
-    let user: User = hdk::utils::get_as_type(id.clone())?;
+    let user: UserEntry = hdk::utils::get_as_type(id.clone())?;
     User::new(id, user)
 }
 
@@ -45,11 +45,11 @@ pub fn list_users() -> ZomeApiResult<Vec<User>> {
 }
 
 pub fn remove_user(id: Address) -> ZomeApiResult<Address> {
-    hdk::remove_link(&user_anchor()?, &id, User_LINK_TYPE, "")?;
+    hdk::remove_link(&user_anchor()?, &id, USER_LINK_TYPE, "")?;
     hdk::remove_entry(&id)
 }
 
-pub fn update_user(id: Address, user_input: User) -> ZomeApiResult<User> {
+pub fn update_user(id: Address, user_input: UserEntry) -> ZomeApiResult<User> {
     let address = match hdk::get_entry(&id.clone())? {
         None => id.clone(),
         Some(entry) => entry.address(),

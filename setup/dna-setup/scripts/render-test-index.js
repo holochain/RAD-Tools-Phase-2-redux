@@ -14,7 +14,6 @@ let testImports = ''
 function renderTestIndex (dnaName, zomeEntryNames, testDir) {
   const entryTestImports = mapFnOverObject(zomeEntryNames, renderTestEntryContent, testImports)
   const completedTestIndex = renderTestEntryFile(testIndexTemplate, dnaName, entryTestImports)
-
   fs.writeFileSync(`${testDir}/index.js`, completedTestIndex)
   return console.log(`\n========== Created Testing root index.js ===========\n\n`)
 }

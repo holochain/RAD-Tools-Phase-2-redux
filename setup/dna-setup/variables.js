@@ -3,6 +3,7 @@ const ENTRY_NAME = 'entryName'
 
 // ================================================================
 // lib.rs file
+const ZOME_NAME = 'zomeName'
 const ENTRY_IMPORTS = 'entryImports'
 const ENTRY_DEFINITIONS = 'entryDefinitions'
 const ENTRY_FUNCTION_DEFINITIONS = 'entryFunctionDefinitions'
@@ -67,6 +68,9 @@ const ANCHOR_NAME_CONSTANTS = 'anchorNameConstants'
 // ================================================================
 // validation.rs file
 const CRUD_VALIDATION_DEFINITIONS = 'crudValidationDefinitions'
+// nb: link actions to validate are add and remove;
+//  as links are baked into the scaffold, 
+//  these links are static input
 
 // ================================================================
 // TESTING: root index.js file
@@ -76,12 +80,12 @@ const ENTRY_TEST_IMPORTS = 'entryTestImports'
 // ================================================================
 // ENTRY TESTING: entry test index.js file
 const CRUD_TESTING = 'crudTesting'
-const VALIDATION_TESTING = 'validationTesting'
 
 module.exports = {
   // Zome Entry:
   ENTRY_NAME,
   // lib.rs
+  ZOME_NAME,
   ENTRY_IMPORTS,
   ENTRY_DEFINITIONS,
   ENTRY_FUNCTION_DEFINITIONS,
@@ -106,7 +110,6 @@ module.exports = {
   DNA_NAME,
   ENTRY_TEST_IMPORTS,
   // test index.js
-  CRUD_TESTING,
-  VALIDATION_TESTING
+  CRUD_TESTING
 //
 }

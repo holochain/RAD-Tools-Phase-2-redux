@@ -1,8 +1,8 @@
 const fs = require('fs')
 const path = require('path')
 const { isEmpty } = require('lodash/fp')
-const { replaceContentPlaceHolders, mapFnOverObject, capitalize } = require('../../utils.js')
-const { ENTRY_IMPORTS, ENTRY_DEFINITIONS, ENTRY_FUNCTION_DEFINITIONS } = require('../variables.js')
+const { replaceNamePlaceHolders, replaceContentPlaceHolders, mapFnOverObject, capitalize } = require('../../utils.js')
+const { ZOME_NAME, ENTRY_IMPORTS, ENTRY_DEFINITIONS, ENTRY_FUNCTION_DEFINITIONS } = require('../variables.js')
 const zomeIndexTemplatePath = path.resolve("setup/dna-setup/zome-template", "index.rs");
 const zomeIndexTemplate = fs.readFileSync(zomeIndexTemplatePath, 'utf8')
 
@@ -24,7 +24,7 @@ const cleanSlate = () => {
 function renderZomeIndex (zomeName, zomeEntryTypes, zomeDir) {
   cleanSlate()
   mapFnOverObject(zomeEntryTypes, renderIndexContent)
-  const completedZomeIndex = renderIndexFile(zomeIndexTemplate, zomeIndexContents)
+  const completedZomeIndex = renderIndexFile(zomeIndexTemplate, zomeIndexContents, zomeName)
   fs.writeFileSync(`${zomeDir}/lib.rs`, completedZomeIndex)
   return console.log(`\n========== Created ${zomeName}/lib.rs  ===========\n\n`)
 }
@@ -36,8 +36,9 @@ const renderIndexContent = (zomeEntryType, zomeEntry) => {
   return zomeIndexContents
 }
 
-const renderIndexFile = (templateFile, zomeIndexContents) => {
+const renderIndexFile = (templateFile, zomeIndexContents, zomeName) => {
   let newFile = templateFile
+  newFile = replaceNamePlaceHolders(newFile, ZOME_NAME, zomeName)
   zomeIndexContents.forEach(([zomeEntryContent, placeHolderContent]) => {
     newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
   })
@@ -78,26 +79,31 @@ const renderZomeEntryFns = (zomeEntryType, { functions }) => {
 
 const renderFnDef = (crudFn, shouldFnRender, zomeEntryType) => {
   if (!shouldFnRender) return
-  let args
+  let args, returnType
   switch (crudFn) {
     case 'create': {
       args = `(${zomeEntryType.toLowerCase()}_input: ${capitalize(zomeEntryType)}Entry)`
+      returnType = `${capitalize(zomeEntryType)}`
       break
     }
     case 'get': {
       args = `(id: Address)`
+      returnType = `${capitalize(zomeEntryType)}`
       break
     }
     case 'update': {
       args = `(id: Address, ${zomeEntryType.toLowerCase()}_input: ${capitalize(zomeEntryType)}Entry)`
+      returnType = `${capitalize(zomeEntryType)}`
       break
     }
     case 'remove': {
       args =  `(id: Address)`
+      returnType = 'Address'
       break    
     }
     case 'list': {
       args = '()'
+      returnType = `Vec<${capitalize(zomeEntryType)}>`
       break
     }
     default: return new Error(`Error: No CRUD function matched. CRUD fn received : ${crudFn}.`)
@@ -105,7 +111,7 @@ const renderFnDef = (crudFn, shouldFnRender, zomeEntryType) => {
 
   return `
     #[zome_fn("hc_public")]
-    fn ${crudFn}_${zomeEntryType.toLowerCase()}${args} -> ZomeApiResult<${capitalize(zomeEntryType)}> {
+    fn ${crudFn}_${zomeEntryType.toLowerCase()}${args} -> ZomeApiResult<${returnType}> {
         ${zomeEntryType.toLowerCase()}::handlers::${crudFn}_${zomeEntryType.toLowerCase()}(${zomeEntryType.toLowerCase()}_input)
     }
   `

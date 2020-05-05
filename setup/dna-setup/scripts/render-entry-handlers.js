@@ -26,6 +26,7 @@ const entryContents = [
   [() => anchorNameConsts, ANCHOR_NAME_CONSTANTS]
 ]
 
+// check to see if need for multiple zomes
 const cleanSlate = () => {
   linkNameConsts = ['']
   anchorNameConsts = ['']      
@@ -35,9 +36,8 @@ const cleanSlate = () => {
 
 function renderHandlers (zomeEntryName, zomeEntry) {
   // cleanSlate()
-  const handlersContent = renderHandlersContent(zomeEntryName, zomeEntry)
-  const { crudDef } = handlersContent  
-  const completedHandlersFile = renderHandlersFile(entryHandlersTemplate, zomeEntryName, crudDef, entryContents)
+  const { crudDefs } = renderHandlersContent(zomeEntryName, zomeEntry)
+  const completedHandlersFile = renderHandlersFile(entryHandlersTemplate, zomeEntryName, crudDefs, entryContents)
   return completedHandlersFile
 }
 
@@ -74,10 +74,11 @@ const renderHandlersContent = (zomeEntryName, zomeEntry) => {
       "list": true
     }
   }
-  crudDef = mapFnOverObject(functions, renderCrudDefinition, zomeEntryName).join('')
+  crudDefs = mapFnOverObject(functions, renderCrudDefinition, zomeEntryName).join('')
+  // console.log(' >>> linkNameConsts', linkNameConsts)
   // console.log(' >>> anchorNameConsts', anchorNameConsts)
   // console.log(' >>> anchorDefs', anchorDefs)
-  return { entryContents, crudDef }
+  return { entryContents, crudDefs }
 }
 
 const renderHandlersFile = (templateFile, zomeEntryName, crudDefs, entryContents) => {  
@@ -115,7 +116,7 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
     case 'get': {
       const get = `
       pub fn get_${toSnakeCase(zomeEntryName).toLowerCase()}(id: Address) -> ZomeApiResult<${capitalize(toCamelCase(zomeEntryName))}> {
-          let ${toSnakeCase(zomeEntryName).toLowerCase()}: ${capitalize(toCamelCase(zomeEntryName))} = hdk::utils::get_as_type(id.clone())?;
+          let ${toSnakeCase(zomeEntryName).toLowerCase()}: ${capitalize(toCamelCase(zomeEntryName))}Entry = hdk::utils::get_as_type(id.clone())?;
           ${capitalize(toCamelCase(zomeEntryName))}::new(id, ${toSnakeCase(zomeEntryName).toLowerCase()})
       }
       `
@@ -124,7 +125,7 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
     }
     case 'update': {
       const update = `
-      pub fn update_${toSnakeCase(zomeEntryName).toLowerCase()}(id: Address, ${toSnakeCase(zomeEntryName).toLowerCase()}_input: ${capitalize(toCamelCase(zomeEntryName))}) -> ZomeApiResult<${capitalize(toCamelCase(zomeEntryName))}> {
+      pub fn update_${toSnakeCase(zomeEntryName).toLowerCase()}(id: Address, ${toSnakeCase(zomeEntryName).toLowerCase()}_input: ${capitalize(toCamelCase(zomeEntryName))}Entry) -> ZomeApiResult<${capitalize(toCamelCase(zomeEntryName))}> {
           let address = match hdk::get_entry(&id.clone())? {
               None => id.clone(),
               Some(entry) => entry.address()
@@ -139,7 +140,7 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
     case 'remove': {
       const remove = `
       pub fn remove_${toSnakeCase(zomeEntryName).toLowerCase()}(id: Address) -> ZomeApiResult<Address> {
-          hdk::remove_link(&${toSnakeCase(zomeEntryName).toLowerCase()}_anchor()?, &id, ${capitalize(toCamelCase(zomeEntryName))}_LINK_TYPE, "")?;
+          hdk::remove_link(&${toSnakeCase(zomeEntryName).toLowerCase()}_anchor()?, &id, ${toSnakeCase(zomeEntryName).toUpperCase()}_LINK_TYPE, "")?;
           hdk::remove_entry(&id)
       }
       `

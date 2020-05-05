@@ -6,7 +6,7 @@ module.exports = (scenario, conductorConfig) => {
         const {alice, bob} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)
         // Make a call to a Zome function
         // indicating the function, and passing it an input
-        const create_user_result = await alice.call(DNA, DnaHappInstance, "create_user", {"user_input" : {"avatar_url":"User test entry #4 content for the avatar_url field in entry definition.","name":"User test entry #4 content for the name field in entry definition."}})
+        const create_user_result = await alice.call(DNA, DnaHappInstance, "create_user", {"user_input" : {"avatar_url":"User test entry #1 content for the avatar_url field in entry definition.","name":"User test entry #1 content for the name field in entry definition."}})
         // Wait for all network activity to settle
         await s.consistency()
         const get_user_result = await bob.call(DNA, DnaHappInstance, "get_user", {"id": create_user_result.Ok.id})
@@ -35,6 +35,16 @@ module.exports = (scenario, conductorConfig) => {
         t.deepEqual(list_users_result_2.Ok.length, 0)
       })  
       
+    scenario("validate_entry_remove", async (s, t) => {
+      const {alice, bob} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)
+      const create_user_result = await alice.call(DNA, DnaHappInstance, "create_user", {"user_input" : {"avatar_url":"User test entry #1 content for the avatar_url field in entry definition.","name":"User test entry #1 content for the name field in entry definition."}})
+      await s.consistency()
+      
+      const remove_user_result = await bob.call(DNA, DnaHappInstance, "remove_user", { "id": remove_user_result.Ok.id })
+      let err = JSON.parse(remove_user_result.Err.Internal)
+      t.deepEqual(err.kind, {"ValidationFailed":"Agent who did not author is trying to remove"})
+    })
+  
       scenario("update_user", async (s, t) => {
         const {alice, bob} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)
         const create_user_result = await alice.call(DNA, DnaHappInstance, "create_user", {"user_input" : {"avatar_url":"User test entry #1 content for the avatar_url field in entry definition.","name":"User test entry #1 content for the name field in entry definition."}})
@@ -49,5 +59,14 @@ module.exports = (scenario, conductorConfig) => {
         t.deepEqual(update_user_result_2, get_user_result_2)
       })
       
+    scenario("validate_entry_update", async (s, t) => {
+      const {alice, bob} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)
+      const create_user_result = await alice.call(DNA, DnaHappInstance, "create_user", {"user_input" : {"avatar_url":"User test entry #1 content for the avatar_url field in entry definition.","name":"User test entry #1 content for the name field in entry definition."}})
+      await s.consistency()
+      
+      const update_user_result = await bob.call(DNA, DnaHappInstance, "update_user", { "id": update_user_result.Ok.id })
+      let err = JSON.parse(update_user_result.Err.Internal)
+      t.deepEqual(err.kind, {"ValidationFailed":"Agent who did not author is trying to update"})
+    })
   
 }

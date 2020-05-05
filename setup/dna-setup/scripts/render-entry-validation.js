@@ -36,7 +36,6 @@ const renderValidationContent = (zomeEntry, zomeEntryName) => {
 }
 
 const renderValidationFile = (templateFile, zomeEntryName, crudValidationDefs) => {  
-  console.log('========== Validation =========== \n')
   let newFile = templateFile
   newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
   newFile = replaceContentPlaceHolders(newFile, CRUD_VALIDATION_DEFINITIONS, crudValidationDefs)
@@ -51,9 +50,9 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
   switch (crudFn) {
     case 'create': {
       const create = `
-      pub fn validate_entry_${toSnakeCase(zomeEntryName).toLowerCase()}(entry: ${capitalize(toCamelCase(zomeEntryName))}, validation_data: hdk::ValidationData) -> Result<(), String> {
-          hdk::debug(format!("validate_entry_create_entry: {:?}", entry)).ok();
-          hdk::debug(format!("validate_entry_create_validation_data: {:?}", validation_data)).ok();
+      pub fn validate_entry_${toSnakeCase(crudFn).toLowerCase()}(entry: ${capitalize(toCamelCase(zomeEntryName))}Entry, validation_data: hdk::ValidationData) -> Result<(), String> {
+          hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_entry: {:?}", entry)).ok();
+          hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_validation_data: {:?}", validation_data)).ok();
           Ok(())
       }
       `
@@ -62,18 +61,18 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
     }
     case 'update': {
       const update = `
-      pub fn validate_entry_${toSnakeCase(zomeEntryName).toLowerCase()}(new_entry: ${capitalize(toCamelCase(zomeEntryName))}, old_entry: NoteEntry, old_entry_header: ChainHeader, validation_data: hdk::ValidationData) -> Result<(), String> {
-          hdk::debug(format!("validate_entry_modify_new_entry: {:?}", new_entry)).ok();
-          hdk::debug(format!("validate_entry_modify_old_entry: {:?}", old_entry)).ok();
-          hdk::debug(format!("validate_entry_modify_old_entry_header: {:?}", old_entry_header)).ok();
-          hdk::debug(format!("validate_entry_modify_validation_data: {:?}", validation_data)).ok();
+      pub fn validate_entry_${toSnakeCase(crudFn).toLowerCase()}(new_entry: ${capitalize(toCamelCase(zomeEntryName))}Entry, old_entry: ${capitalize(toCamelCase(zomeEntryName))}Entry, old_entry_header: ChainHeader, validation_data: hdk::ValidationData) -> Result<(), String> {
+          hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_new_entry: {:?}", new_entry)).ok();
+          hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_old_entry: {:?}", old_entry)).ok();
+          hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_old_entry_header: {:?}", old_entry_header)).ok();
+          hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_validation_data: {:?}", validation_data)).ok();
       
           if let (Some(o), Some(p)) = (old_entry_header.provenances().get(0), validation_data.package.chain_header.provenances().get(0)) {
               if o.source() == p.source() {
                 Ok(())
               }
               else {
-                Err("Agent who did not author is trying to update".to_string())
+                Err("Agent who did not author is trying to ${toSnakeCase(crudFn).toLowerCase()}".to_string())
               }
           }
           else {
@@ -86,17 +85,17 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
     }
     case 'remove': {
       const remove = `
-      pub fn validate_entry_${toSnakeCase(zomeEntryName).toLowerCase()}(old_entry: ${capitalize(toCamelCase(zomeEntryName))}, old_entry_header: ChainHeader, validation_data: hdk::ValidationData) -> Result<(), String> {
-          hdk::debug(format!("validate_entry_delete_old_entry: {:?}", old_entry)).ok();
-          hdk::debug(format!("validate_entry_delete_old_entry_header: {:?}", old_entry_header)).ok();
-          hdk::debug(format!("validate_entry_delete_validation_data: {:?}", validation_data)).ok();
+      pub fn validate_entry_${toSnakeCase(crudFn).toLowerCase()}(old_entry: ${capitalize(toCamelCase(zomeEntryName))}Entry, old_entry_header: ChainHeader, validation_data: hdk::ValidationData) -> Result<(), String> {
+          hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_old_entry: {:?}", old_entry)).ok();
+          hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_old_entry_header: {:?}", old_entry_header)).ok();
+          hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_validation_data: {:?}", validation_data)).ok();
 
           if let (Some(o), Some(p)) = (old_entry_header.provenances().get(0), validation_data.package.chain_header.provenances().get(0)) {
               if o.source() == p.source() {
                 Ok(())
               }
               else {
-                Err("Agent who did not author is trying to delete".to_string())
+                Err("Agent who did not author is trying to ${toSnakeCase(crudFn).toLowerCase()}".to_string())
               }
           }
           else {

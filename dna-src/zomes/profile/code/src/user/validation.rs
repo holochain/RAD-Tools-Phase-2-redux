@@ -1,8 +1,8 @@
 use crate::user::UserEntry;
 use hdk::holochain_core_types::{chain_header::ChainHeader, link::link_data::LinkData};
 
-pub fn validate_entry_user(
-    entry: User,
+pub fn validate_entry_create(
+    entry: UserEntry,
     validation_data: hdk::ValidationData,
 ) -> Result<(), String> {
     hdk::debug(format!("validate_entry_create_entry: {:?}", entry)).ok();
@@ -14,19 +14,19 @@ pub fn validate_entry_user(
     Ok(())
 }
 
-pub fn validate_entry_user(
-    old_entry: User,
+pub fn validate_entry_remove(
+    old_entry: UserEntry,
     old_entry_header: ChainHeader,
     validation_data: hdk::ValidationData,
 ) -> Result<(), String> {
-    hdk::debug(format!("validate_entry_delete_old_entry: {:?}", old_entry)).ok();
+    hdk::debug(format!("validate_entry_remove_old_entry: {:?}", old_entry)).ok();
     hdk::debug(format!(
-        "validate_entry_delete_old_entry_header: {:?}",
+        "validate_entry_remove_old_entry_header: {:?}",
         old_entry_header
     ))
     .ok();
     hdk::debug(format!(
-        "validate_entry_delete_validation_data: {:?}",
+        "validate_entry_remove_validation_data: {:?}",
         validation_data
     ))
     .ok();
@@ -38,28 +38,28 @@ pub fn validate_entry_user(
         if o.source() == p.source() {
             Ok(())
         } else {
-            Err("Agent who did not author is trying to delete".to_string())
+            Err("Agent who did not author is trying to remove".to_string())
         }
     } else {
         Err("No provenance on this validation_data".to_string())
     }
 }
 
-pub fn validate_entry_user(
-    new_entry: User,
-    old_entry: NoteEntry,
+pub fn validate_entry_update(
+    new_entry: UserEntry,
+    old_entry: UserEntry,
     old_entry_header: ChainHeader,
     validation_data: hdk::ValidationData,
 ) -> Result<(), String> {
-    hdk::debug(format!("validate_entry_modify_new_entry: {:?}", new_entry)).ok();
-    hdk::debug(format!("validate_entry_modify_old_entry: {:?}", old_entry)).ok();
+    hdk::debug(format!("validate_entry_update_new_entry: {:?}", new_entry)).ok();
+    hdk::debug(format!("validate_entry_update_old_entry: {:?}", old_entry)).ok();
     hdk::debug(format!(
-        "validate_entry_modify_old_entry_header: {:?}",
+        "validate_entry_update_old_entry_header: {:?}",
         old_entry_header
     ))
     .ok();
     hdk::debug(format!(
-        "validate_entry_modify_validation_data: {:?}",
+        "validate_entry_update_validation_data: {:?}",
         validation_data
     ))
     .ok();

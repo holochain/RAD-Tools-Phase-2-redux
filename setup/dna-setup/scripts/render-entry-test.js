@@ -7,20 +7,14 @@ const { replaceContentPlaceHolders,
   toSnakeCase,
   capitalize
 } = require('../../utils.js')
-const { ENTRY_NAME, CRUD_TESTING, VALIDATION_TESTING } = require('../variables.js')
+const { ENTRY_NAME, CRUD_TESTING } = require('../variables.js')
 
 const entryTestingIndexTemplatePath = path.resolve("setup/dna-setup/test-template/entry-test-template", "index.js");
 const entryTestingIndexTemplate = fs.readFileSync(entryTestingIndexTemplatePath, 'utf8')
 
-let crudTesting, validationTesting
-const entryTestContent = [
-  [() => crudTesting, CRUD_TESTING],
-  [() => validationTesting, VALIDATION_TESTING]
-]
-
 function renderEntryTest (zomeEntryName, zomeEntry) {
-  renderEntryTestContent(zomeEntry, zomeEntryName)
-  const completedTestEntryFile = renderTestEntryFile(entryTestingIndexTemplate, zomeEntryName)
+  const crudTesting = renderEntryTestContent(zomeEntry, zomeEntryName)  
+  const completedTestEntryFile = renderTestEntryFile(entryTestingIndexTemplate, zomeEntryName, crudTesting)
   return completedTestEntryFile
 }
 
@@ -36,20 +30,15 @@ const renderEntryTestContent = (zomeEntry, zomeEntryName) => {
       "list": true
     }
   }
-  crudTesting = mapFnOverObject(functions, renderCrudTesting, { zomeEntryName, zomeEntry }).join('')
-  
-  validationTesting = [] //mapFnOverObject(functions, rendervalidationTesting, { zomeEntryName, zomeEntry }).join('')
-  console.log(' >>> validationTesting', validationTesting)
-  return { crudTesting, validationTesting }
+  const crudTesting = mapFnOverObject(functions, renderCrudTesting, { zomeEntryName, zomeEntry }).join('')
+  return crudTesting
 }
 
-const renderTestEntryFile = (templateFile, zomeEntryName) => {  
+const renderTestEntryFile = (templateFile, zomeEntryName, crudTesting) => {  
   console.log(`------- Entry TEST------- \n`)
   let newFile = templateFile
   newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
-  entryTestContent.forEach(([zomeEntryContentFn, placeHolderContent]) => {
-    newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContentFn())
-  })
+  newFile = replaceContentPlaceHolders(newFile, CRUD_TESTING, crudTesting)
   return newFile
 }
 
@@ -79,87 +68,105 @@ const generateTestEntryArgs = (callVolume, definition, zomeEntryName) => {
   return entryArgs
 }
 
+const rendervalidationTesting = (validatationFn, zomeEntryName, callStringBase, generateTestEntryDefault) => {
+  return `
+    scenario("validate_entry_${toSnakeCase(validatationFn).toLowerCase()}", async (s, t) => {
+      const {alice, bob} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)
+      const create_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryDefault())}})
+      await s.consistency()
+      
+      const ${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await bob.call(${callStringBase}, "${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}", { "id": ${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id })
+      let err = JSON.parse(${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Err.Internal)
+      t.deepEqual(err.kind, {"ValidationFailed":"Agent who did not author is trying to ${toSnakeCase(validatationFn).toLowerCase()}"})
+    })
+  `
+}
+
 const renderCrudTesting = (crudFn, shouldFnRender, { zomeEntryName, zomeEntry }) => {
   if (!shouldFnRender) return
   else if (crudFn === "get") return
 
+  let crudTesting = ''
+
   const { definition } = zomeEntry
   const callStringBase = 'DNA, DnaHappInstance'
+  const generateTestEntryDefault = () => generateTestEntryArgs(1, definition, zomeEntryName)
+  const renderValidateEntryTest = validationCall => rendervalidationTesting(validationCall, zomeEntryName, callStringBase, generateTestEntryDefault)
 
-  let crudTestEntryDef = ''
   switch (crudFn) {
     case 'create': {
       const create = `
-      scenario("create_${toSnakeCase(zomeEntryName).toLowerCase()}", async (s, t) => {
+      scenario("${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}", async (s, t) => {
         const {alice, bob} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)
         // Make a call to a Zome function
         // indicating the function, and passing it an input
-        const create_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryArgs(4, definition, zomeEntryName))}})
+        const ${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await alice.call(${callStringBase}, "${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryDefault())}})
         // Wait for all network activity to settle
         await s.consistency()
-        const get_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await bob.call(${callStringBase}, "get_${toSnakeCase(zomeEntryName).toLowerCase()}", {"id": create_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id})
-        t.deepEqual(create_note_result, get_${toSnakeCase(zomeEntryName).toLowerCase()}_result)
+        const get_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await bob.call(${callStringBase}, "get_${toSnakeCase(zomeEntryName).toLowerCase()}", {"id": ${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id})
+        t.deepEqual(${toSnakeCase(crudFn).toLowerCase()}_note_result, get_${toSnakeCase(zomeEntryName).toLowerCase()}_result)
       })
       `
-      crudTestEntryDef = crudTestEntryDef + create
+      crudTesting = crudTesting + create
       break
     }
     case 'update': {
       const update = `
-      scenario("update_${toSnakeCase(zomeEntryName).toLowerCase()}", async (s, t) => {
+      scenario("${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}", async (s, t) => {
         const {alice, bob} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)
-        const create_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryArgs(1, definition, zomeEntryName))}})
-        const update_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await alice.call(${callStringBase}, "update_${toSnakeCase(zomeEntryName).toLowerCase()}", {"id": create_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id, "${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryArgs(1, definition, zomeEntryName))}})
+        const create_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryDefault())}})
+        const ${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await alice.call(${callStringBase}, "${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}", {"id": create_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id, "${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryDefault())}})
         await s.consistency()
         const get_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await alice.call(${callStringBase}, "get_${toSnakeCase(zomeEntryName).toLowerCase()}", {"id": create_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id})
-        t.deepEqual(update_${toSnakeCase(zomeEntryName).toLowerCase()}_result, get_${toSnakeCase(zomeEntryName).toLowerCase()}_result)
+        t.deepEqual(${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result, get_${toSnakeCase(zomeEntryName).toLowerCase()}_result)
   
-        const update_${toSnakeCase(zomeEntryName).toLowerCase()}_result_2 = await alice.call(${callStringBase}, "update_${toSnakeCase(zomeEntryName).toLowerCase()}", {"id": create_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id, "${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryArgs(1, definition, zomeEntryName))}})
+        const ${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result_2 = await alice.call(${callStringBase}, "${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}", {"id": create_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id, "${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryDefault())}})
         await s.consistency()
         const get_${toSnakeCase(zomeEntryName).toLowerCase()}_result_2 = await bob.call(${callStringBase}, "get_${toSnakeCase(zomeEntryName).toLowerCase()}", {"id": create_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id})
-        t.deepEqual(update_${toSnakeCase(zomeEntryName).toLowerCase()}_result_2, get_${toSnakeCase(zomeEntryName).toLowerCase()}_result_2)
+        t.deepEqual(${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result_2, get_${toSnakeCase(zomeEntryName).toLowerCase()}_result_2)
       })
       `
-      crudTestEntryDef = crudTestEntryDef + update
+      const validateEntryUpdate = renderValidateEntryTest(toSnakeCase(crudFn).toLowerCase())
+      crudTesting = crudTesting + update + validateEntryUpdate
       break
     }
     case 'remove': {
       const remove = `
-      scenario("remove_${toSnakeCase(zomeEntryName).toLowerCase()}", async (s, t) => {
+      scenario("${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}", async (s, t) => {
         const {alice, bob} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)
-        const create_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" :  ${JSON.stringify(generateTestEntryArgs(1, definition, zomeEntryName))}})
+        const create_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" :  ${JSON.stringify(generateTestEntryDefault())}})
         await s.consistency()
         const list_${toSnakeCase(zomeEntryName).toLowerCase()}s_result = await bob.call(${callStringBase}, "list_${toSnakeCase(zomeEntryName).toLowerCase()}s", {})
         t.deepEqual(list_${toSnakeCase(zomeEntryName).toLowerCase()}s_result.Ok.length, 1)
-        await alice.call(${callStringBase}, "remove_${toSnakeCase(zomeEntryName).toLowerCase()}", { "id": create_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id })
+        await alice.call(${callStringBase}, "${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}", { "id": create_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id })
         const list_${toSnakeCase(zomeEntryName).toLowerCase()}s_result_2 = await bob.call(${callStringBase}, "list_${toSnakeCase(zomeEntryName).toLowerCase()}s", {})
         t.deepEqual(list_${toSnakeCase(zomeEntryName).toLowerCase()}s_result_2.Ok.length, 0)
       })  
       `
-      crudTestEntryDef = crudTestEntryDef + remove
+      const validateEntryRemove = renderValidateEntryTest(toSnakeCase(crudFn).toLowerCase())
+      crudTesting = crudTesting + remove + validateEntryRemove
       break
     }
     case 'list': {
       const list = `
-      scenario("list_${toSnakeCase(zomeEntryName).toLowerCase()}s", async (s, t) => {
+      scenario("${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}s", async (s, t) => {
         const {alice} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)
         await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryArgs(1, definition, zomeEntryName))}})
         await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryArgs(2, definition, zomeEntryName))}})
         await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryArgs(3, definition, zomeEntryName))}})
         await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryArgs(4, definition, zomeEntryName))}})
         await s.consistency()
-        const result = await alice.call(${callStringBase}, "list_${toSnakeCase(zomeEntryName).toLowerCase()}s", {})
+        const result = await alice.call(${callStringBase}, "${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}s", {})
         t.deepEqual(result.Ok.length, 4)
       })
       `
-      crudTestEntryDef = crudTestEntryDef + list
+      crudTesting = crudTesting + list
       break
     }
 
-    default: return new Error(`Error: Found invalid CRUD function for TestEntry. CRUD fn received : ${crudFn}.`)
+    default: return new Error(`Error: Found invalid CRUD function for TestEntry. CRUD fn received : ${toSnakeCase(crudFn).toLowerCase()}.`)
   }
-
-  return crudTestEntryDef
+  return crudTesting
 }
 
 module.exports = renderEntryTest
