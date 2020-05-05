@@ -93,6 +93,7 @@ function toCamelCase (snakeCaseString) {
 }
 
 function toSnakeCase (camelCaseString) {
+  console.log('camelCaseString in toSnakeCase ', camelCaseString)
   const cleanCamelCaseString = decapitalize(camelCaseString).trim()
   const underscore = /(_)/g
   const hyphen = /(-)/g

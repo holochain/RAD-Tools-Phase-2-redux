@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "npm run hc:start && npm run ui:start && ",
+    "start": "npm run start:sim2h && npm run hc:start && npm run ui:connect-to-conductor",
     "start:sim2h": "sim2h_server -p 9000",
     "ui:start": "cd ui-src && npm run ui:start-live",
     "ui:start-mock": "cd ui-src && REACT_APP_MOCK_DNA_CONNECTION='true' react-scripts start",

@@ -79,6 +79,8 @@ const ENTRY_TEST_IMPORTS = 'entryTestImports'
 // ================================================================
 // ENTRY TESTING: entry test index.rs file
 // reference {ENTRY_NAME}
+const CRUD_TESTING = 'crudTesting'
+const VALIDATION_TESTING = 'validationTesting'
 
 module.exports = {
   // entry content:
@@ -106,9 +108,11 @@ module.exports = {
   // Testing:
   // root index.js
   DNA_NAME,
-  ENTRY_TEST_IMPORTS
+  ENTRY_TEST_IMPORTS,
   // entry testing:
   // index.rs
+  CRUD_TESTING,
+  VALIDATION_TESTING
 //
 }
 

@@ -31,3 +31,45 @@
     }
   }
 }
+
+// {
+//   "zomes": {	
+//     "Notes": {	
+//       "types": { 	
+//         "Note": {
+//           "description": "Create and mange notes by users.",
+//           "sharing": "public",
+//           "definition": {
+//             "title": "string",	
+//             "text": "string",	
+//             "author": "string"
+//           },
+//           "functions": {}
+//         },	
+//         "Comment": {
+//           "description": "Create and mange notes by users.",
+//           "sharing": "public",
+//           "definition": {
+//             "text": "string",	
+//             "author": "string",	
+//             "ranking": "string"	
+//           },
+//           "functions": {}
+//         }
+//       }	
+//     },	
+//     "Profile": {	
+//       "types": {
+//         "User": {
+//           "description": "Create and mange notes by users.",
+//           "sharing": "public",
+//           "definition": {
+//             "name": "string",
+//             "avatar_url": "string"
+//           },
+//           "functions": {}
+//         }
+//       }
+//     }	
+//   }	
+// }

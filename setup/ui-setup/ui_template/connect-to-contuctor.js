@@ -18,7 +18,7 @@ const tryConnection = () => {
         console.log('Starting UI, connecting to port :' + hcConfig1Port)
         startedConductor = true
         const exec = childProcess.exec
-        exec('npm run start:live')
+        exec('npm run ui:start-live')
       }
     }
   )

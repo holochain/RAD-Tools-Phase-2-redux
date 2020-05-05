@@ -15,8 +15,8 @@ const entryTestingIndexTemplate = fs.readFileSync(entryTestingIndexTemplatePath,
 
 let dnaName, instanceId, entryName
 const entryTestPlaceholders = [
-  [() => dnaName, DNA_NAME],
-  [() => instanceId, INSTANCE_NAME],
+  // [() => dnaName, DNA_NAME],
+  // [() => instanceId, INSTANCE_NAME],
   [() => entryName, ENTRY_NAME]
 ]
 
@@ -31,6 +31,7 @@ function renderEntryTest (zomeEntryName, zomeEntry, dna = 'DNA') {
 
   dnaName = dna
   instanceId = `${dna}HappInstance`
+  entryName = zomeEntryName
 
   const { crudTesting, validationTesting } = renderEntryTestContent(zomeEntry, zomeEntryName)
   const completedTestEntryFile = renderTestEntryFile(entryTestingIndexTemplate, zomeEntryName, crudTesting, validationTesting)
@@ -52,7 +53,7 @@ const renderEntryTestContent = (zomeEntry, zomeEntryName) => {
   crudTesting = mapFnOverObject(functions, renderCrudTesting, { zomeEntryName, zomeEntry }).join('')
   console.log(' >>> crudTesting', crudTesting)
   
-  validationTesting = [] //mapFnOverObject(functions, renderCrudTesting, { zomeEntryName, zomeEntry }).join('')
+  validationTesting = [] //mapFnOverObject(functions, rendervalidationTesting, { zomeEntryName, zomeEntry }).join('')
   console.log(' >>> validationTesting', validationTesting)
   return { crudTesting, validationTesting }
 }
@@ -61,48 +62,44 @@ const renderTestEntryFile = templateFile => {
   console.log(`========== Entry TEST =========== \n`)
   let newFile = templateFile
 
-  entryTestPlaceholders.forEach(([zomeEntryContent, placeHolderContent]) => {
-    newFile = replaceNamePlaceHolders(newFile, placeHolderContent, zomeEntryContent)
+  entryTestPlaceholders.forEach(([zomeEntryNameFn, placeHolderName]) => {
+    newFile = replaceNamePlaceHolders(newFile, placeHolderName, zomeEntryNameFn())
   })
 
-  entryTestContent.forEach(([zomeEntryContent, placeHolderContent]) => {
-    newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
+  entryTestContent.forEach(([zomeEntryContentFn, placeHolderContent]) => {
+    console.log('placeHolderContent :', placeHolderContent);
+    console.log('zomeEntryContentFn :', zomeEntryContentFn);
+    newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContentFn())
   })
-
   return newFile
 }
 
 const renderEntryDefinition = (entryDefName, entryDefType, { zomeEntryName, id }) => {
-  console.log('')
-
+  const testId = id + 1
   const testValue = typeof entryDefType === 'string'
-    ? `${capitalize(zomeEntryName.toLowerCase())} test content for the ${entryDefName.toLowerCase()} feild in entry definition. No ${id}`
+    ? `${capitalize(zomeEntryName.toLowerCase())} test entry #${testId} content for the ${entryDefName.toLowerCase()} field in entry definition.`
     : typeof entryDefType === 'number'
       ? id
       : typeof entryDefType === 'function'
-        ? `() => ${capitalize(zomeEntryName.toLowerCase())} test content for the ${entryDefName.toLowerCase()} feild in entry definition. No ${id}`
+        ? `() => ${capitalize(zomeEntryName.toLowerCase())} test entry #${testId} content for the ${entryDefName.toLowerCase()} field in entry definition.`
         : console.error(`Received unexpected value type for ${capitalize(zomeEntryName.toLowerCase())} entry, field ${entryDefName.toLowerCase()}`)
 
-  return `[${entryDefName}, ${testValue}]`
+  return [`'${entryDefName}'`, `'${testValue}'`]
 }
 
-const genEntryArgs = (callVolume, definition, zomeEntryName) => {
+const generateTestEntryArgs = (callVolume, definition, zomeEntryName) => {
   if(isEmpty(definition)) {
     const entryDefinitionFields =  { ...zomeEntry, description, sharing }
     definition = { entryDefinitionFields }
   }
-
   let entryArgs
-  for (let i = 0; i < callVolume; i++) {
-    const entryArgsMap = mapFnOverObject(definition, renderEntryDefinition, { zomeEntryName, i }).join('')
-    console.log('entryArgArray, {zomeEntryName, i}: ', entryArgArray, JSON.stringify({ zomeEntryName, i }))
+  for (let id = 0; id < callVolume; id++) {
+    const entryArgsMap = new Map(mapFnOverObject(definition, renderEntryDefinition, { zomeEntryName, id }))
     entryArgs = Object.fromEntries(entryArgsMap);
   }
-  
-  console.log('entryArgs: ', entryArgs)
+  // console.log('\nentryArgs: ', entryArgs)
   return entryArgs
 }
-
 
 const renderCrudTesting = (crudFn, shouldFnRender, { zomeEntryName, zomeEntry }) => {
   if (!shouldFnRender) return
@@ -168,10 +165,10 @@ const renderCrudTesting = (crudFn, shouldFnRender, { zomeEntryName, zomeEntry })
       const list = `
       scenario("list_${toSnakeCase(zomeEntryName).toLowerCase()}s", async (s, t) => {
         const {alice, bob} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)
-        await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : {${genEntryArgs(1, definition)}})
-        await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : {${genEntryArgs(2, definition)}})
-        await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : {${genEntryArgs(3, definition)}})
-        await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : {${genEntryArgs(4, definition)}})
+        await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : {${JSON.stringify(generateTestEntryArgs(1, definition, zomeEntryName))}})
+        await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : {${JSON.stringify(generateTestEntryArgs(2, definition, zomeEntryName))}})
+        await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : {${JSON.stringify(generateTestEntryArgs(3, definition, zomeEntryName))}})
+        await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : {${JSON.stringify(generateTestEntryArgs(4, definition, zomeEntryName))}})
         await s.consistency(
        const result = await alice.call(${callStringBase}, "list_${toSnakeCase(zomeEntryName).toLowerCase()}s", {})
         t.deepEqual(result.Ok.length, 4)

@@ -2,16 +2,15 @@
 /// See the tryorama README [https://github.com/holochain/tryorama]
 /// for a potentially more accurate example
 
+const { Orchestrator, Config, combine, callSync, singleConductor, localOnly, tapeExecutor } = require('@holochain/tryorama')
 const path = require('path')
-
-const { Orchestrator, Config, combine, singleConductor, localOnly, tapeExecutor } = require('@holochain/tryorama')
+const dnaPath = path.join(__dirname, "../dist/dna-src.dna.json")
+const dnaId = "{RAD-Tools-Phase-2}HappInstance"
 
 process.on('unhandledRejection', error => {
   // Will print "unhandledRejection err is not defined"
   console.error('got unhandledRejection:', error);
 });
-
-const dnaPath = path.join(__dirname, "../dist/dna-src.dna.json")
 
 const orchestrator = new Orchestrator({
   middleware: combine(
@@ -22,33 +21,67 @@ const orchestrator = new Orchestrator({
     // specify that all "players" in the test are on the local machine, rather than
     // on remote machines
     localOnly,
+    
+    callSync,
 
+    // OPTIONAL:
     // squash all instances from all conductors down into a single conductor,
     // for in-memory testing purposes.
     // Remove this middleware for other "real" network types which can actually
     // send messages across conductors
-    singleConductor,
+    // singleConductor,
   ),
 })
 
-const dna = Config.dna(dnaPath, 'scaffold-test')
-const conductorConfig = Config.gen({myInstanceName: dna})
+const logger = {
+  type: 'debug',
+  rules: {
+    rules: [
+      {
+        exclude: true,
+        pattern: '.*parity.*'
+      },
+      {
+        exclude: true,
+        pattern: '.*mio.*'
+      },
+      {
+        exclude: true,
+        pattern: '.*tokio.*'
+      },
+      {
+        exclude: true,
+        pattern: '.*hyper.*'
+      },
+      {
+        exclude: true,
+        pattern: '.*rusoto_core.*'
+      },
+      {
+        exclude: true,
+        pattern: '.*want.*'
+      },
+      {
+        exclude: true,
+        pattern: '.*rpc.*'
+      }
+    ]
+  },
+  state_dump: false
+}
 
-orchestrator.registerScenario("description of example test", async (s, t) => {
-
-  const {alice, bob} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)
-
-  // Make a call to a Zome function
-  // indicating the function, and passing it an input
-  const addr = await alice.call("myInstanceName", "my_zome", "create_my_entry", {"entry" : {"content":"sample content"}})
-
-  // Wait for all network activity to settle
-  await s.consistency()
-
-  const result = await bob.call("myInstanceName", "my_zome", "get_my_entry", {"address": addr.Ok})
-
-  // check for equality of the actual and expected results
-  t.deepEqual(result, { Ok: { App: [ 'my_entry', '{"content":"sample content"}' ] } })
+const dna = Config.dna(dnaPath, dnaId)
+const conductorConfig = Config.gen({myInstanceName: dna}, {
+  logger,
+  network: {
+    type: 'sim2h',
+    sim2h_url: 'ws://localhost:9000'
+  }
 })
 
-orchestrator.run()
+require('./user')(orchestrator.registerScenario, conductorConfig)
+
+
+orchestrator.run().then(_ => {
+  console.log('Testing Complete.')
+})

@@ -32,7 +32,7 @@ const renderEntry = async (zomeEntryType, zomeEntry, zomeName) => {
   const zomeEntryName = toSnakeCase(zomeEntryType).toLowerCase()
   const ZOME_ENTRY_PATH = await createEntryDir(zomeName, zomeEntryName)
   const TEST_PATH = await createEntryTestDir(zomeEntryName)
-  const resolvePath = fileName => `${fileName === 'index' ? TEST_PATH : ZOME_ENTRY_PATH}/${fileName}.rs`
+  const resolvePath = fileName => fileName === 'index' ? `${TEST_PATH}/${fileName}.js` : `${ZOME_ENTRY_PATH}/${fileName}.rs`
 
   renderers.forEach(([renderFunction, filename]) => {
     fs.writeFileSync(resolvePath(filename), renderFunction(zomeEntryName, zomeEntry))

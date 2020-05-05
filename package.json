@@ -8,12 +8,8 @@
     "ui:generate-clean": "rm -rf ui-src/*",
     "ui:start": "cd ui-src && npm run start",
     "hc:generate-dna": "node setup/dna-setup/scripts/generate-dna",
-    "hc:generate-new-zome": "node setup/dna-setup/scripts/generate-zome",
-    "hc:generate-new-zome-entry": "node setup/dna-setup/scripts/generate-zome-entry",
-    "hc:keygen": "node setup/agent-setup/create-new-agent",
-    "hc:config:add-agent": "node setup/agent-setup/add-agent-to-conductor",
-    "hc:test": "cd dna-src && hc test",
     "hc:package": "cd dna-src && hc package",
+    "hc:test": "cd dna-src && hc test",
     "hc:start": "holochain -c conductor-config.toml",
     "start": "npm run hc:start && npm rn ui:start"
   },

@@ -30,7 +30,7 @@ function renderTestIndex (dna, zomeEntryNames, testDir) {
     mapFnOverObject(zomeEntryNames, renderTestEntryContent, entryTestImports)
     const completedTestIndex = renderTestEntryFile(testIndexTemplate)
 
-    fs.writeFileSync(`${testDir}/index.rs`, completedTestIndex)
+    fs.writeFileSync(`${testDir}/index.js`, completedTestIndex)
     return console.log(`>>> Created Testing root index.rs \n\n`)
   }
   
