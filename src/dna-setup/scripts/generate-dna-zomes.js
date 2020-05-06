@@ -7,6 +7,8 @@ const renderTestIndex = require('./render-test-index')
 const { isEmpty } = require('lodash/fp')
 
 
+let testingEntries = []
+
 async function findDnaName (zomeDir) {
   const { stderr, stdout } = await exec(`cd ${zomeDir}/../../../.. && dirname $(pwd) | xargs -I {} basename {} directory`)
   if(stderr) console.error('stderr:', stderr)      
@@ -45,6 +47,8 @@ async function createZomeDir (zomeNameRaw, entryTypesWrapper, lastZome) {
   else {
     const zomeDir = stdout.trim().split('> ').join('/')
     const zomeEntryTypes = Object.values(entryTypesWrapper)[0]
+    const newTestingEntries = testingEntries.concat(Object.keys(zomeEntryTypes).sort())
+    testingEntries = newTestingEntries    
     console.log(' ---------------------------')
     console.log(` Created ${zomeName.toUpperCase()} Zome Directory at ${zomeDir}`)
     console.log(`\n Starting file generation of following ${zomeName.toUpperCase()} Zome Entry Types:`, zomeEntryTypes)
@@ -60,7 +64,7 @@ async function createZomeDir (zomeNameRaw, entryTypesWrapper, lastZome) {
     if (isLastZome) {      
       const dnaName = await findDnaName(zomeDir)
       const testDir = await findTestDirPath(zomeDir)
-      await renderTestIndex(dnaName, zomeEntryTypes, testDir)
+      await renderTestIndex(dnaName, testingEntries, testDir)
     }
 
     return zomeDir
