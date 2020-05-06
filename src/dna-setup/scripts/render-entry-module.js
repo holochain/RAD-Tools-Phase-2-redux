@@ -91,7 +91,7 @@ const renderModContent = (zomeEntryName, zomeEntry) => {
       "create": true,
       "get": true,
       "update": true,
-      "remove": true,
+      "delete": true,
       "list": true
     }
   }
@@ -153,16 +153,16 @@ const renderCrudValidationDefinition = (crudFn, shouldFnRender) => {
       validationParams = `new_entry, old_entry, old_entry_header, validation_data`
       break
     }
-    case 'remove': {
+    case 'delete': {
       validationParams =  `old_entry, old_entry_header, validation_data`
       break    
     }
-    default: return new Error(`Error: Found invalid CRUD function for validation. CRUD fn received : ${crudFn}.`)
+    default: throw new Error(`Error: Found invalid CRUD function for validation. CRUD fn received : ${crudFn}.`)
   }
 
   // todo: look into spacing/indentation normalization (linter doesn't handle this)
   return `
-              hdk::EntryValidationData::${capitalize(toCamelCase(crudFn))}{${validationParams}} =>
+              hdk::EntryValidationData::${capitalize(toCamelCase(crudFn === 'update' ? 'modify' : crudFn))}{${validationParams}} =>
               {
                   validation::validate_entry_${toSnakeCase(crudFn).toLowerCase()}(${validationParams})
               }

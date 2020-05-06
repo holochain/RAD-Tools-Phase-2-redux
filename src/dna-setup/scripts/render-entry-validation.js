@@ -27,7 +27,7 @@ const renderValidationContent = (zomeEntry, zomeEntryName) => {
       "create": true,
       "get": true,
       "update": true,
-      "remove": true,
+      "delete": true,
       "list": true
     }
   }
@@ -49,18 +49,18 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
   let crudValidationDef = ''
   switch (crudFn) {
     case 'create': {
-      const create = `
+      const createFn = `
       pub fn validate_entry_${toSnakeCase(crudFn).toLowerCase()}(entry: ${capitalize(toCamelCase(zomeEntryName))}Entry, validation_data: hdk::ValidationData) -> Result<(), String> {
           hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_entry: {:?}", entry)).ok();
           hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_validation_data: {:?}", validation_data)).ok();
           Ok(())
       }
       `
-      crudValidationDef = crudValidationDef + create
+      crudValidationDef = crudValidationDef + createFn
       break
     }
     case 'update': {
-      const update = `
+      const updateFn = `
       pub fn validate_entry_${toSnakeCase(crudFn).toLowerCase()}(new_entry: ${capitalize(toCamelCase(zomeEntryName))}Entry, old_entry: ${capitalize(toCamelCase(zomeEntryName))}Entry, old_entry_header: ChainHeader, validation_data: hdk::ValidationData) -> Result<(), String> {
           hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_new_entry: {:?}", new_entry)).ok();
           hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_old_entry: {:?}", old_entry)).ok();
@@ -80,11 +80,11 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
           }
       }
       `
-      crudValidationDef = crudValidationDef + update
+      crudValidationDef = crudValidationDef + updateFn
       break
     }
-    case 'remove': {
-      const remove = `
+    case 'delete': {
+      const deleteFn = `
       pub fn validate_entry_${toSnakeCase(crudFn).toLowerCase()}(old_entry: ${capitalize(toCamelCase(zomeEntryName))}Entry, old_entry_header: ChainHeader, validation_data: hdk::ValidationData) -> Result<(), String> {
           hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_old_entry: {:?}", old_entry)).ok();
           hdk::debug(format!("validate_entry_${toSnakeCase(crudFn).toLowerCase()}_old_entry_header: {:?}", old_entry_header)).ok();
@@ -103,11 +103,11 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
           }
       }
       `
-      crudValidationDef = crudValidationDef + remove
+      crudValidationDef = crudValidationDef + deleteFn
       break
     }
 
-    default: return new Error(`Error: Found invalid CRUD function for validation. CRUD fn received : ${crudFn}.`)
+    default: throw new Error(`Error: Found invalid CRUD function for validation. CRUD fn received : ${crudFn}.`)
   }
 
   return crudValidationDef

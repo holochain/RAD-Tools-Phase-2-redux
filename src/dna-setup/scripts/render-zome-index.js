@@ -18,7 +18,6 @@ const cleanSlate = () => {
   zomeEntryImports = ''
   zomeEntryDefs = ''
   zomeEntryFns = ''
-  return true
 }
 
 function renderZomeIndex (zomeName, zomeEntryTypes, zomeDir) {
@@ -69,7 +68,7 @@ const renderZomeEntryFns = (zomeEntryType, { functions }) => {
       "create": true,
       "get": true,
       "update": true,
-      "remove": true,
+      "delete": true,
       "list": true
     }
   }
@@ -102,7 +101,7 @@ const renderFnDef = (crudFn, shouldFnRender, zomeEntryType) => {
       zomeEntryFnParams = `id, ${zomeEntryType.toLowerCase()}_input`
       break
     }
-    case 'remove': {
+    case 'delete': {
       args =  `(id: Address)`
       returnType = 'Address'
       zomeEntryFnName = `${crudFn}_${zomeEntryType.toLowerCase()}`
