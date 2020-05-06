@@ -8,8 +8,6 @@ use hdk::{
     entry_definition::ValidatingEntryType,
     holochain_core_types::{
         dna::entry_types::Sharing,
-        time::Timeout,
-        time::Iso8601,
     },
     holochain_json_api::{
         json::JsonString,

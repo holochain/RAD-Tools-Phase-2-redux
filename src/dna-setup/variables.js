@@ -13,6 +13,12 @@ const ENTRY_FUNCTION_DEFINITIONS = 'entryFunctionDefinitions'
 const ENTRY_DEFINITION = 'entryDefinition'
 // TODO: ANYTHING REGARDING TIME SHOULD BE DEMARCATED AS A 'SPECIAL FIELD', and create the timestamp fn...
 //  eg: "created_at": "string"
+//  import : 
+// holochain_core_types::{
+//  time::Timeout,
+//  time::Iso8601,
+// }
+// 
 //  >> fn timestamp(address: Address) -> ZomeApiResult<Iso8601> {
 //   let options = GetEntryOptions{status_request: StatusRequestKind::Initial, entry: false, headers: true, timeout: Timeout::new(10000)};
 //   let entry_result = hdk::get_entry_result(&address, options)?;
@@ -126,3 +132,5 @@ module.exports = {
   CRUD_TESTING
 //
 }
+
+// holochain_anchors = { git = "https://github.com/holochain/holochain-anchors" , branch = "master" }

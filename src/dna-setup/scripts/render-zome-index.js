@@ -84,26 +84,36 @@ const renderFnDef = (crudFn, shouldFnRender, zomeEntryType) => {
     case 'create': {
       args = `(${zomeEntryType.toLowerCase()}_input: ${capitalize(zomeEntryType)}Entry)`
       returnType = `${capitalize(zomeEntryType)}`
+      zomeEntryFnName = `${crudFn}_${zomeEntryType.toLowerCase()}`
+      zomeEntryFnParams = `${zomeEntryType.toLowerCase()}_input`
       break
     }
     case 'get': {
       args = `(id: Address)`
       returnType = `${capitalize(zomeEntryType)}`
+      zomeEntryFnName = `${crudFn}_${zomeEntryType.toLowerCase()}`
+      zomeEntryFnParams = `id`
       break
     }
     case 'update': {
       args = `(id: Address, ${zomeEntryType.toLowerCase()}_input: ${capitalize(zomeEntryType)}Entry)`
       returnType = `${capitalize(zomeEntryType)}`
+      zomeEntryFnName = `${crudFn}_${zomeEntryType.toLowerCase()}`
+      zomeEntryFnParams = `id, ${zomeEntryType.toLowerCase()}_input`
       break
     }
     case 'remove': {
       args =  `(id: Address)`
       returnType = 'Address'
+      zomeEntryFnName = `${crudFn}_${zomeEntryType.toLowerCase()}`
+      zomeEntryFnParams = `id`
       break    
     }
     case 'list': {
       args = '()'
       returnType = `Vec<${capitalize(zomeEntryType)}>`
+      zomeEntryFnName = `${crudFn}_${zomeEntryType.toLowerCase()}s`
+      zomeEntryFnParams = ``
       break
     }
     default: return new Error(`Error: No CRUD function matched. CRUD fn received : ${crudFn}.`)
@@ -111,8 +121,8 @@ const renderFnDef = (crudFn, shouldFnRender, zomeEntryType) => {
 
   return `
     #[zome_fn("hc_public")]
-    fn ${crudFn}_${zomeEntryType.toLowerCase()}${args} -> ZomeApiResult<${returnType}> {
-        ${zomeEntryType.toLowerCase()}::handlers::${crudFn}_${zomeEntryType.toLowerCase()}(${zomeEntryType.toLowerCase()}_input)
+    fn ${zomeEntryFnName}${args} -> ZomeApiResult<${returnType}> {
+        ${zomeEntryType.toLowerCase()}::handlers::${zomeEntryFnName}(${zomeEntryFnParams})
     }
   `
 }

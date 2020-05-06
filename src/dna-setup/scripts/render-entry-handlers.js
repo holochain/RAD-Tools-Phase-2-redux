@@ -103,7 +103,7 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
   switch (crudFn) {
     case 'create': {
       const create = `
-      pub fn create_${toSnakeCase(zomeEntryName).toLowerCase()}(${toSnakeCase(zomeEntryName).toLowerCase()}_entry: ${capitalize(toCamelCase(zomeEntryName))}) -> ZomeApiResult<${capitalize(toCamelCase(zomeEntryName))}> {
+      pub fn create_${toSnakeCase(zomeEntryName).toLowerCase()}(${toSnakeCase(zomeEntryName).toLowerCase()}_entry: ${capitalize(toCamelCase(zomeEntryName))}Entry) -> ZomeApiResult<${capitalize(toCamelCase(zomeEntryName))}> {
           let entry = Entry::App(${toSnakeCase(zomeEntryName).toUpperCase()}_ENTRY_NAME.into(), ${toSnakeCase(zomeEntryName).toLowerCase()}_entry.clone().into());
           let address = hdk::commit_entry(&entry)?;
           hdk::link_entries(&${toSnakeCase(zomeEntryName).toLowerCase()}_anchor()?, &address, ${toSnakeCase(zomeEntryName).toUpperCase()}_LINK_TYPE, "")?;

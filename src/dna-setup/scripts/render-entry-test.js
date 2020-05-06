@@ -69,15 +69,15 @@ const generateTestEntryArgs = (callVolume, definition, zomeEntryName) => {
 
 const rendervalidationTesting = (validatationFn, zomeEntryName, callStringBase, generateTestEntryDefault) => {
   return `
-    scenario("validate_entry_${toSnakeCase(validatationFn).toLowerCase()}", async (s, t) => {
-      const {alice, bob} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)
-      const create_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryDefault())}})
-      await s.consistency()
-      
-      const ${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await bob.call(${callStringBase}, "${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}", { "id": ${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id })
-      let err = JSON.parse(${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Err.Internal)
-      t.deepEqual(err.kind, {"ValidationFailed":"Agent who did not author is trying to ${toSnakeCase(validatationFn).toLowerCase()}"})
-    })
+      scenario("validate_entry_${toSnakeCase(validatationFn).toLowerCase()}", async (s, t) => {
+        const {alice, bob} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)
+        const create_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryDefault())}})
+        await s.consistency()
+        
+        const ${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await bob.call(${callStringBase}, "${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}", { "id": ${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id })
+        let err = JSON.parse(${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Err.Internal)
+        t.deepEqual(err.kind, {"ValidationFailed":"Agent who did not author is trying to ${toSnakeCase(validatationFn).toLowerCase()}"})
+      })
   `
 }
 
