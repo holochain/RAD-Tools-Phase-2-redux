@@ -1,5 +1,5 @@
 // const typeSpec = require('../../type-spec.json')
-const typeSpec = require('../../sample-type-spec.json')
+const typeSpec = require('../../../setup/type-specs/sample-type-spec.json')
 const generateDnaShell = require('./generate-dna-shell')
 const generateDnaZomes = require('./generate-dna-zomes')
 

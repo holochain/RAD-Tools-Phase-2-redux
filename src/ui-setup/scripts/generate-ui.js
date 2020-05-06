@@ -1,6 +1,6 @@
 const ncp = require('ncp')
 const fs = require('fs')
-const typeSpec = require('../../type-spec.json')
+const typeSpec = require('../../../setup/type-spec.json')
 const renderSchema = require('./renderSchema')
 const renderResolvers = require('./renderResolvers')
 const renderHomePage = require('./renderHomePage')

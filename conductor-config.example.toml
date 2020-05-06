@@ -55,7 +55,7 @@ exclude = false
 pattern = "^debug/dna"
 
 [network]
-sim2h_url = "ws://public.sim2h.net:9000"
+sim2h_url = "ws://localhost:9000"
 type = "sim2h"
 
 bridges = []
