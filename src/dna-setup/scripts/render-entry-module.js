@@ -129,7 +129,7 @@ const renderModFile = (templateFile, zomeEntryName, entryContents, bulkEntryCont
 
 const renderEntryDefinition = (entryDefName, entryDefType) => {
   return `
-    ${entryDefName}: ${entryDefType},
+    ${entryDefName}: ${capitalize(entryDefType.toLowerCase())},
   `
 }
 
@@ -160,11 +160,12 @@ const renderCrudValidationDefinition = (crudFn, shouldFnRender) => {
     default: return new Error(`Error: Found invalid CRUD function for validation. CRUD fn received : ${crudFn}.`)
   }
 
+  // todo: look into spacing/indentation normalization (linter doesn't handle this)
   return `
-    hdk::EntryValidationData::${capitalize(toCamelCase(crudFn))}{${validationParams}} =>
-    {
-        validation::validate_entry_${toSnakeCase(crudFn).toLowerCase()}(${validationParams})
-    }
+              hdk::EntryValidationData::${capitalize(toCamelCase(crudFn))}{${validationParams}} =>
+              {
+                  validation::validate_entry_${toSnakeCase(crudFn).toLowerCase()}(${validationParams})
+              }
   `
 }
 
