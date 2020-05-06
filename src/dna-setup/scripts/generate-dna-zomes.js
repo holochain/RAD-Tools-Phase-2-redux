@@ -19,50 +19,66 @@ async function findTestDirPath (zomeDir) {
   else return testDirectoryPath = stdout.trim()
 }
 
-async function formatZome (zomeDir) {
-  const { stderr } = await exec(`cd ${zomeDir} && cd ../../../../ && nix-shell; cd ${zomeDir} && cargo fmt && cd ../../../..`)
+async function addHCAnchors (zomeDir) {
+  const { stderr } = await exec(`cd ${zomeDir} && cargo add holochain_anchors --git https://github.com/holochain/holochain-anchors.git && cd ../../../..`)
   if(stderr) console.error('stderr:', stderr)      
   else {
-    return console.log('Successfully formated code. +1 \n--------------------------------------  \n')
+    return console.log('\nSuccessfully added `holochain_anchors` module')
   }
 }
 
-async function createZomeDir (currentZomeName, entryTypes) {
-  const zomeName = toSnakeCase(currentZomeName).toLowerCase()
+const addCargoEdit = async (zomeDir) => exec(`cd ${zomeDir} && cargo install cargo-edit --force && cd ../../../..`)
+
+async function formatZome (zomeDir) {
+  const { stderr } = await exec(`cd ${zomeDir} && cargo fmt && cd ../../../..`)
+  if (stderr) console.error('stderr:', stderr)      
+  else {
+    return console.log('\n--------------------------------------\n Successfully formated zome. +1 \n--------------------------------------  \n')
+  }
+}
+
+async function createZomeDir (zomeNameRaw, entryTypesWrapper, lastZome) {
+  const isLastZome = zomeNameRaw === lastZome
+  const zomeName = toSnakeCase(zomeNameRaw).toLowerCase()
   const { stderr, stdout } = await exec(`cd ./dna-src && hc generate zomes/${zomeName} rust-proc | sed -ne 's/lib.rs\.*//p' | xargs -I {} echo $(pwd -P){} && cd ..`)
-  if(stderr) console.error('stderr:', stderr)      
+  if (stderr) console.error('stderr:', stderr)      
   else {
     const zomeDir = stdout.trim().split('> ').join('/')
+    const zomeEntryTypes = Object.values(entryTypesWrapper)[0]
     console.log(' ---------------------------')
-    console.log(`Created ${zomeName.toUpperCase()} Zome Directory at ${zomeDir}`)
-    console.log(`${zomeName.toUpperCase()} Zome entryTypes:`, entryTypes)
+    console.log(` Created ${zomeName.toUpperCase()} Zome Directory at ${zomeDir}`)
+    console.log(`\n Starting file generation of following ${zomeName.toUpperCase()} Zome Entry Types:`, zomeEntryTypes)
     console.log(' --------------------------- \n')
-    const entryTypeWrapper = Object.values(entryTypes)
-    const zomeEntryTypes = entryTypeWrapper[0]
-    const zomeEntries = await generateZomeEntries(zomeName, zomeEntryTypes)
+    await generateZomeEntries(zomeName, zomeEntryTypes)
+    console.log('\nPreparing to add Holochain Anchors to Zome ... \n (This might take a while.)')
+    await addCargoEdit(zomeDir)
+    await addHCAnchors(zomeDir)
     await renderZomeIndex(zomeName, zomeEntryTypes, zomeDir)
-  
-    const dnaName = await findDnaName(zomeDir)
-    const testDir = await findTestDirPath(zomeDir)
-    await renderTestIndex(dnaName, zomeEntryTypes, testDir)
-    console.log('-------------------------------------- \nFormatting Zome Codebase... ')
     await formatZome(zomeDir)
     console.log(`>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n Finished creating ${zomeName.toUpperCase()} ZOME \n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< \n\n\n`)
-    return zomeEntries
+
+    if (isLastZome) {      
+      const dnaName = await findDnaName(zomeDir)
+      const testDir = await findTestDirPath(zomeDir)
+      await renderTestIndex(dnaName, zomeEntryTypes, testDir)
+    }
+
+    return zomeDir
   }
 }
 
 const generateDnaZomes = typeSpec => {
   let { zomes } = typeSpec
-  // zomes placeholder for before type-schema format is updated:
+  // a zomes placeholder for before type-schema format is updated:
   if(isEmpty(zomes)) {
     const { types } = typeSpec
     const zomeEntries = Object.keys(types)    
-    const zomeName = zomeEntries.length > 1 ? 'my_zome' : toSnakeCase(zomeEntries[0].concat('s')).toLowerCase()
+    const zomeName = toSnakeCase(zomeEntries[0].concat('s')).toLowerCase()
     zomes = { [zomeName]: { types } }
   }
-
-  return promiseMapFnOverObject(zomes, createZomeDir)
+  const orderedZomeNames = Object.keys(zomes).sort()
+  const lastZome = orderedZomeNames[orderedZomeNames.length - 1]
+  return promiseMapFnOverObject(zomes, createZomeDir, lastZome)
 }
 
 module.exports = generateDnaZomes
