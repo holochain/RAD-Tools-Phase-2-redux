@@ -1,4 +1,4 @@
-const { dnaTitle, dnaHappInstance } = require('../index.js')
+const { dnaHappInstance } = require('../index.js')
 
 module.exports = (scenario, conductorConfig) => {
   {CRUD_TESTING}
