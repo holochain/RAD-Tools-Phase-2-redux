@@ -45,6 +45,7 @@ ncp(SOURCE_PATH, DESTINATION_PATH, err => {
     fs.writeFileSync(path, renderFunction(typeSpec)))
 
   mapObject(typeSpec.types, generateTypePage)
+  console.log(`\n ${chalk.cyan.bold(' UI Generation Complete')} \n`)
 })
 
 function generateTypePage (typeName, type) {

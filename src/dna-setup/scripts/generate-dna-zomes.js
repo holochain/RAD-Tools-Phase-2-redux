@@ -2,8 +2,8 @@ const { promisify } = require('util')
 const exec = promisify(require('child_process').exec)
 const fs = require('fs')
 const path = require('path')
-const { promiseMapFnOverObject, replaceNamePlaceHolders, toSnakeCase } = require('../../utils.js')
-const { ZOME_NAME } = require('../variables.js')
+const { promiseMapFnOverObject, replaceNamePlaceHolders, toCamelCase, toSnakeCase } = require('../../utils.js')
+const { DNA_NAME, ZOME_NAME } = require('../variables.js')
 const generateZomeEntries = require('./generate-zome-entries')
 const renderZomeLib = require('./render-zome-lib')
 const renderTestIndex = require('./render-test-index')
@@ -34,6 +34,20 @@ const renderZomeCargoToml = (zomeName, zomeDir) => {
   return writeCargoToml
 }
 
+const renderNixSetup = (dnaName, zomeDir) => {
+  const happDnaName = toCamelCase(dnaName)
+  const pathAsArray = zomeDir.split('/')
+  const dnaSrcDir = pathAsArray.splice(0, pathAsArray.length-5).join('/')
+  const defaultNixTemplatePath = path.resolve("src/dna-setup/zome-template", "default.nix");
+  const defaultNix = fs.readFileSync(defaultNixTemplatePath, 'utf8')
+  fs.writeFileSync(`${dnaSrcDir}/default.nix`, defaultNix)
+  const configNixTemplatePath = path.resolve("src/dna-setup/zome-template", "config.nix");
+  const configNixTemplate = fs.readFileSync(configNixTemplatePath, 'utf8')
+  const configNix = replaceNamePlaceHolders(configNixTemplate, DNA_NAME, happDnaName)
+  const writeconfigNix = fs.writeFileSync(`${dnaSrcDir}/config.nix`, configNix)
+  return writeconfigNix
+}
+
 async function formatZome (zomeDir) {
   const { stderr } = await exec(`cd ${zomeDir} && cargo fmt && cd ../../../..`)
   if (stderr) console.error('stderr:', stderr)      
@@ -51,15 +65,16 @@ async function createZomeDir (zomeNameRaw, entryTypesWrapper, lastZome) {
     const newTestingEntries = testingEntries.concat(Object.keys(zomeEntryTypes).sort())
     testingEntries = newTestingEntries
     await generateZomeEntries(zomeName, zomeEntryTypes)
-    renderZomeCargoToml(zomeName, zomeDir)
     await renderZomeLib(zomeName, zomeEntryTypes, zomeDir)
     await formatZome(zomeDir)
-    console.log(`${chalk.cyan(' Finished creating ' + chalk.bold(zomeName.toUpperCase()) + ' ZOME')}\n`)
-
+    renderZomeCargoToml(zomeName, zomeDir)
+    console.log(`${chalk.cyan(' Finished creating ' + zomeName.toUpperCase() + ' ZOME')}\n`)
+    
     if (isLastZome) {      
       const dnaName = await findDnaName(zomeDir)
       const testDir = await findTestDirPath(zomeDir)
       await renderTestIndex(dnaName, testingEntries, testDir)
+      renderNixSetup(dnaName, zomeDir)
     }
 
     return zomeDir

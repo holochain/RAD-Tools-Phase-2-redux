@@ -5,7 +5,7 @@ const chalk = require('chalk')
 async function generateDnaShell () {
   const { stderr }  = await exec(`([ ! -d ./dna-src ] && hc init dna-src); [ -d ./dna-src ] && echo {}`)
   if (stderr) return stderr
-  else return console.log(`\n ${chalk.cyan('*** Created DNA shell ***')} \n`)
+  else return console.log(`\n ${chalk.cyan('Finished creating DNA Shell')} \n`)
 }
 
 module.exports = generateDnaShell

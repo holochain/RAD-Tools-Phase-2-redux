@@ -21,6 +21,7 @@ async function genDNA() {
 }
 
 genDNA()
+  .then(() => console.log(` ${chalk.cyan.bold('DNA Generation Complete')} \n`))
   .catch(e => {
     if (e.stderr === '/bin/sh: 1: hc: not found\n'){
       console.error(`  ${chalk.red(e.stderr)} \n${chalk.yellow('> Hint: You are probably not running this command in nix-shell. \n  Be sure to enter into nix-shell prior to running any Holochain command.')}`)

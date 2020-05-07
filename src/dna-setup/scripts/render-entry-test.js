@@ -12,7 +12,7 @@ const { ENTRY_NAME, CRUD_TESTING } = require('../variables.js')
 const entryTestingIndexTemplatePath = path.resolve("src/dna-setup/test-template/entry-test-template", "index.js");
 const entryTestingIndexTemplate = fs.readFileSync(entryTestingIndexTemplatePath, 'utf8')
 
-function renderEntryTest (zomeName, zomeEntryName, zomeEntry) {
+function renderEntryTest (zomeEntryName, zomeEntry, zomeName) {
   const crudTesting = renderEntryTestContent(zomeName, zomeEntry, zomeEntryName)
   const completedTestEntryFile = renderTestEntryFile(entryTestingIndexTemplate, zomeEntryName, crudTesting)
   return completedTestEntryFile

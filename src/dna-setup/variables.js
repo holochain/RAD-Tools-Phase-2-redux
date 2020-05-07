@@ -1,4 +1,5 @@
-// name replacements for most/all files
+// app name replacements
+const DNA_NAME = 'dnaName'
 const ZOME_NAME = 'zomeName'
 const ENTRY_NAME = 'entryName'
 
@@ -92,7 +93,6 @@ const CRUD_VALIDATION_DEFINITIONS = 'crudValidationDefinitions'
 
 // ================================================================
 // TESTING: root index.js file
-const DNA_NAME = 'dnaName'
 const ENTRY_TEST_IMPORTS = 'entryTestImports'
 
 // ================================================================

@@ -4,6 +4,7 @@
   "description": "The second tier of RAD tools, automating a UI GraphQL and DNA generation based on a JSON schema file.",
   "main": "index.js",
   "scripts": {
+    "generate:happ": "npm run clear-happ && npm run generate:ui && npm run hc:generate-dna",
     "generate:ui": "node src/ui-setup/scripts/generate-ui",
     "ui:generate-clean": "rm -rf ui-src/*",
     "ui:start": "cd ui-src && npm run start",
@@ -11,7 +12,8 @@
     "hc:package": "cd dna-src && hc package",
     "hc:test": "cd dna-src && hc test",
     "hc:start": "holochain -c conductor-config.toml",
-    "start": "npm run hc:start && npm rn ui:start"
+    "start": "npm run hc:start && npm rn ui:start",
+    "clear-happ": "rm -rf dna-src/ ui-src/"
   },
   "devDependencies": {},
   "dependencies": {
