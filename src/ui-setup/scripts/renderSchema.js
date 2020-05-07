@@ -10,7 +10,7 @@ ${renderMutationDef(types)}\`
 `
 }
 
-function renderTypeDef (typeName, type) {
+function renderTypeDef (typeName, { definition: type }) {
   return `type ${typeName} {
   id: ID
 ${mapObject(type, renderField).join('\n')}

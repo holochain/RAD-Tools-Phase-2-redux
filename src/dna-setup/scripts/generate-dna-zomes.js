@@ -1,11 +1,14 @@
 const { promisify } = require('util')
 const exec = promisify(require('child_process').exec)
-const { promiseMapFnOverObject, toSnakeCase } = require('../../utils.js')
+const fs = require('fs')
+const path = require('path')
+const { promiseMapFnOverObject, replaceNamePlaceHolders, toSnakeCase } = require('../../utils.js')
+const { ZOME_NAME } = require('../variables.js')
 const generateZomeEntries = require('./generate-zome-entries')
-const renderZomeIndex = require('./render-zome-index')
+const renderZomeLib = require('./render-zome-lib')
 const renderTestIndex = require('./render-test-index')
 const { isEmpty } = require('lodash/fp')
-
+const chalk = require('chalk')
 
 let testingEntries = []
 
@@ -21,22 +24,20 @@ async function findTestDirPath (zomeDir) {
   else return testDirectoryPath = stdout.trim()
 }
 
-async function addHCAnchors (zomeDir) {
-  const { stderr } = await exec(`cd ${zomeDir} && cargo add holochain_anchors --git https://github.com/holochain/holochain-anchors.git && cd ../../../..`)
-  if(stderr) console.error('stderr:', stderr)      
-  else {
-    return console.log('\nSuccessfully added `holochain_anchors` module')
-  }
+const renderZomeCargoToml = (zomeName, zomeDir) => {
+  const pathAsArray = zomeDir.split('/')
+  const zomeCodeDir = pathAsArray.splice(0, pathAsArray.length-2).join('/')
+  const cargoTomlTemplatePath = path.resolve("src/dna-setup/zome-template", "Cargo.toml");
+  const cargoTomlTemplate = fs.readFileSync(cargoTomlTemplatePath, 'utf8')
+  const cargoToml = replaceNamePlaceHolders(cargoTomlTemplate, ZOME_NAME, zomeName)
+  const writeCargoToml = fs.writeFileSync(`${zomeCodeDir}/Cargo.toml`, cargoToml)
+  return writeCargoToml
 }
-
-const addCargoEdit = async (zomeDir) => exec(`cd ${zomeDir} && cargo install cargo-edit --force && cd ../../../..`)
 
 async function formatZome (zomeDir) {
   const { stderr } = await exec(`cd ${zomeDir} && cargo fmt && cd ../../../..`)
   if (stderr) console.error('stderr:', stderr)      
-  else {
-    return console.log('\n--------------------------------------\n Successfully formated zome. +1 \n--------------------------------------  \n')
-  }
+  return
 }
 
 async function createZomeDir (zomeNameRaw, entryTypesWrapper, lastZome) {
@@ -48,18 +49,12 @@ async function createZomeDir (zomeNameRaw, entryTypesWrapper, lastZome) {
     const zomeDir = stdout.trim().split('> ').join('/')
     const zomeEntryTypes = Object.values(entryTypesWrapper)[0]
     const newTestingEntries = testingEntries.concat(Object.keys(zomeEntryTypes).sort())
-    testingEntries = newTestingEntries    
-    console.log(' ---------------------------')
-    console.log(` Created ${zomeName.toUpperCase()} Zome Directory at ${zomeDir}`)
-    console.log(`\n Starting file generation of following ${zomeName.toUpperCase()} Zome Entry Types:`, zomeEntryTypes)
-    console.log(' --------------------------- \n')
+    testingEntries = newTestingEntries
     await generateZomeEntries(zomeName, zomeEntryTypes)
-    console.log('\nPreparing to add Holochain Anchors to Zome ... \n (This might take a while.)')
-    await addCargoEdit(zomeDir)
-    await addHCAnchors(zomeDir)
-    await renderZomeIndex(zomeName, zomeEntryTypes, zomeDir)
+    renderZomeCargoToml(zomeName, zomeDir)
+    await renderZomeLib(zomeName, zomeEntryTypes, zomeDir)
     await formatZome(zomeDir)
-    console.log(`>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n Finished creating ${zomeName.toUpperCase()} ZOME \n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< \n\n\n`)
+    console.log(`${chalk.cyan(' Finished creating ' + chalk.bold(zomeName.toUpperCase()) + ' ZOME')}\n`)
 
     if (isLastZome) {      
       const dnaName = await findDnaName(zomeDir)

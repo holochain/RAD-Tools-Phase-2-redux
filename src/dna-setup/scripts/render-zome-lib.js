@@ -3,12 +3,12 @@ const path = require('path')
 const { isEmpty } = require('lodash/fp')
 const { replaceNamePlaceHolders, replaceContentPlaceHolders, mapFnOverObject, capitalize } = require('../../utils.js')
 const { ZOME_NAME, ENTRY_IMPORTS, ENTRY_DEFINITIONS, ENTRY_FUNCTION_DEFINITIONS } = require('../variables.js')
-const zomeIndexTemplatePath = path.resolve("src/dna-setup/zome-template", "index.rs");
-const zomeIndexTemplate = fs.readFileSync(zomeIndexTemplatePath, 'utf8')
+const zomeLibTemplatePath = path.resolve("src/dna-setup/zome-template", "lib.rs");
+const zomeLibTemplate = fs.readFileSync(zomeLibTemplatePath, 'utf8')
 
 
 let zomeEntryImports, zomeEntryDefs, zomeEntryFns
-const zomeIndexContents = [
+const zomeLibContents = [
   [() => zomeEntryImports, ENTRY_IMPORTS],
   [() => zomeEntryDefs, ENTRY_DEFINITIONS],
   [() => zomeEntryFns, ENTRY_FUNCTION_DEFINITIONS]
@@ -20,25 +20,25 @@ const cleanSlate = () => {
   zomeEntryFns = ''
 }
 
-function renderZomeIndex (zomeName, zomeEntryTypes, zomeDir) {
+function renderZomeLib (zomeName, zomeEntryTypes, zomeDir) {
   cleanSlate()
-  mapFnOverObject(zomeEntryTypes, renderIndexContent)
-  const completedZomeIndex = renderIndexFile(zomeIndexTemplate, zomeIndexContents, zomeName)
-  fs.writeFileSync(`${zomeDir}/lib.rs`, completedZomeIndex)
-  return console.log(`\n========== Created ${zomeName}/lib.rs  ===========\n\n`)
+  mapFnOverObject(zomeEntryTypes, renderLibContent)
+  const completedZomeLib = renderLibFile(zomeLibTemplate, zomeLibContents, zomeName)
+  const writeZomeLib = fs.writeFileSync(`${zomeDir}/lib.rs`, completedZomeLib)
+  return writeZomeLib
 }
 
-const renderIndexContent = (zomeEntryType, zomeEntry) => {
+const renderLibContent = (zomeEntryType, zomeEntry) => {
   zomeEntryImports = zomeEntryImports.concat(renderZomeEntryImports(zomeEntryType))
   zomeEntryDefs = zomeEntryDefs.concat(renderZomeEntryDefs(zomeEntryType))
   zomeEntryFns = zomeEntryFns.concat(renderZomeEntryFns(zomeEntryType, zomeEntry))
-  return zomeIndexContents
+  return zomeLibContents
 }
 
-const renderIndexFile = (templateFile, zomeIndexContents, zomeName) => {
+const renderLibFile = (templateFile, zomeLibContents, zomeName) => {
   let newFile = templateFile
   newFile = replaceNamePlaceHolders(newFile, ZOME_NAME, zomeName)
-  zomeIndexContents.forEach(([zomeEntryContent, placeHolderContent]) => {
+  zomeLibContents.forEach(([zomeEntryContent, placeHolderContent]) => {
     newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
   })
   return newFile
@@ -126,4 +126,4 @@ const renderFnDef = (crudFn, shouldFnRender, zomeEntryType) => {
   `
 }
 
-module.exports = renderZomeIndex
+module.exports = renderZomeLib

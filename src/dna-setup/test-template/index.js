@@ -4,9 +4,9 @@
 
 const { Orchestrator, Config, combine, callSync, singleConductor, localOnly, tapeExecutor } = require('@holochain/tryorama')
 const path = require('path')
-const dnaPath = path.join(__dirname, "../dist/dna-src.dna.json")
-const dnaHappInstance = "dnaNameHappInstance"
-const dnaTitle = dnaName
+const dnaPath = path.join(__dirname, '../dist/dna-src.dna.json')
+const dnaHappInstance = 'dnaNameHappInstance'
+const dnaTitle = 'dnaName'
 
 process.on('unhandledRejection', error => {
   // Will print "unhandledRejection err is not defined".
