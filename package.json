@@ -10,7 +10,7 @@
     "ui:start": "cd ui-src && npm run start",
     "hc:generate-dna": "node src/dna-setup/scripts/generate-dna",
     "hc:package": "cd dna-src && hc package",
-    "hc:test": "cd dna-src && hc test",
+    "hc:test": "cd dna-src && RUST_BACKTRACE=1 HC_IGNORE_SIM2H_URL_PROPERTY=true hc test | node test/node_modules/faucet/bin/cmd.js",
     "hc:start": "holochain -c conductor-config.toml",
     "start": "npm run hc:start && npm rn ui:start",
     "clear-happ": "rm -rf dna-src/ ui-src/"

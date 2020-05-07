@@ -5,6 +5,7 @@ const { replaceContentPlaceHolders,
   replaceNamePlaceHolders,
   mapFnOverObject,
   toSnakeCase,
+  toCamelCase,
   capitalize
 } = require('../../utils.js')
 const { ENTRY_NAME, CRUD_TESTING } = require('../variables.js')
@@ -51,7 +52,7 @@ const renderEntryDefinition = (entryDefName, entryDefType, { zomeEntryName, id }
         ? `() => ${capitalize(zomeEntryName.toLowerCase())} test entry #${testId} content for the ${entryDefName.toLowerCase()} field in entry definition.`
         : console.error(`Received unexpected value type for ${capitalize(zomeEntryName.toLowerCase())} entry, field ${entryDefName.toLowerCase()}`)
 
-  return [`${entryDefName}`, `${testValue}`]
+  return [`${toCamelCase(entryDefName)}`, `${testValue}`]
 }
 
 const generateTestEntryArgs = (callVolume, definition, zomeEntryName) => {
