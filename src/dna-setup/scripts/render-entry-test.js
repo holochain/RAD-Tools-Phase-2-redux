@@ -104,7 +104,7 @@ const renderCrudTesting = (crudFn, shouldFnRender, { zomeName, zomeEntryName, zo
         // Wait for all network activity to settle
         await s.consistency()
         const get_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await bob.call(${callStringBase}, "get_${toSnakeCase(zomeEntryName).toLowerCase()}", {"id": ${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id})
-        t.deepEqual(${toSnakeCase(crudFn).toLowerCase()}_note_result, get_${toSnakeCase(zomeEntryName).toLowerCase()}_result)
+        t.deepEqual(${toSnakeCase(crudFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result, get_${toSnakeCase(zomeEntryName).toLowerCase()}_result)
       })
       `
       crudTesting = crudTesting + create
