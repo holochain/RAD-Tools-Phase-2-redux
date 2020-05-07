@@ -88,7 +88,7 @@ const renderCrudTesting = (crudFn, shouldFnRender, { zomeEntryName, zomeEntry })
   let crudTesting = ''
 
   const { definition } = zomeEntry
-  const callStringBase = 'dnaTitle, dnaHappInstance'
+  const callStringBase = `dnaHappInstance, ${zomeEntryName}`
   const generateTestEntryDefault = () => generateTestEntryArgs(1, definition, zomeEntryName)
   const renderValidateEntryTest = validationCall => rendervalidationTesting(validationCall, zomeEntryName, callStringBase, generateTestEntryDefault)
 

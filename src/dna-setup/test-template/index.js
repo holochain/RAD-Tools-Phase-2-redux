@@ -6,7 +6,6 @@ const { Orchestrator, Config, combine, callSync, singleConductor, localOnly, tap
 const path = require('path')
 const dnaPath = path.join(__dirname, '../dist/dna-src.dna.json')
 const dnaHappInstance = 'dnaNameHappInstance'
-const dnaTitle = 'dnaName'
 
 process.on('unhandledRejection', error => {
   // Will print "unhandledRejection err is not defined".
@@ -90,4 +89,4 @@ orchestrator.run().then(_ => {
   console.log('Testing Complete.')
 })
 
-module.exports = { dnaHappInstance, dnaTitle }
+module.exports = { dnaHappInstance }
