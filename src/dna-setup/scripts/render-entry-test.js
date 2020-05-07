@@ -75,7 +75,7 @@ const rendervalidationTesting = (validatationFn, zomeEntryName, callStringBase, 
         const create_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await alice.call(${callStringBase}, "create_${toSnakeCase(zomeEntryName).toLowerCase()}", {"${toSnakeCase(zomeEntryName).toLowerCase()}_input" : ${JSON.stringify(generateTestEntryDefault())}})
         await s.consistency()
 
-        const ${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await bob.call(${callStringBase}, "${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}", { "id": ${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id })
+        const ${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result = await bob.call(${callStringBase}, "${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}", { "id": create_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Ok.id })
         let err = JSON.parse(${toSnakeCase(validatationFn).toLowerCase()}_${toSnakeCase(zomeEntryName).toLowerCase()}_result.Err.Internal)
         t.deepEqual(err.kind, {"ValidationFailed":"Agent who did not author is trying to ${toSnakeCase(validatationFn).toLowerCase()}"})
       })
