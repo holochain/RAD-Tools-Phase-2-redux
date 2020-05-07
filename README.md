@@ -6,7 +6,7 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
 
 ### Generate a UI from type-spec
 ```
-$ npm run generate:ui sample-type-spec.json
+$ npm run generate:ui <sample-type-spec.json>
 ```
 
 This will generate your new ui in the `ui-src` directory. CD into that directory and run
@@ -23,7 +23,7 @@ and your UI server will start up and open the ui in a browser tab with mock data
 
 ### Generate a DNA from type-spec
 ```
-$ npm run hc-generate:dna sample-type-spec.json
+$ npm run hc-generate:dna <sample-type-spec.json>
 ```
 
 This will generate your new DNA in the `dna-src` directory.
