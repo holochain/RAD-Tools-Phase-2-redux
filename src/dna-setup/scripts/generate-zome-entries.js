@@ -5,7 +5,8 @@ const { promiseMapFnOverObject, toSnakeCase } = require('../../utils.js')
 const renderMod = require('./render-entry-module')
 const renderHandlers = require('./render-entry-handlers')
 const renderValidation = require('./render-entry-validation')
-const renderTest = require('./render-entry-test')
+const renderEntryTest = require('./render-entry-test')
+const chalk = require('chalk')
 
 async function createEntryDir(zomeName, entryName) {
   const { stdout, stderr } = await exec(`cd dna-src/zomes/${zomeName}/code/src; [ ! -d ${entryName} ] && mkdir ${entryName}; cd ${entryName} && echo $(pwd -P)`)
@@ -25,7 +26,7 @@ const renderers = [
   [renderMod, 'mod'],
   [renderHandlers, 'handlers'],
   [renderValidation, 'validation'],
-  [renderTest, 'index']
+  [renderEntryTest, 'index']
 ]
 
 const renderEntry = async (zomeEntryType, zomeEntry, zomeName) => {

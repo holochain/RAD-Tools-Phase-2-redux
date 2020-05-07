@@ -15,6 +15,7 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "chalk": "^4.0.0",
     "lodash": "^4.17.15",
     "ncp": "^2.0.0",
     "toml": "^3.0.0",

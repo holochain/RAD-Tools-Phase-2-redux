@@ -1,6 +1,6 @@
 const mapObject = require('./render-utils').mapObject
 
-function renderTypePage (typeName, fields) {
+function renderTypePage (typeName, { definition: fields }) {
   const name = typeName
   const namePlural = typeName + 's'
   const capsName = typeName.toUpperCase()

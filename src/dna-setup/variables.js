@@ -1,9 +1,9 @@
 // name replacements for most/all files
+const ZOME_NAME = 'zomeName'
 const ENTRY_NAME = 'entryName'
 
 // ================================================================
 // lib.rs file
-const ZOME_NAME = 'zomeName'
 const ENTRY_IMPORTS = 'entryImports'
 const ENTRY_DEFINITIONS = 'entryDefinitions'
 const ENTRY_FUNCTION_DEFINITIONS = 'entryFunctionDefinitions'
@@ -100,10 +100,12 @@ const ENTRY_TEST_IMPORTS = 'entryTestImports'
 const CRUD_TESTING = 'crudTesting'
 
 module.exports = {
+  // Zome:
+  ZOME_NAME,
+
   // Zome Entry:
   ENTRY_NAME,
   // lib.rs
-  ZOME_NAME,
   ENTRY_IMPORTS,
   ENTRY_DEFINITIONS,
   ENTRY_FUNCTION_DEFINITIONS,
