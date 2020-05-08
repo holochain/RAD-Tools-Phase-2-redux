@@ -5,7 +5,7 @@ name = "Agent 1"
 public_address = "<AGENT_1_PUB_KEY>"
 
 [[dnas]]
-file = "dna_src/dist/dna_src.dna.json"
+file = "dna-src/dist/dna-src.dna.json"
 hash = "<DNA_HASH>"
 id = "<DNA_NAME>-reference"
 

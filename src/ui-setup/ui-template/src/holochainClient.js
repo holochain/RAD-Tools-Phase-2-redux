@@ -38,7 +38,7 @@ function parseZomeCallPath (zomeCallPath) {
   return { instanceId, zome, zomeFunc }
 }
 
-function createZomeCall (zomeCallPath, callOpts = {}) {
+export function createZomeCall (zomeCallPath, callOpts = {}) {
   const DEFAULT_OPTS = {
     logging: HOLOCHAIN_LOGGING
   }

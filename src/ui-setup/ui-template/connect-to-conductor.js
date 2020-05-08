@@ -1,24 +1,27 @@
 // gratitude to https://flaviocopes.com/react-electron/ for this approach
 const net = require('net')
-const childProcess = require('child_process')
+// const util = require('util');
+// const exec = util.promisify(require('child_process').exec)
+const { exec } = require('child_process')
 const fs = require('fs')
 const toml = require('toml')
 
-const hcConfig1 = toml.parse(fs.readFileSync('../../../conductor-config.toml', 'utf-8'))
-const hcConfig1Port = hcConfig1.interfaces[0].driver.port || 3400
+const hcConfig = toml.parse(fs.readFileSync('../conductor-config.toml', 'utf-8'))
+const port = hcConfig.interfaces[0].driver.port || 3400
+
 client = new net.Socket()
 
 let startedConductor = false
 const tryConnection = () => {
+  console.log('hcConfig port:', port)
   client.connect(
-    { hcConfig1Port },
+    { port },
     () => {
       client.end()
       if (!startedConductor) {
-        console.log('Starting UI, connecting to port :' + hcConfig1Port)
         startedConductor = true
-        const exec = childProcess.exec
-        exec('npm run ui:start-live')
+        console.log('Starting UI, connecting to port :', port)
+        exec("echo 'running exec to start ui' && npm run ui:start-live")
       }
     }
   )

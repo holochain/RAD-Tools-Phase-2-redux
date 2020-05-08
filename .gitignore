@@ -36,3 +36,4 @@ conductor-config.toml
 keystores
 dna-src
 ui-src
+conductor.log
