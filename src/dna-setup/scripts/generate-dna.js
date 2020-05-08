@@ -1,6 +1,6 @@
-
 const generateDnaShell = require('./generate-dna-shell')
 const generateDnaZomes = require('./generate-dna-zomes')
+const fs = require('fs')
 const chalk = require('chalk')
 const typeSpecPath = process.argv[2]
 const defaultTypeSpec = require('../../setup/type-specs/sample-type-spec.json')
@@ -12,7 +12,7 @@ if (!typeSpecPath) {
   typeSpec = defaultTypeSpec
 }
 else {
-  typespec = JSON.parse(fs.readFileSync(typeSpecPath))
+  typeSpec = JSON.parse(fs.readFileSync(typeSpecPath))
 }
 
 async function genDNA() {

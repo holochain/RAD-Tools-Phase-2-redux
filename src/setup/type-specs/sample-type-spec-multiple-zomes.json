@@ -1,18 +1,18 @@
 {
   "zomes": {
-    "Profile": {
-      "types": {
-        "User": {
-          "description": "Create and manage users.",
-          "sharing": "public",
-          "definition": {
-            "name": "string",
-            "avatar_url": "string"
-          },
-          "functions": {}
-        }
-      }
-    },
+   "Profile": {
+     "types": {
+       "User": {
+         "description": "Create and manage users.",
+         "sharing": "public",
+         "definition": {
+           "name": "string",
+           "avatar_url": "string"
+         },
+         "functions": {}
+       }
+     }
+   },
     "Notes": {
       "types": {
         "Author": {
