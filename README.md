@@ -11,7 +11,12 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
     ```
     $ nix-shell
     ```
-3. Generate your custom Holochain Happ according to the type-spec.json file.
+3. Install root node dependencies
+    ```
+    $ npm i
+    ```
+
+4. Generate your custom Holochain Happ according to the type-spec.json file.
     >NB: *The type-spec.json is optional and will default to th sample provided in the src/setup/type-specs folder.*
     ```
     $ npm run happ:generate <type-spec.json>
@@ -22,7 +27,7 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
 
 1. Install all node dependencies
     ```
-    $ npm i
+    $ npm run happ:install
     ```
 2. Generate your Holochain Conductor
     ```
@@ -60,16 +65,21 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
     $ nix-shell
     ```
 
-2. Generate the DNA according to the type-spec.json file.
+2. Install all root node dependencies
+    ```
+    $ npm i
+    ```
+
+3. Generate the DNA according to the type-spec.json file.
     >NB: *The type-spec.json is optional and will default to the sample provided in the src/setup/type-specs folder.*
     ```
     $ hc:generate-dna <type-spec.json>
     ```
 
 ##### Run your DNA tests:
-1. Install all node dependencies
+1. Install all happ node dependencies
     ```
-    $ npm i
+    $ npm happ:install
     ```
 2. Test your DNA
     ```
