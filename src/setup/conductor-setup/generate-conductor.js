@@ -1,14 +1,16 @@
 // const util = require('util');
-// const child_process = util.promisify(require('child_process'))
+// const exec = util.promisify(require('child_process').exec)
 const { exec } = require('child_process')
 const chalk = require('chalk')
 const path = require('path')
+const { toCamelCase } = require('../../utils.js')
 
 // todo: this is currently a work around due to .cargo/config override option throwing an error at build time.
 // combine this command with generateConductor script after futures-util crate is corrected and runs with hc
 function updateConductorWithPackagedDNA (dnaHash) {
   const conductorConfigPath = path.resolve("./", "conductor-config.toml")
-  exec(`sed -i "s/{DNA_HASH}/${dnaHash}/" ${conductorConfigPath}`, (error, stdout, stderr) => {
+  const appName = toCamelCase(path.basename(path.dirname(conductorConfigPath)))
+  exec(`sed -i "s/<DNA_HASH>/${dnaHash}/" ${conductorConfigPath}; sed -i "s/<DNA_NAME>/${appName || dnaHash}/" ${conductorConfigPath}`, (error, stderr) => {
     if (error) {
       console.error(`exec error: \n${chalk.red(error)}`)
       return
@@ -17,14 +19,13 @@ function updateConductorWithPackagedDNA (dnaHash) {
       console.error(`stderr: \n${chalk.red(stderr)}`)
       return
     }
-    return console.log(`Added DNA Instance to Conductor \nFinished generating Conductor`)
+    return console.log(chalk.cyan('Added DNA Instance to Conductor \n\nFinished generating Conductor'))
   })
 }
 
 // todo: this is currently a work around due to .cargo/config override option throwing an error at build time.
 // combine this command with generateConductor script after futures-util crate is corrected and runs with hc
 function packageDNA () {
-  console.log('Completed DNA build with hc package')
   exec("cd dna-src && hc package", (error, stdout) => {
     if (error) {
       console.error(`exec error: \n${chalk.red(error)}`)
@@ -34,11 +35,12 @@ function packageDNA () {
     const dnaPackage = /(DNA hash: )/gi
     if(dnaPackage.test(stdout)) {
       dnaHash = stdout.trim().replace(dnaPackage, 'DNA_HASH').split('DNA_HASH')[1]
+      console.log(chalk.cyan('Completed DNA build with hc package'))
       updateConductorWithPackagedDNA(dnaHash)
     } else {
       throw new Error('hc package error: Unable to locate compiled DNA hash.')
     }
-    return console.log(`\n${chalk.cyan('DNA Hash: ' + dnaHash)}`)
+    return console.log(chalk.cyan('DNA Hash: ' + dnaHash))
   })
 }
 

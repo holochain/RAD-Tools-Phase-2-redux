@@ -6,7 +6,7 @@ const { toSnakeCase, toKebabCase } = require('../../utils.js')
 
 const agentName = process.argv[2]
 // nb: will need to update path to: ('../../conductor-config.toml')
-const conductorConfigPath = '../../conductor-config.example.toml'
+const conductorConfigPath = path.resolve("./", "conductor-config.toml")
 const conductorConfig = toml.parse(fs.readFileSync(conductorConfigPath, 'utf-8'))
 const addAgentToConfig = (conductorConfigPath, agentConfigTemplate) => fs.appendFileSync(conductorConfigPath, agentConfigTemplate)
 
