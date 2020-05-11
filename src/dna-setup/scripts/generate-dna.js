@@ -3,8 +3,8 @@ const generateDnaZomes = require('./generate-dna-zomes')
 const fs = require('fs')
 const chalk = require('chalk')
 const typeSpecPath = process.argv[2]
-const defaultTypeSpec = require('../../setup/type-specs/sample-type-spec.json')
-// const defaultTypeSpec = require('../../setup/type-specs/sample-type-spec-multiple-zomes.json')
+const defaultTypeSpecPath = path.resolve("src/setup/type-specs", "sample-type-spec.json");
+const defaultTypeSpec = require(defaultTypeSpecPath)
 
 let typeSpec
 if (!typeSpecPath) {

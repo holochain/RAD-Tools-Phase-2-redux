@@ -22,7 +22,7 @@
     "hc:start": "holochain -c conductor-config.toml &> conductor.log &",
     "hc:generate-conductor": "node src/setup/conductor-setup/generate-conductor",
     "hc:run": "npm run hc:package && cd dna-src && hc run -p 3400",
-    "futures-overwrite": "touch ./cargo/config"
+    "futures-override": "node src/setup/futures-override"
   },
   "devDependencies": {},
   "dependencies": {

@@ -8,7 +8,8 @@ const renderTypePage = require('./renderTypePage')
 const renderIndex = require('./renderIndex')
 const mapObject = require('./render-utils').mapObject
 const typeSpecPath = process.argv[2]
-const defaultTypeSpec = require('../../setup/type-specs/sample-type-spec.json')
+const defaultTypeSpecPath = path.resolve("src/setup/type-specs", "sample-type-spec.json");
+const defaultTypeSpec = require(defaultTypeSpecPath)
 
 let typeSpec
 if (!typeSpecPath) {
