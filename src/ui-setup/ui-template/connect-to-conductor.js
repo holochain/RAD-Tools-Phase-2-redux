@@ -21,7 +21,7 @@ const tryConnection = () => {
       if (!startedConductor) {
         startedConductor = true
         console.log('Starting UI, connecting to port :', port)
-        exec("npm run ui:start-live", (error, stdout, stderr) => {
+        exec("npm run ui:start-agent-1", (error, stdout, stderr) => {
         if (error) {
           console.error(`exec error: ${error}`)
           return
