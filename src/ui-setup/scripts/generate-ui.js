@@ -1,6 +1,7 @@
 const ncp = require('ncp')
 const fs = require('fs')
 const chalk = require('chalk')
+const path = require('path')
 const renderSchema = require('./renderSchema')
 const renderResolvers = require('./renderResolvers')
 const renderHomePage = require('./renderHomePage')

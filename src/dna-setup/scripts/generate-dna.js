@@ -1,6 +1,7 @@
 const generateDnaShell = require('./generate-dna-shell')
 const generateDnaZomes = require('./generate-dna-zomes')
 const fs = require('fs')
+const path = require('path')
 const chalk = require('chalk')
 const typeSpecPath = process.argv[2]
 const defaultTypeSpecPath = path.resolve("src/setup/type-specs", "sample-type-spec.json");
