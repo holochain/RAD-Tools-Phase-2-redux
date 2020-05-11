@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run start:sim2h && npm run hc:start; npm run ui:start",
     "start:sim2h": "sim2h_server -p 9000 &> sim2h-server.log &",
-    "install": "cd dna-src/test && npm i && cd ../../ui-src && npm i && cd ..",
+    "happ:install": "cd dna-src/test && npm i && cd ../../ui-src && npm i && cd ..",
     "happ:generate": "npm run happ:remove && npm run ui:generate && npm run hc:generate-dna",
     "happ:remove": "rm -rf dna-src/ ui-src/ .cargo/ target/",
     "ui:start": "cd ui-src && npm run ui:connect-to-conductor",
@@ -21,8 +21,7 @@
     "hc:test": "cd dna-src && RUST_BACKTRACE=1 HC_IGNORE_SIM2H_URL_PROPERTY=true hc test | node test/node_modules/faucet/bin/cmd.js",
     "hc:start": "holochain -c conductor-config.toml &> conductor.log &",
     "hc:generate-conductor": "node src/setup/conductor-setup/generate-conductor",
-    "hc:run": "npm run hc:package && cd dna-src && hc run -p 3400",
-    "futures-override": "node src/setup/futures-override"
+    "hc:run": "npm run hc:package && cd dna-src && hc run -p 3400"
   },
   "devDependencies": {},
   "dependencies": {
