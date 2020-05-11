@@ -4,10 +4,11 @@ const exec = util.promisify(require('child_process').exec);
 const toml = require('toml')
 const { toSnakeCase, toKebabCase } = require('../../utils.js')
 
+const agentName = process.argv[2]
 // nb: will need to update path to: ('../../conductor-config.toml')
 const conductorConfigPath = '../../conductor-config.example.toml'
 const conductorConfig = toml.parse(fs.readFileSync(conductorConfigPath, 'utf-8'))
-const agentName = process.argv[2]
+const addAgentToConfig = (conductorConfigPath, agentConfigTemplate) => fs.appendFileSync(conductorConfigPath, agentConfigTemplate)
 
 const generateAgentConfig = (agentName, agentPubKey) => `
   [[agents]]
@@ -16,8 +17,6 @@ const generateAgentConfig = (agentName, agentPubKey) => `
   name = "${insertSpacesInString(toSnakeCase(agentName), 'underscore')}"
   public_address = "${agentPubKey}"
 `
-
-const addAgentToConfig = (agentConfigTemplate, conductorConfigPath) => fs.appendFileSync(conductorConfigPath, agentConfigTemplate)
 
 async function locateAgentPubKey() {
   try {
@@ -40,7 +39,7 @@ if(agentName) {
       console.log('agentPubKey >>>> in the .then block: ', agentPubKey)
       if (conductorConfig.agents.find(agent.public_address === agentPubKey)) return console.log('Agent already exists in Conductor Config')
       generateAgentConfig(agentName, agentPubKey)
-      addAgentToConfig(generateAgentConfig(agentName, agentPubKey), conductorConfigPath)
+      addAgentToConfig(conductorConfigPath, generateAgentConfig(agentName, agentPubKey))
     })
 }
 else {

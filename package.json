@@ -6,20 +6,22 @@
   "scripts": {
     "start": "npm run start:sim2h && npm run hc:start; npm run ui:start",
     "start:sim2h": "sim2h_server -p 9000 &> sim2h-server.log &",
-    "generate": "npm run happ:remove && npm run ui:generate && npm run hc:generate-dna",
     "install": "cd dna-src/test && npm i && cd ../../ui-src && npm i && cd ..",
-    "happ:remove": "rm -rf dna-src/ ui-src/",
+    "happ:generate": "npm run happ:remove && npm run ui:generate && npm run hc:generate-dna",
+    "happ:remove": "rm -rf dna-src/ ui-src/ .cargo/ target/",
     "ui:start": "cd ui-src && npm run ui:connect-to-conductor",
     "ui:generate": "node src/ui-setup/scripts/generate-ui",
     "ui:generate-clean": "rm -rf ui-src/*",
     "hc:clean-storage": "rm -rf ./.holochain/holo/storage",
     "hc:generate-dna": "node src/dna-setup/scripts/generate-dna",
-    "hc:config-add-agent": "node setup/agent-setup/add-agent-to-conductor",
-    "hc:keygen": "node setup/agent-setup/create-new-agent",
+    "hc:config-add-agent": "node setup/conductor-setup/add-agent-to-conductor",
+    "hc:keygen": "node setup/conductor-setup/create-new-agent",
     "hc:package": "cd dna-src && hc package",
     "hc:build": "npm run hc:package",
     "hc:test": "cd dna-src && RUST_BACKTRACE=1 HC_IGNORE_SIM2H_URL_PROPERTY=true hc test | node test/node_modules/faucet/bin/cmd.js",
-    "hc:start": "holochain -c conductor-config.toml &> conductor.log &"
+    "hc:start": "holochain -c conductor-config.toml &> conductor.log &",
+    "hc:generate-conductor": "node src/setup/conductor-setup/generate-conductor",
+    "hc:run": "npm run hc:package && cd dna-src && hc run -p 3400"
   },
   "devDependencies": {},
   "dependencies": {

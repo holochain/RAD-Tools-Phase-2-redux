@@ -26,10 +26,11 @@ genDNA()
     if (e.stderr === '/bin/sh: 1: hc: not found\n'){
       console.error(`  ${chalk.red(e.stderr)} \n${chalk.yellow('> Hint: You are probably not running this command in nix-shell. \n  Be sure to enter into nix-shell prior to running any Holochain command.')}`)
     } else if (e.stderr) {
-      console.error(e.stderr)
+      console.error(`${chalk.red(e.stderr)}`)
     } 
     else {
-      console.error(e)
+      console.error(`${chalk.red(e)}`)
     }
   })
+  
   

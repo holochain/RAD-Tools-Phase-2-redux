@@ -2,38 +2,79 @@
 The second tier of RAD tools, automating a UI GraphQL and DNA generation based on a JSON schema file.
 
 ---
+## Generate your custom Holochain Happ:
+1. Clone the repo
+    ```
+    $ git clone https://github.com/holochain/RAD-Tools-Phase-2.git
+    ```
+2. Enter nix-shell
+    ```
+    $ nix-shell
+    ```
+3. Generate your custom Holochain Happ according to the type-spec.json file.
+    >NB: *The type-spec.json is optional and will default to th sample provided in the src/setup/type-specs folder.*
+    ```
+    $ npm run happ:generate <type-spec.json>
+    ```
+
+
+### Run your custom happ:
+
+1. Install all node dependencies
+    ```
+    $ npm i
+    ```
+2. Generate your Holochain Conductor
+    ```
+    $ npm run hc:generate-conductor
+    ```
+3. Start your Holochain Happ
+    ```
+    $ npm run start
+    ```
+---
+
 ## Run the Automated UI Command Only
 
 ### Generate a UI from type-spec
-```
-$ npm run generate:ui <sample-type-spec.json>
-```
+1. Generate your new ui in the `ui-src` directory.
+    ```
+    $ npm run ui:generate <type-spec.json>
+    ```
 
-This will generate your new ui in the `ui-src` directory. CD into that directory and run
+##### Run the UI with mock data:
+1. CD into that directory and run the app with mock data
+    ```
+    $ cd ui-src && npm i && npm start:mock
+    ```
 
-```
-$ npm i && npm start:mock
-```
-
-and your UI server will start up and open the ui in a browser tab with mock data.
+2. Navigate ot your browser, where your UI server will automatically start up and open the ui in a browser tab with mock data.
 
 ---
 
 ## Run the Automated DNA Command Only
 
 ### Generate a DNA from type-spec
-```
-$ npm run hc-generate:dna <sample-type-spec.json>
-```
+1. Enter nix-shell
+    ```
+    $ nix-shell
+    ```
 
-This will generate your new DNA in the `dna-src` directory.
+2. Generate the DNA according to the type-spec.json file.
+    >NB: *The type-spec.json is optional and will default to the sample provided in the src/setup/type-specs folder.*
+    ```
+    $ hc:generate-dna <type-spec.json>
+    ```
 
-```
-$ npm run hc:start
-```
-
-and your Holochain Conductor will start up in your terminal and output Conductor and networking logs related to the processing of data for your DNA Instance.
-
+##### Run your DNA tests:
+1. Install all node dependencies
+    ```
+    $ npm i
+    ```
+2. Test your DNA
+    ```
+    $ npm hc:test
+    ```
 ---
 
 <!-- ## Generate a complete and personalized Holochain Happ
