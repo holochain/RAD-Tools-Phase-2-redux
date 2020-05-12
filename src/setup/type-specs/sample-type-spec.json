@@ -7,6 +7,15 @@
         "name": "string",
         "avatar_url": "string"
       }
+    },
+    "Book": {
+      "description": "Create and manage books.",
+      "sharing": "public",
+      "definition": {
+        "author": "string",
+        "title": "string",
+        "topic": "string"
+      }
     }
   }
 }
