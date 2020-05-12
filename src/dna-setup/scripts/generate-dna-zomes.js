@@ -86,8 +86,7 @@ const generateDnaZomes = typeSpec => {
   // a zomes placeholder for before type-schema format is updated:
   if(isEmpty(zomes)) {
     const { types } = typeSpec
-    const zomeEntries = Object.keys(types)    
-    const zomeName = toSnakeCase(zomeEntries[0].concat('s')).toLowerCase()
+    const zomeName = 'zome'
     zomes = { [zomeName]: { types } }
   }
   const orderedZomeNames = Object.keys(zomes).sort()

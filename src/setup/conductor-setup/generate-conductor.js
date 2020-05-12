@@ -8,9 +8,11 @@ const { toCamelCase } = require('../../utils.js')
 // todo: this is currently a work around due to .cargo/config override option throwing an error at build time.
 // combine this command with generateConductor script after futures-util crate is corrected and runs with hc
 function updateConductorWithPackagedDNA (dnaHash) {
-  const conductorConfigPath = path.resolve("./", "conductor-config.toml")
+  const conductorConfigPath = path.resolve("./", "conductor-config.toml")  
   const appName = toCamelCase(path.basename(path.dirname(conductorConfigPath)))
-  exec(`sed -i "s/<DNA_HASH>/${dnaHash}/" ${conductorConfigPath}; sed -i "s/<DNA_NAME>/${appName || dnaHash}/" ${conductorConfigPath}`, (error, stderr) => {
+  const dnaName = appName || dnaHash
+
+  exec(`sed -i "s/<DNA_HASH>/${dnaHash}/" ${conductorConfigPath}; sed -i "s/<DNA_NAME>/${dnaName}/" ${conductorConfigPath}`, (error, stderr) => {
     if (error) {
       console.error(`exec error: \n${chalk.red(error)}`)
       return
