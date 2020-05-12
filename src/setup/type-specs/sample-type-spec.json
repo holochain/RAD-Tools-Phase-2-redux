@@ -7,6 +7,14 @@
         "name": "string",
         "avatar_url": "string"
       }
+    },
+    "Post": {
+      "description": "Create and manage posts.",
+      "sharing": "public",
+      "definition": {
+        "title": "string",
+        "body": "string"
+      }
     }
   }
 }
