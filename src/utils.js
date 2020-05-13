@@ -41,7 +41,8 @@ function insertSpacesInString (string, spaceDelimiter) {
   if (delimiter.test(string)) {
    return string.replace(space, match => ' '.concat(match.toLowerCase()))
   } else {
-    return console.error(`No ${delimiter}s to replace in provided string.`)
+    console.log(`Notice: There are no ${spaceDelimiter}s to replace in provided string,`, string)
+    return string
   }
 }
 
@@ -50,7 +51,8 @@ function replaceSpacesInString (string, replacement) {
   if (space.test(string)) {
    return string.replace(space, match => replacement.concat(match.toLowerCase()))
   } else {
-    return console.error('No spaces to replace in provided string.')
+    console.log('Notice: There are no spaces to replace in provided string.')
+    return string
   }
 }
 
