@@ -1,4 +1,6 @@
 const mapObject = require('./render-utils').mapObject
+const { toCamelCase } = require('../../utils.js')
+
 
 function renderSchema ({ types }) {
   return `import gql from 'graphql-tag'
@@ -27,7 +29,7 @@ function renderField (name, type) {
     string: 'String'
   }
   const graphqlType = rustToGraphqlType[type]
-  return `  ${name}: ${graphqlType}`
+  return `  ${toCamelCase(name)}: ${graphqlType}`
 }
 
 function renderQueryDef (types) {
@@ -49,8 +51,8 @@ ${mapObject(types, renderTypeMutations).join('')}}
 }
 
 function renderTypeMutations (typeName) {
-  return `  create${typeName}(input: ${typeName}Input): ${typeName}
-  update${typeName}(id: ID, input: ${typeName}Input): ${typeName}
+  return `  create${typeName}(${toCamelCase(typeName)}Input: ${typeName}Input): ${typeName}
+  update${typeName}(id: ID, ${toCamelCase(typeName)}Input: ${typeName}Input): ${typeName}
   delete${typeName}(id: ID): ${typeName}
 `
 }
