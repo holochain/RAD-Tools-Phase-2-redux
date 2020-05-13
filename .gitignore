@@ -38,3 +38,4 @@ ui-src
 conductor-config.toml
 conductor.log
 sim2h-server.log
+sim2h.log
