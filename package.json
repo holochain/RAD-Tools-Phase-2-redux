@@ -11,7 +11,7 @@
     "happ:generate": "npm run happ:remove && npm run ui:generate && npm run hc:generate-dna && npm run happ:install",
     "happ:install": "cd dna-src/test && npm i && cd ../../ui-src && npm i && cd ..",
     "happ:refresh": "npm run hc:clean-storage && npm run sim2h:clear-local",
-    "happ:remove": "npm run happ:refresh && rm -rf dna-src/ ui-src/ .cargo/ target/",
+    "happ:remove": "npm run hc:clean-storage && rm -rf dna-src/ ui-src/ .cargo/ target/",
     "ui:start": "cd ui-src && npm run ui:connect-to-conductor",
     "ui:generate": "node src/ui-setup/scripts/generate-ui",
     "ui:remove": "rm -rf ui-src/*",

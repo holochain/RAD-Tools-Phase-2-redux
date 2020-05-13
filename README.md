@@ -25,15 +25,11 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
 
 ### Run your custom happ:
 
-1. Install all node dependencies
-    ```
-    $ npm run happ:install
-    ```
-2. Generate your Holochain Conductor
+1.  Generate your Holochain Conductor
     ```
     $ npm run hc:generate-conductor
     ```
-3. Start your Holochain Happ
+2. Start your Holochain Happ
     ```
     $ npm run start
     ```
@@ -77,11 +73,7 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
     ```
 
 ##### Run your DNA tests:
-1. Install all happ node dependencies
-    ```
-    $ npm happ:install
-    ```
-2. Test your DNA
+1. Test your DNA
     ```
     $ npm hc:test
     ```
