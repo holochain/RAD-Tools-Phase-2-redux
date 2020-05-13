@@ -53,10 +53,10 @@ const data = {
         }
       },
 
-      remove_note: ({ id }) => {
-        const removedNote = data.notes.notes.get_note({ id })
+      delete_note: ({ id }) => {
+        const deletedNote = data.notes.notes.get_note({ id })
         delete noteEntries[id]
-        return removedNote
+        return deletedNote
       },
 
       list_notes: () => Object.keys(noteEntries)

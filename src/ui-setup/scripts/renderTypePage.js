@@ -49,8 +49,8 @@ ${fieldsForGQL}
 \`
 
 const DELETE_${capsName}_MUTATION = gql\`
-  mutation Remove${name}($id: String) {
-    remove${name} (id: $id) {
+  mutation Delete${name}($id: String) {
+    delete${name} (id: $id) {
 ${fieldsForGQL}
     }
   }
