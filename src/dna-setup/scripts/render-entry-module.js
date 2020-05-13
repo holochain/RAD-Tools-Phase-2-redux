@@ -14,16 +14,15 @@ const {
   ENTRY_DEFINITION_IMPLEMENTATION,
   ENTRY_DESCRIPTION,
   SHARING_TYPE,
-  ENTRY_VALIDATION_DEFINITIONS,
-  LINK_DEFINITION,
-  LINK_NAME_DEFINITIONS,
-  ANCHOR_NAME_DEFINITIONS
+  ENTRY_VALIDATION_DEFINITIONS
 } = require('../variables.js')
 
 const entryModTemplatePath = path.resolve("src/dna-setup/zome-template/entry-template", "mod.rs");
 const entryModTemplate = fs.readFileSync(entryModTemplatePath, 'utf8')
 
-let entryDef, entryDefImpl = '', entryDescription, sharingType, entryValidationDefs
+let entryDef, entryDescription, sharingType, entryValidationDefs
+let entryDefImpl = ''
+
 const entryContents = [
   [() => entryDef, ENTRY_DEFINITION],
   [() => entryDefImpl, ENTRY_DEFINITION_IMPLEMENTATION],
@@ -32,71 +31,28 @@ const entryContents = [
   [() => entryValidationDefs, ENTRY_VALIDATION_DEFINITIONS]
 ]
 
-let linkDefs, linkNameDefs, anchorNameDefs
-const bulkEntryContents = [
-  [() => linkDefs, LINK_DEFINITION],
-  [() => linkNameDefs, LINK_NAME_DEFINITIONS],
-  [() => anchorNameDefs, ANCHOR_NAME_DEFINITIONS]
-]
-
-// check to see if need for multiple zomes
-const cleanSlate = () => {
-  linkNameDefs = ['']
-  linkDefs = ['']
-  anchorNameDefs = ['']
-  entryDef = ''
-  entryDefImpl = ''
-  entryDescription = ''
-  sharingType = ''
-  entryValidationDefs = ''
-  return entryContents
-}
-
 function renderMod (zomeEntryName, zomeEntry) {
-  // cleanSlate()
   renderModContent(zomeEntryName, zomeEntry)
-  const completedModFile = renderModFile(entryModTemplate, zomeEntryName, entryContents, bulkEntryContents)
+  const completedModFile = renderModFile(entryModTemplate, zomeEntryName)
   return completedModFile
 }
 
 const renderModContent = (zomeEntryName, zomeEntry) => {
-  const { sharing, description, links, anchors } = zomeEntry
+  const { sharing, description } = zomeEntry
   let { definition, functions } = zomeEntry
-  
-  if(!isEmpty(links)) {
-    const entryLinks = Object.values(links)
-    const { linkDefinition, linkNameDefinition } = entryLinks.map(entryLink => mapOverObject(entryLink, renderLink).join('')[0])
-    linkDefs = linkDefinition
-    linkNameDefs = linkNameDefinition
-  } else {
-    // clear placeholders in template
-    linkNameDefs = ['']
-    linkDefs = ['']
-  }
 
-  if(!isEmpty(anchors)) {
-    const entryAnchors = Object.values(anchors)
-    const anchorNameDefinition = entryAnchors.map(entryAnchor => mapOverObject(entryAnchor, renderAnchorNameDefinitions).join('')[0])
-    
-    console.log('anchorNameDefinition : ', anchorNameDefinition)
-    anchorNameDefs = anchorNameDefinition
-  } else {
-    // clear placeholder in template
-    anchorNameDefs = ['']
-  }
-  
   // { functions } placeholder for before type-schema format is updated :
-  if(isEmpty(functions)) {
+  if (isEmpty(functions)) {
     functions = {
-      "create": true,
-      "get": true,
-      "update": true,
-      "delete": true,
-      "list": true
+      create: true,
+      get: true,
+      update: true,
+      delete: true,
+      list: true
     }
   }
   // { definition } placeholder for before type-schema format is updated :
-  if(isEmpty(definition)) {
+  if (isEmpty(definition)) {
     const entryDefinitionFields =  { ...zomeEntry, description, sharing }
     definition = { entryDefinitionFields }
   }
@@ -107,24 +63,16 @@ const renderModContent = (zomeEntryName, zomeEntry) => {
   entryDef = mapOverObject(definition, renderEntryDefinition).join('')
   entryDefImpl = mapOverObject(definition, entryDefName =>
     renderEntryDefinitionImplementation(entryDefName, zomeEntryName)).join('')
-  return { entryContents, bulkEntryContents }
 }
 
-const renderModFile = (templateFile, zomeEntryName, entryContents, bulkEntryContents) => {  
+const renderModFile = (templateFile, zomeEntryName) => {
   let newFile = templateFile
   newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
 
   entryContents.forEach(([zomeEntryContent, placeHolderContent]) => {
-      newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
+    newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
   })
 
-  for (let [zomeEntryContentArrState, placeHolderContent] of bulkEntryContents) {
-    const zomeEntryContentArray = zomeEntryContentArrState()
-    for (let zomeEntryContent of zomeEntryContentArray) {
-      const zomeEntryValue = zomeEntryContent
-      newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryValue)     
-    }
-  }
   return newFile
 }
 
@@ -168,86 +116,6 @@ const renderCrudValidationDefinition = (crudFn, shouldFnRender) => {
                   validation::validate_entry_${toSnakeCase(crudFn).toLowerCase()}(${validationParams})
               }
   `
-}
-
-const renderLink = (linkDetailName, linkDetailValue) => {
-  let linkTypeName, linkTagName, linkDirection, linkedEntryType
-  switch (linkDetailName) {
-    case 'linked_entry_type': {
-      linkedEntryType = linkDetailValue
-      // TODO: Validation/Type check the value for linked_entry_type to ensure that this is either an anchor, agentId, or entry
-      // ie: anchor (import crate): `holochain_anchors::ANCHOR_TYPE,`
-      //     agentId (constant): "%agent_id"
-      // or  entry(declared as module in Zome): eg: "notes_entry"
-      //
-      // NB: If type is agentId or entry, the value MUST be a string...
-      break
-    }
-    case 'link_type_name': {
-      linkTypeName = linkDetailValue
-      break
-    }
-    case 'link_tag_name': {
-      // NB: Link tags can be blank/null
-      if (isNil(linkDetailValue)) {
-        linkTagName = ""
-      } else {
-        linkTagName = linkDetailValue
-      }
-      break
-    }
-    case 'direction': {
-      linkDirection = linkDetailValue
-      break    
-    }
-
-    default: return new Error(`Error: Received unexpected entry link Detail : ${linkDetailName}.`)
-  }
-  const linkNameDefinition = `
-  const ${toSnakeCase(linkTypeName).toUpperCase()}_LINK_TYPE: &str = "${toSnakeCase(linkTypeName).toLowerCase}_link";
-  const ${toSnakeCase(linkTagName).toUpperCase()}_LINK_TAG: &str = "${toSnakeCase(linkTagName).toLowerCase}";
-  `
-  const linkDefinition = `,
-  ${linkDirection}!(
-    ${linkedEntryType},
-    link_type: ${toSnakeCase(linkTypeName).toUpperCase()}}_LINK_TYPE,
-  
-    validation_package: || {
-        hdk::ValidationPackageDefinition::Entry
-    },
-  
-    validation: | _validation_data: hdk::LinkValidationData | {
-        Ok(())
-    }
-  )
-  `
-  return { linkDefinition, linkNameDefinition }
-}
-
-const renderAnchorNameDefinitions = (anchorDetailName, anchorDetailValue) => {
-  let anchorTypeName, anchorTagName
-  switch (anchorDetailName) {
-    case 'anchor_type_name': {
-      anchorTypeName = anchorDetailValue
-      break
-    }
-    case 'anchor_tag_name': {
-      // NB: Anchor tags can be blank/null
-      if (isNil(anchorDetailValue)) {
-        anchorTagName = ""
-      } else {
-        anchorTagName = anchorDetailValue
-      }
-      break
-    }
-    
-    default: return new Error(`Error: Received unexpected entry link Detail : ${anchorDetailName}.`)
-  }
-  const anchorNameDefinition = `
-  const ${toSnakeCase(anchorTypeName).toUpperCase()}_ANCHOR_TYPE: &str = "${toSnakeCase(anchorTypeName).toLowerCase}_anchor";
-  const ${toSnakeCase(anchorTagName).toUpperCase()}_ANCHOR_TEXT: &str = "${toSnakeCase(anchorTagName).toLowerCase}";
-  `
-  return anchorNameDefinition
 }
 
 module.exports = renderMod

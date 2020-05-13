@@ -25,9 +25,6 @@ const {ENTRY_NAME}_LINK_TYPE: &str = "{entry_name}_link";
 const {ENTRY_NAME}_ANCHOR_TYPE: &str = "{entry_name}";
 const {ENTRY_NAME}_ANCHOR_TEXT: &str = "{entry_name}";
 
-{LINK_NAME_DEFINITIONS}
-{ANCHOR_NAME_DEFINITIONS}
-
 #[derive(Serialize, Deserialize, Debug, DefaultJson,Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct {EntryName}Entry {
@@ -85,7 +82,6 @@ pub fn definition() -> ValidatingEntryType {
                     }
                 }
             )
-            {LINK_DEFINITION}
         ]
     )
 }
