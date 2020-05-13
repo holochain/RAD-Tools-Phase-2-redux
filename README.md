@@ -2,7 +2,7 @@
 The second tier of RAD tools, automating a UI GraphQL and DNA generation based on a JSON schema file.
 
 ---
-## Generate your custom Holochain Happ:
+<!-- ## Generate your custom Holochain Happ:
 1. Clone the repo
     ```
     $ git clone https://github.com/holochain/RAD-Tools-Phase-2.git
@@ -79,7 +79,7 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
     ```
 ---
 
-<!-- ## Generate a complete and personalized Holochain Happ
+## hc-happ-scaffold: A command to generate a complete and personalized Holochain Happ
 > This will generate the full UI and DNA codebase as well as the conductor interface.
 
 # hc-happ-scaffold
@@ -100,13 +100,19 @@ curl https://nixos.org/nix/install | sh
 
 ## 1 - Get Holonix and enter the development environment
 
-Holonix is a full Holochain development environment built with the [Nix package manager](https://nixos.org/nix/). Download Holonix and enter the shell:
+Holonix is a full Holochain development environment built with the [Nix package manager](https://nixos.org/nix/). 
 
+This repo comes shipped with nix-shell already baked in.  All you need to do, is enter the provided environment, by running:
+```
+$ nix-shell
+```
+
+NB: Altneratively, you may also download the most recent blessed version of Holonix and enter the shell from anywhere on your OS, by running:
 ```
 $ nix-shell https://holochain.love
 ```
 
-## 2 - Run the hApp scaffold command
+## 2 - Run the hc-happ-scaffold command
 
 From within the `nix-shell` environment, first create a directory for all your Holochain projects (if you haven't already). You can create it wherever you like; here's a recommended setup:
 
@@ -124,7 +130,7 @@ $ hc-happ-scaffold <PATH_TO_JSON_TYPE_SPEC> <HAPP_PROJECT_NAME>
 
 This will create a new directory for your project, download all the dependencies and development tools, and create the hApp source code.
 
-## 3 - Start your new hApp!
+## 3 - Start your new happ!
 
 Once it's complete, go into the new project directory and run this command:
 
@@ -132,14 +138,13 @@ Once it's complete, go into the new project directory and run this command:
 $ npm run start
 ```
 
-The first time the Holochain conductor runs there may be some additional compilation, so it might take a little while. When it's done, a browser page should open to the notes hApp. If it doesn't, you can browse to http://localhost:5200 to use the hApp.
+When it's done, a browser page should open to your Happ UI. If it doesn't, you can browse to http://localhost:3400 to use the hApp.
 
-The conductor and the UI server run in the foreground, so you can stop them by pressing `Ctrl`+`C`.
-`$ npm start`
+NB: The conductor and the UI server run in the foreground, so you can stop them by pressing `Ctrl`+`C` in the terminal.
 
 ## A very brief tour
 
-The UI code is in `ui_src` and the DNA code is in `dna_src`. This notes demo app uses:
+The UI code is in `ui-src` and the DNA code is in `dna-src`. Your generated happ will use:
 
 1. A Holochain DNA on the back end (of course)
 2. [Apollo GraphQL middleware](https://www.apollographql.com/) in the browser to translate zome calls into something easy for front-end frameworks to understand and manipulate
