@@ -2,15 +2,8 @@ const mapObject = require('./render-utils').mapObject
 
 function renderResolvers ({ types }) {
   return `import { createZomeCall } from './holochainClient'
-  // const fs = require('fs')
-  // const path = require('path')
-  // const toml = require('toml')
-  // const uiConfigSimLinkPath = path.resolve("./ui-src/src", "conductor-config.toml")
-  // const hcConfig = toml.parse(fs.readFileSync(uiConfigSimLinkPath, 'utf-8'))
-  // const DNA_INSTANCE_ID = hcConfig.instances[0].id
-  
-  const DNA_INSTANCE_ID = '<DNA_INSTANCE>'
-  const dnaPath = zomeFn => DNA_INSTANCE_ID + '/zome/' + zomeFn
+
+  const dnaPath = zomeFunc => \`\${process.env.REACT_APP_INSTANCE_ID}/zome/\${zomeFunc}\`
   
 export const resolvers = {
   Query: {

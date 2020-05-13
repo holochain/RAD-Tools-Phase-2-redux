@@ -7,7 +7,7 @@ const toml = require('toml')
 const hcConfig = toml.parse(fs.readFileSync('../conductor-config.toml', 'utf-8'))
 const port = hcConfig.interfaces[0].driver.port || 3400
 
-client = new net.Socket()
+const client = new net.Socket()
 
 let startedConductor = false
 const tryConnection = () => {
@@ -19,17 +19,16 @@ const tryConnection = () => {
       if (!startedConductor) {
         startedConductor = true
         console.log('Starting UI, connecting to port :', port)
-        exec('npm run ui:start-agent-1', (error, stdout, stderr) => {
-        if (error) {
-          console.error(`exec error: ${error}`)
-          return
-        }
-        else if (stderr) {
-          console.error(`stderr: ${stderr}`)
-          return
-        }
-        console.log(`stdout: ${stdout}`)
-      })
+        exec('npm run ui:start-agent', (error, stdout, stderr) => {
+          if (error) {
+            console.error(`exec error: ${error}`)
+            return
+          } else if (stderr) {
+            console.error(`stderr: ${stderr}`)
+            return
+          }
+          console.log(`stdout: ${stdout}`)
+        })
       }
     }
   )

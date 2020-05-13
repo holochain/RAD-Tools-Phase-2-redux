@@ -24,8 +24,7 @@
     "hc:build": "npm run hc:package",
     "hc:test": "cd dna-src && RUST_BACKTRACE=1 HC_IGNORE_SIM2H_URL_PROPERTY=true hc test | node test/node_modules/faucet/bin/cmd.js",
     "hc:start-log": "npm run sim2h:start && holochain -c conductor-config.toml &> conductor.log &",
-    "hc:start": "npm run sim2h:start && holochain -c conductor-config.toml",
-    "hc:run": "npm run hc:package && cd dna-src && hc run -p 3400"
+    "hc:start": "npm run sim2h:start && holochain -c conductor-config.toml"
   },
   "devDependencies": {},
   "dependencies": {
