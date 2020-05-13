@@ -18,6 +18,7 @@ ${mapObject(fields, fieldName => {
   const fieldsForObjectWithDefaults = mapObject(fields, fieldName => `${toCamelCase(fieldName)}: ''`).join(', ')
 
   return `import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import gql from 'graphql-tag'
 import { pick } from 'lodash/fp'
 import { useQuery, useMutation } from '@apollo/react-hooks'
@@ -66,12 +67,15 @@ function ${namePlural}Page () {
 
   // the id of the ${lowerName} currently being edited
   const [editingId, setEditingId] = useState()
+  
+  const { push } = useHistory()
 
   return <div className='type-page'>
-    <div className='background-block'/>
+  <div className='background-block'/>
+  <button className='button' onClick={() => push('/')}>Home Page</button>
+  <br/>
     <h1>${name} Entry</h1>
     <h2>Endpoint Testing</h2>
-
     <${name}Form
       formAction={({ ${lowerName}Input }) => create${name}({ variables: { ${lowerName}Input } })}
       formTitle='Create ${name}' />
@@ -105,8 +109,9 @@ function ${name}Row ({ ${lowerName}, editingId, setEditingId, update${name}, del
 
 function ${name}Card ({ ${lowerName}: { id, ${fieldsForObject} }, setEditingId, delete${name} }) {
   return <div className='type-card' data-testid='${lowerName}-card'>
+  <h6 className='card-id'><em>Entry ID: {id}</em></h6>
 ${mapObject(fields, fieldName => `
-    <div><span className='field-label'>${toCamelCase(fieldName)}: </span><span className='field-content'>{${toCamelCase(fieldName)}}</span></div>`).join('')}
+    <div className='entry-field'><span className='field-label'>${toCamelCase(fieldName)}: </span><span className='field-content'>{${toCamelCase(fieldName)}}</span></div>`).join('')}
     <br/>
     <button className='button' onClick={() => setEditingId(id)}>Edit</button>
     <button onClick={() => delete${name}({ variables: { id } })}>Remove</button>

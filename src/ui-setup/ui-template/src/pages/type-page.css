@@ -1,7 +1,7 @@
 .background-block {
-  margin-top: 25vh;
+  margin-top: 35vh;
   background-color: cadetblue;
-  padding: 37vh;
+  padding: 60vh;
   right: 0;
   top: 0;
   left: 0;
@@ -68,6 +68,14 @@ button {
 
 .white {
   color: white
+}
+
+.card-id {
+  margin: 10px 0px;
+}
+
+.entry-field {
+  margin-bottom: 5px;
 }
 
 .title {

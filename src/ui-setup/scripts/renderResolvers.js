@@ -3,9 +3,11 @@ const mapObject = require('./render-utils').mapObject
 function renderResolvers ({ types }) {
   return `import { createZomeCall } from './holochainClient'
   // const fs = require('fs')
+  // const path = require('path')
   // const toml = require('toml')
-  // const hcConfig = toml.parse(fs.readFileSync('../conductor-config.toml', 'utf-8'))
-  // const dnaInstanceId = hcConfig.instances[0].id
+  // const uiConfigSimLinkPath = path.resolve("./ui-src/src", "conductor-config.toml")
+  // const hcConfig = toml.parse(fs.readFileSync(uiConfigSimLinkPath, 'utf-8'))
+  // const DNA_INSTANCE_ID = hcConfig.instances[0].id
   
   const DNA_INSTANCE_ID = '<DNA_INSTANCE>'
   const dnaPath = zomeFn => DNA_INSTANCE_ID + '/zome/' + zomeFn

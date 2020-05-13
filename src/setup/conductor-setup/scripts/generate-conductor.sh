@@ -9,7 +9,3 @@ hc keygen -n --path ./keystores/agent1/AGENT_1_PUB_KEY.keystore | sed -ne 's/^Pu
 [ ! -L ./ui-src/src/conductor-config.toml ] && ln -s ./conductor-config.toml ./ui-src/src/conductor-config.toml
 echo "Generated new keypair for Agent 1"
 echo "Added Agent 1 to Conductor"
-
-# nb: This is currently commented out in favor of a work around due to .cargo/config override option throwing an error at build time.
-#      Comment back in once crate is compatible again with HC.
-# 
