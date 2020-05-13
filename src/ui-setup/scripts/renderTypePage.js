@@ -109,7 +109,6 @@ function ${name}Row ({ ${lowerName}, editingId, setEditingId, update${name}, del
 
 function ${name}Card ({ ${lowerName}: { id, ${fieldsForObject} }, setEditingId, delete${name} }) {
   return <div className='type-card' data-testid='${lowerName}-card'>
-  <h6 className='card-id'><em>Entry ID: {id}</em></h6>
 ${mapObject(fields, fieldName => `
     <div className='entry-field'><span className='field-label'>${toCamelCase(fieldName)}: </span><span className='field-content'>{${toCamelCase(fieldName)}}</span></div>`).join('')}
     <br/>
