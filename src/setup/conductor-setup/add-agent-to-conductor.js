@@ -11,11 +11,11 @@ const conductorConfigPath = path.resolve("./", "conductor-config.toml")
 const conductorConfig = toml.parse(fs.readFileSync(conductorConfigPath, 'utf-8'))
 
 const generateAgentConfig = (agentName, agentPubKey) => `
-  [[agents]]
-  id = "${toKebabCase(agentName)}"
-  keystore_file = "keystores/${agentName}/${agentPubKey}.keystore"
-  name = "${formattedName}"
-  public_address = "${agentPubKey}"
+[[agents]]
+id = "${toKebabCase(agentName)}"
+keystore_file = "keystores/${agentName}/${agentPubKey}.keystore"
+name = "${formattedName}"
+public_address = "${agentPubKey}"
 `
 
 async function locateAgentPubKey() {
@@ -36,10 +36,14 @@ if(agentName) {
   locateAgentPubKey()
     .catch(e => console.log(e))
     .then(agentPubKey => {
-      // if (conductorConfig.agents.find(agent => agent.public_address === agentPubKey)) return console.log('Agent already exists in Conductor Config : ', conductorConfig.agents.find(agent => agent.public_address === agentPubKey))
-      console.log('conductorConfigPath: ', conductorConfigPath)
-      console.log('generateAgentConfig(agentName, agentPubKey): ', generateAgentConfig(agentName, agentPubKey))
-      return fs.appendFileSync(conductorConfigPath, generateAgentConfig(agentName, agentPubKey))
+      if (conductorConfig.agents.find(agent => agent.public_address === agentPubKey)) return console.log('Agent already exists in Conductor Config : ', conductorConfig.agents.find(agent => agent.public_address === agentPubKey))
+      try {
+        fs.appendFileSync(conductorConfigPath, generateAgentConfig(agentName, agentPubKey))
+        console.log('New agent appended to conductor-config.toml!');
+      } catch (err) {
+        console.error('Error: Error appending new agent to the file')
+      }
+      return agentPubKey
     })
 }
 else {
