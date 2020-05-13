@@ -3,7 +3,7 @@ const path = require('path')
 const { isEmpty } = require('lodash/fp')
 const { replaceContentPlaceHolders,
   replaceNamePlaceHolders,
-  mapFnOverObject,
+  mapOverObject,
   toSnakeCase,
   toCamelCase,
   capitalize
@@ -65,7 +65,7 @@ const renderModContent = (zomeEntryName, zomeEntry) => {
   
   if(!isEmpty(links)) {
     const entryLinks = Object.values(links)
-    const { linkDefinition, linkNameDefinition } = entryLinks.map(entryLink => mapFnOverObject(entryLink, renderLink).join('')[0])
+    const { linkDefinition, linkNameDefinition } = entryLinks.map(entryLink => mapOverObject(entryLink, renderLink).join('')[0])
     linkDefs = linkDefinition
     linkNameDefs = linkNameDefinition
   } else {
@@ -76,7 +76,7 @@ const renderModContent = (zomeEntryName, zomeEntry) => {
 
   if(!isEmpty(anchors)) {
     const entryAnchors = Object.values(anchors)
-    const anchorNameDefinition = entryAnchors.map(entryAnchor => mapFnOverObject(entryAnchor, renderAnchorNameDefinitions).join('')[0])
+    const anchorNameDefinition = entryAnchors.map(entryAnchor => mapOverObject(entryAnchor, renderAnchorNameDefinitions).join('')[0])
     
     console.log('anchorNameDefinition : ', anchorNameDefinition)
     anchorNameDefs = anchorNameDefinition
@@ -103,9 +103,10 @@ const renderModContent = (zomeEntryName, zomeEntry) => {
 
   sharingType = capitalize(sharing.toLowerCase())
   entryDescription = description
-  entryValidationDefs = mapFnOverObject(functions, renderCrudValidationDefinition).join('')
-  entryDef = mapFnOverObject(definition, renderEntryDefinition).join('')
-  entryDefImpl = mapFnOverObject(definition, renderEntryDefinitionImplementation, zomeEntryName).join('')
+  entryValidationDefs = mapOverObject(functions, renderCrudValidationDefinition).join('')
+  entryDef = mapOverObject(definition, renderEntryDefinition).join('')
+  entryDefImpl = mapOverObject(definition, entryDefName =>
+    renderEntryDefinitionImplementation(entryDefName, zomeEntryName)).join('')
   return { entryContents, bulkEntryContents }
 }
 
@@ -133,7 +134,7 @@ const renderEntryDefinition = (entryDefName, entryDefType) => {
   `
 }
 
-const renderEntryDefinitionImplementation = (entryDefName, entryDefType, zomeEntryName) => {
+const renderEntryDefinitionImplementation = (entryDefName, zomeEntryName) => {
   return `
     ${entryDefName}: ${zomeEntryName}_entry.${entryDefName},
   `

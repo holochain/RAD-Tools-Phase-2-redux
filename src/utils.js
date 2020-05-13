@@ -1,8 +1,8 @@
 const capitalize = string => string.charAt(0).toUpperCase() + string.substring(1)
 const decapitalize = string => string.charAt(0).toLowerCase() + string.substring(1)
 
-function mapFnOverObject (object, fn, args = {}) {
-  return Object.keys(object).sort().map(key => fn(key, object[key], args))
+function mapOverObject (object, fn) {
+  return Object.keys(object).sort().map(key => fn(key, object[key]))
 }
 
 async function promiseMap (array, fn) {
@@ -12,8 +12,8 @@ async function promiseMap (array, fn) {
   return resolved
 }
 
-function promiseMapFnOverObject (object, fn, args = {}) {
-  return promiseMap(Object.keys(object).sort(), key => fn(key, object[key], args))
+function promiseMapOverObject (object, fn) {
+  return promiseMap(Object.keys(object).sort(), key => fn(key, object[key]))
 }
 
 function insertSpacesInString (string, spaceDelimiter) {
@@ -73,7 +73,7 @@ function toKebabCase (snakeCaseString) {
     snakeCaseString = toSnakeCase(nonSnakeCaseString)
     console.log(`Converted String to snake_case : ${snakeCaseString}\n`)
   }
-  let cleanSnakeCaseString = snakeCaseString.trim().toLowerCase()
+  const cleanSnakeCaseString = snakeCaseString.trim().toLowerCase()
   const underscore = /(_)/g
   const snakeCase = cleanSnakeCaseString.replace(underscore, match => '-'.concat(match.toLowerCase()))
   return snakeCase
@@ -138,9 +138,9 @@ function replaceContentPlaceHolders (file, placeHolderContent, replacementConten
 
 module.exports = {
   capitalize,
-  mapFnOverObject,
+  mapOverObject,
   promiseMap,
-  promiseMapFnOverObject,
+  promiseMapOverObject,
   insertSpacesInString,
   replaceSpacesInString,
   toKebabCase,

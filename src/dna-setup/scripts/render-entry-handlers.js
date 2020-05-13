@@ -3,95 +3,47 @@ const path = require('path')
 const { isEmpty } = require('lodash/fp')
 const { replaceContentPlaceHolders,
   replaceNamePlaceHolders,
-  mapFnOverObject,
+  mapOverObject,
   toSnakeCase,
   toCamelCase,
   capitalize
 } = require('../../utils.js')
 const {
   ENTRY_NAME,
-  LINK_NAME_CONSTANTS,
-  ANCHOR_DEFINITIONS,
-  ANCHOR_NAME_CONSTANTS,
   CRUD_DEFINITION
 } = require('../variables.js')
 
 const entryHandlersTemplatePath = path.resolve("src/dna-setup/zome-template/entry-template", "handlers.rs");
 const entryHandlersTemplate = fs.readFileSync(entryHandlersTemplatePath, 'utf8')
 
-let linkNameConsts, anchorNameConsts, anchorDefs
-const entryContents = [
-  [() => linkNameConsts, LINK_NAME_CONSTANTS],
-  [() => anchorDefs, ANCHOR_DEFINITIONS],
-  [() => anchorNameConsts, ANCHOR_NAME_CONSTANTS]
-]
-
-// check to see if need for multiple zomes
-const cleanSlate = () => {
-  linkNameConsts = ['']
-  anchorNameConsts = ['']      
-  anchorDefs = ['']
-  return entryContents
-}
-
 function renderHandlers (zomeEntryName, zomeEntry) {
-  // cleanSlate()
   const { crudDefs } = renderHandlersContent(zomeEntryName, zomeEntry)
-  const completedHandlersFile = renderHandlersFile(entryHandlersTemplate, zomeEntryName, crudDefs, entryContents)
+  const completedHandlersFile = renderHandlersFile(entryHandlersTemplate, zomeEntryName, crudDefs)
   return completedHandlersFile
 }
 
 const renderHandlersContent = (zomeEntryName, zomeEntry) => {
-  const { links, anchors } = zomeEntry
   let { functions } = zomeEntry
-  
-  if(!isEmpty(links)) {
-    const entryLinks = Object.values(links)
-    linkNameConsts = entryLinks.map(entryLink => mapFnOverObject(entryLink, renderLinkNameConstants).join('')[0])
-  } else {
-    // clear placeholders in template
-    linkNameConsts = ['']
-  }
 
-  if(!isEmpty(anchors)) {
-    const entryAnchors = Object.values(anchors)
-    const { anchorNameConstants, anchorDefinitions} = entryAnchors.map(entryAnchor => mapFnOverObject(entryAnchor, renderEntryAnchor, zomeEntryName).join('')[0])
-    anchorNameConsts = anchorNameConstants
-    anchorDefs = anchorDefinitions
-  } else {
-    // clear placeholder in template
-    anchorNameConsts = ['']
-    anchorDefs = ['']
-  }
-  
-  // { functions } placeholder for before type-schema format is updated :
-  if(isEmpty(functions)) {
+  if (isEmpty(functions)) {
     functions = {
-      "create": true,
-      "get": true,
-      "update": true,
-      "delete": true,
-      "list": true
+      create: true,
+      get: true,
+      update: true,
+      delete: true,
+      list: true
     }
   }
-  crudDefs = mapFnOverObject(functions, renderCrudDefinition, zomeEntryName).join('')
-  // console.log(' >>> linkNameConsts', linkNameConsts)
-  // console.log(' >>> anchorNameConsts', anchorNameConsts)
-  // console.log(' >>> anchorDefs', anchorDefs)
-  return { entryContents, crudDefs }
+
+  const crudDefs = mapOverObject(functions, (crudFn, shouldFnRender) =>
+    renderCrudDefinition(crudFn, shouldFnRender, zomeEntryName)).join('')
+  return { crudDefs }
 }
 
-const renderHandlersFile = (templateFile, zomeEntryName, crudDefs, entryContents) => {  
+const renderHandlersFile = (templateFile, zomeEntryName, crudDefs, entryContents) => {
   let newFile = templateFile
   newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
   newFile = replaceContentPlaceHolders(newFile, CRUD_DEFINITION, crudDefs)
-
-  for (let [zomeEntryContentArrState, placeHolderContent] of entryContents) {
-    const zomeEntryContentArr = zomeEntryContentArrState()
-    for (let zomeEntryContent of zomeEntryContentArr) {
-      newFile = replaceContentPlaceHolders(newFile, placeHolderContent, zomeEntryContent)
-    }
-  }
 
   return newFile
 }
@@ -168,76 +120,6 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
     default: throw new Error(`Error: Found invalid CRUD function for validation. CRUD fn received : ${toSnakeCase(crudFn).toLowerCase()}.`)
   }
   return crudDef
-}
-
-const renderLinkNameConstants = (linkDetailName, linkDetailValue) => {
-  let linkTypeName, linkTagName
-  switch (linkDetailName) {
-    case 'link_type_name': {
-      linkTypeName = linkDetailValue
-      break
-    }
-    case 'link_tag_name': {
-      // NB: Link tags can be blank/null
-      if (isNil(linkDetailValue)) {
-        linkTagName = ""
-      } else {
-        linkTagName = linkDetailValue
-      }
-      break
-    }
-    default: return new Error(`Error: Did not receive expected entry link Detail to form link constants : ${linkDetailName}.`)
-  }
-
-  const linkNameConstants = `
-  const ${toSnakeCase(linkTypeName).toUpperCase()}_LINK_TYPE,
-  const ${toSnakeCase(linkTagName).toUpperCase()}_LINK_TAG,
-  `
-  return linkNameConstants
-}
-
-const renderAnchorNameConstants = (anchorDetailName, anchorDetailValue) => {
-  let anchorType, anchorTag
-  switch (anchorDetailName) {
-    case 'anchor_type_name': {
-      anchorType = anchorDetailValue
-      break
-    }
-    case 'anchor_tag_name': {
-      // NB: Anchor tags can be blank/null
-      if (isNil(anchorDetailValue)) {
-        anchorTag = ""
-      } else {
-        anchorTag = anchorDetailValue
-      }
-      break
-    }
-    
-    default: return new Error(`Error: Received unexpected entry link Detail : ${anchorDetailName}.`)
-  }
-  const anchorTypeName = `${toSnakeCase(anchorType).toUpperCase()}_ANCHOR_TYPE`
-  const anchorTagName = `${toSnakeCase(anchorTag).toUpperCase()}_ANCHOR_TEXT`
-  const anchorNameConstants = anchorTagName + ',\n' + anchorTypeName + ','
-  return {
-    anchorNameConstants,
-    anchorTypeName,
-    anchorTagName
-  }
-}
-
-const renderAnchorDefinition = (zomeEntryName, anchorTypeName, anchorTagName) => {
-   const anchorDefinition = `
-  fn ${zomeEntryName}_anchor() -> ZomeApiResult<Address> {
-      anchor(${anchorTypeName}.to_string(), ${anchorTagName}.to_string())
-  }
-  `
-  return anchorDefinition
-}
-
-renderEntryAnchor = (anchorDetailName, anchorDetailValue, zomeEntryName) => {
-  const { anchorTypeName, anchorTagName, anchorNameConstants} = renderAnchorNameConstants(anchorDetailName, anchorDetailValue)
-  const anchorDefinitions = renderAnchorDefinition(zomeEntryName, anchorTypeName, anchorTagName)
-  return { anchorDefinitions, anchorNameConstants }
 }
 
 module.exports = renderHandlers
