@@ -6,6 +6,7 @@
       "start": "npm run start:sim2h && npm run hc:start; npm run ui:start",
       "start:sim2h": "sim2h_server -p 9000 &> sim2h-server.log &",
       "happ:start": "npm run start",
+      "happ:refresh": "npm run hc:clean-storage && npm run sim2h:clear-local",
       "happ:install": "cd dna-src/test && npm i && cd ../../ui-src && npm i && cd ..",
       "ui:start": "cd ui-src && npm run ui:connect-to-conductor",
       "hc:clean-storage": "rm -rf ./.holochain/holo/storage",
