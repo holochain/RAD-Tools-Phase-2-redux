@@ -8,7 +8,7 @@
     "sim2h:start": "sim2h_server -p 9000 &> sim2h-server.log &",
     "sim2h:clear-local": "kill -9 $(lsof -t -i:9000)",
     "happ:start": "npm run start",
-    "happ:generate": "npm run happ:remove && npm run ui:generate && npm run hc:generate-dna && npm run happ:install",
+    "happ:generate": "npm run happ:remove && npm run ui:generate && npm run hc:generate-dna && npm run happ:install && npm run hc:package && npm run hc:generate-conductor",
     "happ:install": "cd dna-src/test && npm i && cd ../../ui-src && npm i && cd ..",
     "happ:refresh": "npm run hc:clean-storage && npm run sim2h:clear-local",
     "happ:remove": "npm run hc:clean-storage && rm -rf dna-src/ ui-src/ .cargo/ target/",
@@ -24,8 +24,7 @@
     "hc:build": "npm run hc:package",
     "hc:test": "cd dna-src && RUST_BACKTRACE=1 HC_IGNORE_SIM2H_URL_PROPERTY=true hc test | node test/node_modules/faucet/bin/cmd.js",
     "hc:start-log": "npm run sim2h:start && holochain -c conductor-config.toml &> conductor.log &",
-    "hc:start": "npm run sim2h:start && holochain -c conductor-config.toml",
-    "hc:run": "npm run hc:package && cd dna-src && hc run -p 3400"
+    "hc:start": "npm run sim2h:start && holochain -c conductor-config.toml"
   },
   "devDependencies": {},
   "dependencies": {

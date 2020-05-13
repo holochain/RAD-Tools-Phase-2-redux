@@ -22,7 +22,7 @@ type = "file"
 id = "websocket-interface"
 
 [interfaces.driver]
-port = 3400
+port = 3407
 type = "websocket"
 
 [[interfaces.instances]]
@@ -33,7 +33,7 @@ admin = true
 id = "http-interface"
 
 [interfaces.driver]
-port = 3300
+port = 3307
 type = "http"
 
 [[interfaces.instances]]
