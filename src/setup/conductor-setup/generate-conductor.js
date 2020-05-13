@@ -18,9 +18,6 @@ async function updateConductorWithPackagedDna (dnaHash) {
   const dnaName = appName || dnaHash
 
   const hcConfig = toml.parse(fs.readFileSync(conductorConfigPath, 'utf-8'))
-
-  console.log('port from conductor', hcConfig.interfaces[0].driver.port)
-
   const port = hcConfig.interfaces[0].driver.port || 3400
 
   await updateUiDotEnv(`${dnaName}-instance-1`, port)
