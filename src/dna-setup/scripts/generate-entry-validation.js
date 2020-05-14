@@ -13,9 +13,9 @@ const { ENTRY_NAME, CRUD_VALIDATION_DEFINITIONS } = require('../variables.js')
 const entryValidationTemplatePath = path.resolve("src/dna-setup/zome-template/entry-template", "validation.rs");
 const entryValidationTemplate = fs.readFileSync(entryValidationTemplatePath, 'utf8')
 
-function renderValidation (zomeEntryName, zomeEntry) {
+function generateValidation (zomeEntryName, zomeEntry) {
   const crudValidationDefs = renderValidationContent(zomeEntry, zomeEntryName)
-  const completedValidationFile = renderValidationFile(entryValidationTemplate, zomeEntryName, crudValidationDefs)
+  const completedValidationFile = generateValidationFile(entryValidationTemplate, zomeEntryName, crudValidationDefs)
   return completedValidationFile
 }
 
@@ -35,7 +35,7 @@ const renderValidationContent = (zomeEntry, zomeEntryName) => {
     renderCrudDefinition(crudFn, shouldFnRender, zomeEntryName)).join('')
 }
 
-const renderValidationFile = (templateFile, zomeEntryName, crudValidationDefs) => {  
+const generateValidationFile = (templateFile, zomeEntryName, crudValidationDefs) => {  
   let newFile = templateFile
   newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
   newFile = replaceContentPlaceHolders(newFile, CRUD_VALIDATION_DEFINITIONS, crudValidationDefs)
@@ -113,4 +113,4 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
   return crudValidationDef
 }
 
-module.exports = renderValidation
+module.exports = generateValidation

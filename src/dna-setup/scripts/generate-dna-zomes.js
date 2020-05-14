@@ -5,8 +5,8 @@ const path = require('path')
 const { promiseMapOverObject, replaceNamePlaceHolders, toCamelCase, toSnakeCase } = require('../../utils.js')
 const { DNA_NAME, ZOME_NAME } = require('../variables.js')
 const generateZomeEntries = require('./generate-zome-entries')
-const renderZomeLib = require('./render-zome-lib')
-const renderTestIndex = require('./render-test-index')
+const generateZomeLib = require('./generate-zome-lib')
+const generateTestIndex = require('./generate-test-index')
 const { isEmpty } = require('lodash/fp')
 const chalk = require('chalk')
 
@@ -64,7 +64,7 @@ async function createZomeDir (zomeNameRaw, entryTypesWrapper) {
     const zomeEntryTypes = Object.values(entryTypesWrapper)[0]
     const testingEntries = Object.keys(zomeEntryTypes).sort()
     await generateZomeEntries(zomeName, zomeEntryTypes)
-    await renderZomeLib(zomeName, zomeEntryTypes, zomeDir)
+    await generateZomeLib(zomeName, zomeEntryTypes, zomeDir)
     await formatZome(zomeDir)
     renderZomeCargoToml(zomeName, zomeDir)
     console.log(`${chalk.cyan(' Finished creating ' + zomeName.toUpperCase() + ' ZOME')}\n`)
@@ -91,7 +91,7 @@ const generateDnaZomes = typeSpec => {
         const testingEntries = zomeDirResults.reduce((acc, { testingEntries }) => acc.concat(testingEntries), [])
         const dnaName = await findDnaName(zomeDir)
         const testDir = await findTestDirPath(zomeDir)
-        await renderTestIndex(dnaName, testingEntries, testDir)
+        await generateTestIndex(dnaName, testingEntries, testDir)
         renderNixSetup(dnaName, zomeDir)
       }
     })

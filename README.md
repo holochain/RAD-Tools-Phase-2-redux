@@ -17,26 +17,101 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
     ```
 
 4. Generate your custom Holochain Happ according to the type-spec.json file.
-    >NB: *The type-spec.json is optional and will default to th sample provided in the src/setup/type-specs folder.*
     ```
     $ npm run happ:generate <type-spec.json>
     ```
+    >*NB: The type-spec.json is optional and will default to the sample-type-spec.json provided in the src/setup/type-specs folder.*
 
+##### Type Spec JSON
+    The type-spec.json file is the schema that informs the DNA zome, entry, and entry test content as well as the UI's Apollo GraphQL data layer and UI page content. 
+    
+    The type-spec.json is structured in a pattern wherein the keys represent the name of the current field and its values are the content of said field.
+  
+    ```JSON
+    {
+      "types": {
+        <entry-name>: {
+          "description": <entry-description>,
+          "sharing": "<public | private>",
+          "definition": {
+            "<entry-field-name>": <entry-field-type>
+          },
+          "functions": {
+            "create": <boolean>,
+            "update": <boolean>,
+            "delete": <boolean>,
+            "get": <boolean>,
+            "list": <boolean>
+          }
+        }
+      }
+    }
+    ```
+
+    Example: Below is an example of a happ that will have a single zome with three entries: user, author and books:
+
+    ```JSON
+    {
+      "types": {
+        "user": {
+          "description": "Create and manage users.",
+          "sharing": "public",
+          "definition": {
+            "name": "string",
+            "avatarUrl": "string"
+          },
+          "functions": {
+            "create": true,
+            "update": true,
+            "delete": true,
+            "get": true,
+            "list": true
+          }
+        },
+        "author": {
+          "description": "Create and manage authors.",
+          "sharing": "public",
+          "definition": {
+            "user": "string",
+            "nickname": "string",
+          },
+          "functions": {
+            "create": true,
+            "update": true,
+            "delete": false,
+            "get": true,
+            "list": true
+          }
+        },
+        "book": {
+          "description": "Create and manage books.",
+          "sharing": "public",
+          "definition": {
+            "author": "string",
+            "title": "string",
+            "topic": "string"
+          },
+          "functions": {
+            "create": true,
+            "update": true,
+            "delete": false,
+            "get": true,
+            "list": true
+          }
+        }
+      }
+    }
+    ```
 
 ### Run your custom happ:
 
-1.  Generate your Holochain Conductor
-    ```
-    $ npm run hc:generate-conductor
-    ```
-2. Start your Holochain Happ
+1.  Start your Holochain Happ
     ```
     $ npm run start
     ```
 ---
 
 ## Run the Automated UI Command Only
-
 ### Generate a UI from type-spec
 1. Generate your new ui in the `ui-src` directory.
     ```
@@ -49,12 +124,11 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
     $ cd ui-src && npm i && npm start:mock
     ```
 
-2. Navigate ot your browser, where your UI server will automatically start up and open the ui in a browser tab with mock data.
+2. Navigate to your browser, where your UI server will automatically start up and open the ui in a browser tab with mock data.
 
 ---
 
 ## Run the Automated DNA Command Only
-
 ### Generate a DNA from type-spec
 1. Enter nix-shell
     ```
@@ -67,10 +141,40 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
     ```
 
 3. Generate the DNA according to the type-spec.json file.
-    >NB: *The type-spec.json is optional and will default to the sample provided in the src/setup/type-specs folder.*
     ```
     $ hc:generate-dna <type-spec.json>
     ```
+    >NB: *The type-spec.json is optional and will default to the sample provided in the src/setup/type-specs folder.*
+
+    If you are only developing a DNA, you may include the zome object wrapper in your schema and run `hc-generate-dna` to generate multiple zomes.
+
+    The type-spec.json example with zome wrapper:
+
+    ```JSON
+    {
+      "zomes": {
+        <zome-name>: {
+          "types": {
+            <entry-name>: {
+              "description": <entry-description>,
+              "sharing": "<public | private>",
+              "definition": {
+                "<entry-field-name>": <entry-field-type>
+              },
+              "functions": {
+                "create": <boolean>,
+                "update": <boolean>,
+                "delete": <boolean>,
+                "get": <boolean>,
+                "list": <boolean>
+              }
+            }
+          }
+        }
+      }
+    }
+    ```
+   *NB: If no zomes object is provided, a single zome will be generated. Currently, only the DNA is compatible with generating muliptle zomes.*
 
 ##### Run your DNA tests:
 1. Test your DNA
@@ -78,37 +182,3 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
     $ npm hc:test
     ```
 ---
-
-## hc-happ-scaffold: A command to generate a complete and personalized Holochain Happ
-> This will generate the full UI and DNA codebase as well as the conductor interface.
-
-## 1 - Get Holonix and enter the development environment
-Holonix is a full Holochain development environment built with the [Nix package manager](https://nixos.org/nix/). 
-This repo comes shipped with nix-shell already baked in.  All you need to do, is enter the provided environment, by running:
-```
-$ nix-shell
-```
-## 2 - Run the hc-happ-scaffold command
-From within the `nix-shell` environment, first create a directory for all your Holochain projects (if you haven't already). You can create it wherever you like; here's a recommended setup:
-
-```
-$ cd ~
-$ mkdir Holochain
-$ cd Holochain
-```
-
-Then run this command:
-
-```
-$ hc-happ-scaffold <PATH_TO_JSON_TYPE_SPEC> <HAPP_PROJECT_NAME>
-```
-
-This will create a new directory for your project, download all the dependencies and development tools, and create the hApp source code.
-
-## 3 - Start your new happ!
-
-Once it's complete, go into the new project directory and run this command:
-
-```
-$ npm run start
-```

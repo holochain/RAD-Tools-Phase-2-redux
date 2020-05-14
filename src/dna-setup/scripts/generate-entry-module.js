@@ -31,9 +31,9 @@ const entryContents = [
   [() => entryValidationDefs, ENTRY_VALIDATION_DEFINITIONS]
 ]
 
-function renderMod (zomeEntryName, zomeEntry) {
+function generateMod (zomeEntryName, zomeEntry) {
   renderModContent(zomeEntryName, zomeEntry)
-  const completedModFile = renderModFile(entryModTemplate, zomeEntryName)
+  const completedModFile = generateModFile(entryModTemplate, zomeEntryName)
   return completedModFile
 }
 
@@ -65,7 +65,7 @@ const renderModContent = (zomeEntryName, zomeEntry) => {
     renderEntryDefinitionImplementation(entryDefName, zomeEntryName)).join('')
 }
 
-const renderModFile = (templateFile, zomeEntryName) => {
+const generateModFile = (templateFile, zomeEntryName) => {
   let newFile = templateFile
   newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
 
@@ -118,4 +118,4 @@ const renderCrudValidationDefinition = (crudFn, shouldFnRender) => {
   `
 }
 
-module.exports = renderMod
+module.exports = generateMod

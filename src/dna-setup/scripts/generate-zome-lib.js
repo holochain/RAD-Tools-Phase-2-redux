@@ -20,10 +20,10 @@ const cleanSlate = () => {
   zomeEntryFns = ''
 }
 
-function renderZomeLib (zomeName, zomeEntryTypes, zomeDir) {
+function generateZomeLib (zomeName, zomeEntryTypes, zomeDir) {
   cleanSlate()
   mapOverObject(zomeEntryTypes, renderLibContent)
-  const completedZomeLib = renderLibFile(zomeLibTemplate, zomeLibContents, zomeName)
+  const completedZomeLib = generateLibFile(zomeLibTemplate, zomeLibContents, zomeName)
   const writeZomeLib = fs.writeFileSync(`${zomeDir}/lib.rs`, completedZomeLib)
   return writeZomeLib
 }
@@ -35,7 +35,7 @@ const renderLibContent = (zomeEntryType, zomeEntry) => {
   return zomeLibContents
 }
 
-const renderLibFile = (templateFile, zomeLibContents, zomeName) => {
+const generateLibFile = (templateFile, zomeLibContents, zomeName) => {
   let newFile = templateFile
   newFile = replaceNamePlaceHolders(newFile, ZOME_NAME, zomeName)
   zomeLibContents.forEach(([zomeEntryContent, placeHolderContent]) => {
@@ -126,4 +126,4 @@ const renderFnDef = (crudFn, shouldFnRender, zomeEntryType) => {
   `
 }
 
-module.exports = renderZomeLib
+module.exports = generateZomeLib

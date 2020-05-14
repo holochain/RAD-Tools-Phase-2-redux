@@ -16,9 +16,9 @@ const {
 const entryHandlersTemplatePath = path.resolve("src/dna-setup/zome-template/entry-template", "handlers.rs");
 const entryHandlersTemplate = fs.readFileSync(entryHandlersTemplatePath, 'utf8')
 
-function renderHandlers (zomeEntryName, zomeEntry) {
+function generateHandlers (zomeEntryName, zomeEntry) {
   const { crudDefs } = renderHandlersContent(zomeEntryName, zomeEntry)
-  const completedHandlersFile = renderHandlersFile(entryHandlersTemplate, zomeEntryName, crudDefs)
+  const completedHandlersFile = generateHandlersFile(entryHandlersTemplate, zomeEntryName, crudDefs)
   return completedHandlersFile
 }
 
@@ -40,7 +40,7 @@ const renderHandlersContent = (zomeEntryName, zomeEntry) => {
   return { crudDefs }
 }
 
-const renderHandlersFile = (templateFile, zomeEntryName, crudDefs, entryContents) => {
+const generateHandlersFile = (templateFile, zomeEntryName, crudDefs, entryContents) => {
   let newFile = templateFile
   newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
   newFile = replaceContentPlaceHolders(newFile, CRUD_DEFINITION, crudDefs)
@@ -122,4 +122,4 @@ const renderCrudDefinition = (crudFn, shouldFnRender, zomeEntryName) => {
   return crudDef
 }
 
-module.exports = renderHandlers
+module.exports = generateHandlers

@@ -13,9 +13,9 @@ const { ENTRY_NAME, CRUD_TESTING } = require('../variables.js')
 const entryTestingIndexTemplatePath = path.resolve("src/dna-setup/test-template/entry-test-template", "index.js");
 const entryTestingIndexTemplate = fs.readFileSync(entryTestingIndexTemplatePath, 'utf8')
 
-function renderEntryTest (zomeEntryName, zomeEntry, zomeName) {
+function generateEntryTest (zomeEntryName, zomeEntry, zomeName) {
   const crudTesting = renderEntryTestContent(zomeName, zomeEntry, zomeEntryName)
-  const completedTestEntryFile = renderTestEntryFile(entryTestingIndexTemplate, zomeEntryName, crudTesting)
+  const completedTestEntryFile = generateTestEntryFile(entryTestingIndexTemplate, zomeEntryName, crudTesting)
   return completedTestEntryFile
 }
 
@@ -36,7 +36,7 @@ const renderEntryTestContent = (zomeName, zomeEntry, zomeEntryName) => {
   return crudTesting
 }
 
-const renderTestEntryFile = (templateFile, zomeEntryName, crudTesting) => {
+const generateTestEntryFile = (templateFile, zomeEntryName, crudTesting) => {
   let newFile = templateFile
   newFile = replaceNamePlaceHolders(newFile, ENTRY_NAME, zomeEntryName)
   newFile = replaceContentPlaceHolders(newFile, CRUD_TESTING, crudTesting)
@@ -173,4 +173,4 @@ const renderCrudTesting = (crudFn, shouldFnRender, { zomeName, zomeEntryName, zo
   return crudTesting
 }
 
-module.exports = renderEntryTest
+module.exports = generateEntryTest

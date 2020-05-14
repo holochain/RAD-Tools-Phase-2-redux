@@ -2,10 +2,10 @@ const fs = require('fs')
 const { promisify } = require('util')
 const exec = promisify(require('child_process').exec)
 const { promiseMapOverObject, toSnakeCase } = require('../../utils.js')
-const renderMod = require('./render-entry-module')
-const renderHandlers = require('./render-entry-handlers')
-const renderValidation = require('./render-entry-validation')
-const renderEntryTest = require('./render-entry-test')
+const generateMod = require('./generate-entry-module')
+const generateHandlers = require('./generate-entry-handlers')
+const generateValidation = require('./generate-entry-validation')
+const generateEntryTest = require('./generate-entry-test')
 const chalk = require('chalk')
 
 async function createEntryDir(zomeName, entryName) {
@@ -21,10 +21,10 @@ async function createEntryTestDir(entryName) {
 }
 
 const renderers = [
-  [renderMod, 'mod'],
-  [renderHandlers, 'handlers'],
-  [renderValidation, 'validation'],
-  [renderEntryTest, 'index']
+  [generateMod, 'mod'],
+  [generateHandlers, 'handlers'],
+  [generateValidation, 'validation'],
+  [generateEntryTest, 'index']
 ]
 
 const renderEntry = async (zomeEntryType, zomeEntry, zomeName) => {
