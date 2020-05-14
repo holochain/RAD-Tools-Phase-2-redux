@@ -35,13 +35,6 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
           "sharing": "<public | private>",
           "definition": {
             "<entry-field-name>": <entry-field-type>
-          },
-          "functions": {
-            "create": <boolean>,
-            "update": <boolean>,
-            "delete": <boolean>,
-            "get": <boolean>,
-            "list": <boolean>
           }
         }
       }
@@ -59,13 +52,6 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
           "definition": {
             "name": "string",
             "avatarUrl": "string"
-          },
-          "functions": {
-            "create": true,
-            "update": true,
-            "delete": true,
-            "get": true,
-            "list": true
           }
         },
         "author": {
@@ -74,13 +60,6 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
           "definition": {
             "user": "string",
             "nickname": "string",
-          },
-          "functions": {
-            "create": true,
-            "update": true,
-            "delete": false,
-            "get": true,
-            "list": true
           }
         },
         "book": {
@@ -90,13 +69,6 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
             "author": "string",
             "title": "string",
             "topic": "string"
-          },
-          "functions": {
-            "create": true,
-            "update": true,
-            "delete": false,
-            "get": true,
-            "list": true
           }
         }
       }
@@ -146,7 +118,7 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
     ```
     >NB: *The type-spec.json is optional and will default to the sample provided in the src/setup/type-specs folder.*
 
-    If you are only developing a DNA, you may include the zome object wrapper in your schema and run `hc-generate-dna` to generate multiple zomes.
+    If you are only developing a DNA, you may include the zome object wrapper in your schema and run `hc-generate-dna` to generate multiple zomes. Similarly, you may declare which crud functions you'd like to generate by providing a function object as displayed below.
 
     The type-spec.json example with zome wrapper:
 
