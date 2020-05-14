@@ -32,8 +32,10 @@
   margin-bottom: 20px;
 }
 
+.field-label {
+}
+
 .field-content {
-  margin-bottom: 20px;
 }
 
 .type-form {

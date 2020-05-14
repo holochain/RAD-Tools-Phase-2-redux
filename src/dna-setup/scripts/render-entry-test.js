@@ -3,7 +3,7 @@ const path = require('path')
 const { isEmpty } = require('lodash/fp')
 const { replaceContentPlaceHolders,
   replaceNamePlaceHolders,
-  mapFnOverObject,
+  mapOverObject,
   toSnakeCase,
   toCamelCase,
   capitalize
@@ -22,16 +22,17 @@ function renderEntryTest (zomeEntryName, zomeEntry, zomeName) {
 const renderEntryTestContent = (zomeName, zomeEntry, zomeEntryName) => {
   let { functions } = zomeEntry
   // { functions } placeholder for before type-schema format is updated :
-  if(isEmpty(functions)) {
+  if (isEmpty(functions)) {
     functions = {
-      "create": true,
-      "get": true,
-      "update": true,
-      "delete": true,
-      "list": true
+      create: true,
+      get: true,
+      update: true,
+      delete: true,
+      list: true
     }
   }
-  const crudTesting = mapFnOverObject(functions, renderCrudTesting, { zomeName, zomeEntryName, zomeEntry }).join('')
+  const crudTesting = mapOverObject(functions, (crudFn, shouldFnRender) =>
+    renderCrudTesting(crudFn, shouldFnRender, { zomeName, zomeEntryName, zomeEntry })).join('')
   return crudTesting
 }
 
@@ -56,14 +57,11 @@ const renderEntryDefinition = (entryDefName, entryDefType, { zomeEntryName, id }
 }
 
 const generateTestEntryArgs = (callVolume, definition, zomeEntryName) => {
-  if(isEmpty(definition)) {
-    const entryDefinitionFields =  { ...zomeEntry, description, sharing }
-    definition = { entryDefinitionFields }
-  }
   let entryArgs
   for (let id = 0; id < callVolume; id++) {
-    const entryArgsMap = new Map(mapFnOverObject(definition, renderEntryDefinition, { zomeEntryName, id }))
-    entryArgs = Object.fromEntries(entryArgsMap);
+    const entryArgsMap = new Map(mapOverObject(definition, (entryDefName, entryDefType) =>
+      renderEntryDefinition(entryDefName, entryDefType, { zomeEntryName, id })))
+    entryArgs = Object.fromEntries(entryArgsMap)
   }
   return entryArgs
 }

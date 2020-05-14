@@ -3,7 +3,7 @@ const path = require('path')
 const { isEmpty } = require('lodash/fp')
 const { replaceContentPlaceHolders,
   replaceNamePlaceHolders,
-  mapFnOverObject,
+  mapOverObject,
   toSnakeCase,
   toCamelCase,
   capitalize
@@ -21,18 +21,18 @@ function renderValidation (zomeEntryName, zomeEntry) {
 
 const renderValidationContent = (zomeEntry, zomeEntryName) => {
   let { functions } = zomeEntry
-  // { functions } placeholder for before type-schema format is updated :
-  if(isEmpty(functions)) {
+  if (isEmpty(functions)) {
     functions = {
-      "create": true,
-      "get": true,
-      "update": true,
-      "delete": true,
-      "list": true
+      create: true,
+      get: true,
+      update: true,
+      delete: true,
+      list: true
     }
   }
-  crudValidationDefs = mapFnOverObject(functions, renderCrudDefinition, zomeEntryName).join('')
-  return crudValidationDefs
+
+  return mapOverObject(functions, (crudFn, shouldFnRender) =>
+    renderCrudDefinition(crudFn, shouldFnRender, zomeEntryName)).join('')
 }
 
 const renderValidationFile = (templateFile, zomeEntryName, crudValidationDefs) => {  

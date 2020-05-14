@@ -18,13 +18,15 @@ export default HomePage
 }
 
 function renderLinks (types) {
-  return mapObject(types, renderLink).join('\n')
+  return `<div>
+${mapObject(types, renderLink).join('\n')}
+  </div>`
 }
 
 function renderLink (typeName) {
   const path = `/${typeName.toLowerCase()}s`
   const text = `${typeName}s`
-  return `    <div><Link to='${path}'>${text}</Link></div>`
+  return `    <div className='type-page-link'><Link to='${path}'>${text}</Link></div>`
 }
 
 module.exports = renderHomePage

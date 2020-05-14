@@ -1,7 +1,7 @@
 const fs = require('fs')
 const { promisify } = require('util')
 const exec = promisify(require('child_process').exec)
-const { promiseMapFnOverObject, toSnakeCase } = require('../../utils.js')
+const { promiseMapOverObject, toSnakeCase } = require('../../utils.js')
 const renderMod = require('./render-entry-module')
 const renderHandlers = require('./render-entry-handlers')
 const renderValidation = require('./render-entry-validation')
@@ -37,6 +37,6 @@ const renderEntry = async (zomeEntryType, zomeEntry, zomeName) => {
   return console.log(`${chalk.cyan(' Finished creating ' + zomeEntryName.toLowerCase() + ' entry')}\n`)
 }
 
-const generateZomeEntries = (zomeName, zomeEntryTypes) => promiseMapFnOverObject(zomeEntryTypes, renderEntry, zomeName)
+const generateZomeEntries = (zomeName, zomeEntryTypes) => promiseMapOverObject(zomeEntryTypes, (zomeEntryType, zomeEntry) => renderEntry(zomeEntryType, zomeEntry, zomeName))
 
 module.exports = generateZomeEntries
