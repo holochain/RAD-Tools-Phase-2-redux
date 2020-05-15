@@ -56,7 +56,7 @@ async function formatZome (zomeDir) {
 
 async function createZomeDir (zomeNameRaw, entryTypesWrapper) {
   const zomeName = toSnakeCase(zomeNameRaw).toLowerCase()
-  const { stderr, stdout } = await exec(`cd ./dna-src && hc generate zomes/${zomeName} rust-proc | sed -ne 's/lib.rs\.*//p' | xargs -I {} echo $(pwd -P){} && cd ..`)
+  const { stderr, stdout } = await exec(`hc generate zomes/${zomeName} rust-proc | sed -ne 's/lib.rs\.*//p' | xargs -I {} echo $(pwd -P){}`)
   if (stderr) {
     console.error('stderr:', stderr)
   } else {
@@ -76,7 +76,7 @@ async function createZomeDir (zomeNameRaw, entryTypesWrapper) {
   }
 }
 
-const generateDnaZomes = typeSpec => {
+const generateDnaZomes = (typeSpec, destinationPath) => {
   let { zomes } = typeSpec
   // a zomes placeholder for before type-schema format is updated:
   if (isEmpty(zomes)) {
@@ -84,8 +84,14 @@ const generateDnaZomes = typeSpec => {
     const zomeName = 'zome'
     zomes = { [zomeName]: { types } }
   }
+
+  // go into dna directory
+  process.chdir(destinationPath)
+
   return promiseMapOverObject(zomes, createZomeDir)
     .then(async zomeDirResults => {
+      // go back up out of happ directory
+      process.chdir('../..')
       if (zomeDirResults.length > 1) {
         const { zomeDir } = zomeDirResults[0]
         const testingEntries = zomeDirResults.reduce((acc, { testingEntries }) => acc.concat(testingEntries), [])

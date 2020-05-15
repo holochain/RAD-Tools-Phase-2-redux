@@ -8,9 +8,9 @@
     "ui:start-live": "REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts start",
     "ui:start-agent": "PORT=3100 npm run ui:start-live",
     "ui:build": "react-scripts build",
-    "ui:test": "react-scripts test",
+    "ui:test": "react-scripts test --config=./jest.unit.config.js",
     "ui:eject": "react-scripts eject",
-    "ui:connect-to-conductor": "node connect-to-conductor"
+    "ui:wait-for-conductor": "node wait-for-conductor"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",

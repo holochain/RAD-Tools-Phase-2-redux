@@ -9,20 +9,19 @@ const renderTypePage = require('./renderTypePage')
 const renderIndex = require('./renderIndex')
 const mapObject = require('./render-utils').mapObject
 const typeSpecPath = process.argv[2]
-const defaultTypeSpecPath = path.resolve("src/setup/type-specs", "sample-type-spec.json");
+const defaultTypeSpecPath = path.resolve('src/setup/type-specs', 'sample-type-spec.json')
 const defaultTypeSpec = require(defaultTypeSpecPath)
 
 let typeSpec
 if (!typeSpecPath) {
   console.log(chalk.blue('> No type spec JSON file provided. \n  Using default type spec JSON file located within the setup directory.\n'))
   typeSpec = defaultTypeSpec
-}
-else {
-  typespec = JSON.parse(fs.readFileSync(typeSpecPath))
+} else {
+  typeSpec = JSON.parse(fs.readFileSync(typeSpecPath))
 }
 
 const SOURCE_PATH = './src/ui-setup/ui-template'
-const DESTINATION_PATH = './ui-src'
+const DESTINATION_PATH = './happ/ui-src'
 
 const SCHEMA_PATH = `${DESTINATION_PATH}/src/schema.js`
 const RESOLVERS_PATH = `${DESTINATION_PATH}/src/resolvers.js`
