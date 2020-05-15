@@ -32,7 +32,7 @@ async function initAndGetHolochainClient () {
   }
 }
 
-export function parseZomeCallPath (zomeCallPath) {
+function parseZomeCallPath (zomeCallPath) {
   const [zomeFunc, zome, instanceId] = zomeCallPath.split('/').reverse()
 
   return { instanceId, zome, zomeFunc }

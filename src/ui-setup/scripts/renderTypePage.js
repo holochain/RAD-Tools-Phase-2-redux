@@ -1,19 +1,24 @@
 const mapObject = require('./render-utils').mapObject
+const { toCamelCase } = require('../../utils.js')
 
-function renderTypePage (typeName, fields) {
+function renderTypePage (typeName, { definition: fields }) {
   const name = typeName
   const namePlural = name + 's'
   const capsName = typeName.toUpperCase()
   const capsNamePlural = capsName + 'S'
-  const lowerName = typeName.toLowerCase()
+  const lowerName = toCamelCase(typeName.toLowerCase())
 
   const fieldsForGQL = `      id
-${mapObject(fields, fieldName => `      ${fieldName}`).join('\n')}`
-  const fieldsForArray = mapObject(fields, fieldName => `'${fieldName}'`).join(', ')
-  const fieldsForObject = mapObject(fields, fieldName => `${fieldName}`).join(', ')
-  const fieldsForObjectWithDefaults = mapObject(fields, fieldName => `${fieldName}: ''`).join(', ')
+${mapObject(fields, fieldName => {
+  const formattedFieldName = toCamelCase(fieldName)
+  return `      ${formattedFieldName}`
+}).join('\n')}`
+  const fieldsForArray = mapObject(fields, fieldName => `'${toCamelCase(fieldName)}'`).join(', ')
+  const fieldsForObject = mapObject(fields, fieldName => `${toCamelCase(fieldName)}`).join(', ')
+  const fieldsForObjectWithDefaults = mapObject(fields, fieldName => `${toCamelCase(fieldName)}: ''`).join(', ')
 
   return `import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import gql from 'graphql-tag'
 import { pick } from 'lodash/fp'
 import { useQuery, useMutation } from '@apollo/react-hooks'
@@ -57,15 +62,20 @@ function ${namePlural}Page () {
   const list${namePlural} = (data && data.list${namePlural}) || []
 
   const [create${name}] = useMutation(CREATE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
-  const [update${name}] = useMutation(UPDATE_${capsName}_MUTATION)
+  const [update${name}] = useMutation(UPDATE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
   const [delete${name}] = useMutation(DELETE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
 
   // the id of the ${lowerName} currently being edited
   const [editingId, setEditingId] = useState()
+  
+  const { push } = useHistory()
 
   return <div className='type-page'>
-    <h1>${namePlural}</h1>
-
+  <div className='background-block'/>
+  <button className='button' onClick={() => push('/')}>Home Page</button>
+  <br/>
+    <h1>${name} Entry</h1>
+    <h2>Endpoint Testing</h2>
     <${name}Form
       formAction={({ ${lowerName}Input }) => create${name}({ variables: { ${lowerName}Input } })}
       formTitle='Create ${name}' />
@@ -99,12 +109,9 @@ function ${name}Row ({ ${lowerName}, editingId, setEditingId, update${name}, del
 
 function ${name}Card ({ ${lowerName}: { id, ${fieldsForObject} }, setEditingId, delete${name} }) {
   return <div className='type-card' data-testid='${lowerName}-card'>
-
-${mapObject(fields, fieldName => `    <div className='field-pair'>
-      <span className='field-label'>${fieldName}: </span>
-      <span className='field-content'>{${fieldName}}</span>
-    </div>
-`).join('')}
+${mapObject(fields, fieldName => `
+    <div className='entry-field'><span className='field-label'>${toCamelCase(fieldName)}: </span><span className='field-content'>{${toCamelCase(fieldName)}}</span></div>`).join('')}
+    <br/>
     <button className='button' onClick={() => setEditingId(id)}>Edit</button>
     <button onClick={() => delete${name}({ variables: { id } })}>Remove</button>
   </div>
@@ -121,7 +128,7 @@ function ${name}Form ({ ${lowerName} = { ${fieldsForObjectWithDefaults} }, formT
 
   const clearForm = () => {
     setFormState({
-${mapObject(fields, fieldName => `      ${fieldName}: ''`).join(',\n')}
+${mapObject(fields, fieldName => `      ${toCamelCase(fieldName)}: ''`).join(',\n')}
     })
   }
 
@@ -143,8 +150,8 @@ ${mapObject(fields, fieldName => `      ${fieldName}: ''`).join(',\n')}
   return <div className='type-form'>
     <h3>{formTitle}</h3>
 ${mapObject(fields, fieldName => `    <div className='form-row'>
-      <label htmlFor='${fieldName}'>${fieldName}</label>
-      <input id='${fieldName}' name='${fieldName}' value={${fieldName}} onChange={setField('${fieldName}')} />
+      <label htmlFor='${fieldName}'>${toCamelCase(fieldName)}</label>
+      <input id='${toCamelCase(fieldName)}' name='${toCamelCase(fieldName)}' value={${toCamelCase(fieldName)}} onChange={setField('${toCamelCase(fieldName)}')} />
     </div>
 `).join('')}
     <div>

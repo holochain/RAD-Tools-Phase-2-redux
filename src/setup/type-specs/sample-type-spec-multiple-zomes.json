@@ -1,0 +1,40 @@
+{
+  "zomes": {
+   "Profile": {
+     "types": {
+       "User": {
+         "description": "Create and manage users.",
+         "sharing": "public",
+         "definition": {
+           "name": "string",
+           "avatar_url": "string"
+         },
+         "functions": {}
+       }
+     }
+   },
+    "Notes": {
+      "types": {
+        "Author": {
+          "description": "Create and mange authors.",
+          "sharing": "public",
+          "definition": {
+            "name": "string",
+            "avatar_url": "string"
+          },
+          "functions": {}
+        },
+        "Note": {
+          "description": "Create and mange notes.",
+          "sharing": "public",
+          "definition": {
+            "title": "string",
+            "content": "string",
+            "author": "string"
+          },
+          "functions": {}
+        }
+      }
+    }
+  }
+}

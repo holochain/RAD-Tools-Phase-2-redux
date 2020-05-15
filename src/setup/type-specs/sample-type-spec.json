@@ -1,0 +1,35 @@
+{
+  "types": {
+    "User": {
+      "description": "Create and manage users.",
+      "sharing": "public",
+      "definition": {
+        "name": "string",
+        "avatar_url": "string"
+      },
+      "functions": {
+        "create": true,
+        "update": true,
+        "delete": true,
+        "get": true,
+        "list": true
+      }
+    },
+    "Book": {
+      "description": "Create and manage books.",
+      "sharing": "public",
+      "definition": {
+        "author": "string",
+        "title": "string",
+        "topic": "string"
+      },
+      "functions": {
+        "create": true,
+        "update": true,
+        "delete": true,
+        "get": true,
+        "list": true
+      }
+    }
+  }
+}

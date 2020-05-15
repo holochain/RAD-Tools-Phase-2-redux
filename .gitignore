@@ -1,1 +1,36 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
 node_modules
+.pnp
+.pnp.js
+
+# testing
+coverage
+
+# production
+build
+
+# misc
+.directory
+.DS_Store
+
+.holochain
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+dist/
+target/
+.hc
+.cargo
+.DS_STORE
+
+keystores
+dna-src
+ui-src
+conductor-config.toml
+conductor.log
+sim2h-server.log
+sim2h.log

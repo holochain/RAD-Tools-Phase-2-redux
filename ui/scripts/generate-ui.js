@@ -1,6 +1,6 @@
 const typeSpecPath = process.argv[2]
 
-if (!typeSpecPath) throw new Error ('Please specify a path for your type spec JSON file')
+if (!typeSpecPath) throw new Error('Please specify a path for your type spec JSON file')
 
 const fs = require('fs')
 const renderSchema = require('./renderSchema')

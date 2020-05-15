@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;  
+  position: relative;
+}
+
+.index-page {
+  margin: 0 auto;
+  text-align: center;
+  justify-content: center;
+}
+
+.title {
+  margin-top: 50px;
+  margin-bottom: -10px;
+}
+
+.subtitle {
+  font-weight: lighter;
+}
