@@ -41,12 +41,11 @@ const renderNixSetup = (dnaName, zomeDir, DNA_SETUP_DIR) => {
   const dnaSrcDir = pathAsArray.splice(0, pathAsArray.length - 5).join('/')
   const defaultNixTemplatePath = path.resolve(`${DNA_SETUP_DIR}/zome-template`, 'default.nix')
   const defaultNix = fs.readFileSync(defaultNixTemplatePath, 'utf8')
-  fs.writeFileSync(`${dnaSrcDir}/default.nix`, defaultNix)
-  const configNixTemplatePath = path.resolve('src/dna-setup/zome-template', 'config.nix')
+  fs.writeFileSync(`${dnaSrcDir}/../default.nix`, defaultNix)
+  const configNixTemplatePath = path.resolve(`${DNA_SETUP_DIR}/zome-template`, 'config.nix')
   const configNixTemplate = fs.readFileSync(configNixTemplatePath, 'utf8')
   const configNix = replaceNamePlaceHolders(configNixTemplate, DNA_NAME, happDnaName)
-  const writeconfigNix = fs.writeFileSync(`${dnaSrcDir}/config.nix`, configNix)
-  return writeconfigNix
+  fs.writeFileSync(`${dnaSrcDir}/../config.nix`, configNix)
 }
 
 async function formatZome (zomeDir) {
@@ -87,7 +86,7 @@ const generateDnaZomes = (typeSpec, DNA_SETUP_DIR) => {
 
   return promiseMapOverObject(zomes, (zomeNameRaw, entryTypesWrapper) => createZomeDir(zomeNameRaw, entryTypesWrapper, DNA_SETUP_DIR))
     .then(async zomeDirResults => {
-      if (zomeDirResults.length > 1) {
+      if (zomeDirResults.length > 0) {
         const { zomeDir } = zomeDirResults[0]
         const testingEntries = zomeDirResults.reduce((acc, { testingEntries }) => acc.concat(testingEntries), [])
         const dnaName = await findDnaName(zomeDir)

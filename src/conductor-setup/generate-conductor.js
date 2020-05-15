@@ -1,6 +1,6 @@
 const util = require('util')
 const exec = util.promisify(require('child_process').exec)
-const { toCamelCase } = require('../setup/scripts/utils')
+const { toCamelCase } = require('../setup/utils')
 const chalk = require('chalk')
 const path = require('path')
 const fs = require('fs')
@@ -9,34 +9,19 @@ const toml = require('toml')
 const ROOT_DIR = path.resolve(`./`)
 const DESTINATION_PATH = `${ROOT_DIR}/happ`
 
-async function updateUiDotEnv (instanceId, wsPort) {
-  const uiDotEnvPath = path.resolve(`${ROOT_DIR}/ui-src`, '.env')
-  await exec(`sed -i "s/<INSTANCE_ID>/${instanceId}/" ${uiDotEnvPath}`)
-  await exec(`sed -i "s/<WS_PORT>/${wsPort}/" ${uiDotEnvPath}`)
-}
-
-async function updateConductorWithPackagedDna (dnaHash) {
-  const conductorConfigPath = path.resolve(ROOT_DIR, 'conductor-config.toml')
-  const appName = toCamelCase(path.basename(path.dirname(conductorConfigPath)))
-  const dnaName = appName || dnaHash
-
-  const hcConfig = toml.parse(fs.readFileSync(conductorConfigPath, 'utf-8'))
-  const port = hcConfig.interfaces[0].driver.port || 3400
-
-  await updateUiDotEnv(`${dnaName}-instance-1`, port)
-
-  const { stderr } = await exec(`sed -i "s/<DNA_HASH>/${dnaHash}/" ${conductorConfigPath}; sed -i "s/<DNA_NAME>/${dnaName}/" ${conductorConfigPath} && mv ${ROOT_DIR}/conductor-config.toml ${DESTINATION_PATH}/conductor-config.toml`)
+async function generateConductor () {
+  const { stderr, stdout } = await exec(`sh ${ROOT_DIR}/src/conductor-setup/scripts/generate-conductor.sh`)
   if (stderr) {
-    return console.error(`exec stderr: \n${chalk.red(stderr)}`)
+    throw new Error(stderr)
   } else {
-    return console.log(chalk.cyan('Added DNA Instance to Conductor \n\nFinished generating Conductor'))
+    console.log(`\n${chalk.cyan(stdout)}`)
   }
 }
 
 // nb: this is currently a work around to manage warning errors that cause successfull builds to return an error
 async function packageDNA () {
   console.log('building DNA...')
-  const { stdout } = await exec(`cd dna-src && hc package`)
+  const { stdout } = await exec(`cd ${DESTINATION_PATH}/dna-src && hc package`)
   let dnaHash
   const dnaPackage = /(DNA hash: )/gi
   if (dnaPackage.test(stdout)) {
@@ -49,10 +34,28 @@ async function packageDNA () {
   return console.log(chalk.cyan('DNA Hash: ' + dnaHash))
 }
 
-async function generateConductor () {
-  const { stderr, stdout } = await exec(`sh ${ROOT_DIR}/src/setup/conductor-setup/scripts/generate-conductor.sh`)
-  if (stderr) return stderr
-  else return console.log(`\n${chalk.cyan(stdout)}`)
+async function updateConductorWithPackagedDna (dnaHash) {
+  const conductorConfigPath = path.resolve(DESTINATION_PATH, 'conductor-config.toml')
+  const appName = toCamelCase(path.basename(path.dirname(conductorConfigPath)))
+  const dnaName = appName || dnaHash
+
+  const hcConfig = toml.parse(fs.readFileSync(conductorConfigPath, 'utf-8'))
+  const port = hcConfig.interfaces[0].driver.port || 3400
+
+  await updateUiDotEnv(`${dnaName}-instance-1`, port)
+
+  const { stderr } = await exec(`sed -i "s/<DNA_HASH>/${dnaHash}/" ${conductorConfigPath}; sed -i "s/<DNA_NAME>/${dnaName}/" ${conductorConfigPath}`)
+  if (stderr) {
+    return console.error(`exec stderr: \n${chalk.red(stderr)}`)
+  } else {
+    return console.log(chalk.cyan('Added DNA Instance to Conductor \n\nFinished generating Conductor'))
+  }
+}
+
+async function updateUiDotEnv (instanceId, wsPort) {
+  const uiDotEnvPath = path.resolve(`${DESTINATION_PATH}/ui-src`, '.env')
+  await exec(`sed -i "s/<INSTANCE_ID>/${instanceId}/" ${uiDotEnvPath}`)
+  await exec(`sed -i "s/<WS_PORT>/${wsPort}/" ${uiDotEnvPath}`)
 }
 
 generateConductor()

@@ -17,7 +17,7 @@
       "hc:clean-storage": "rm -rf ./.holochain/holo/storage",
       "hc:keygen": "node scripts/create-new-agent",
       "hc:config-add-agent": "node scripts/add-agent-to-conductor",
-      "test:integration": "nix-shell --command 'REACT_APP_INTEGRATION_TEST=true react-scripts test --config=./ui-src/jest.integration.config.js'",
+      "test:integration": "nix-shell --command 'REACT_APP_INTEGRATION_TEST=true react-scripts test -- --config=./ui-src/jest.integration.config.js'",
       "test:wait-for-conductor": "node ui-src/wait-for-conductor.js"
     },
     "devDependencies": {},
