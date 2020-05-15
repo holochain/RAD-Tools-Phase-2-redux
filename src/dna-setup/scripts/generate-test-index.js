@@ -4,7 +4,7 @@ const { replaceContentPlaceHolders,
   replaceNamePlaceHolders,
   toSnakeCase,
   toCamelCase
-} = require('../../utils.js')
+} = require('../../setup/utils.js')
 const { ENTRY_TEST_IMPORTS, DNA_NAME } = require('../variables.js')
 
 function generateTestIndex (dnaName, zomeEntryNames, testDir, DNA_SETUP_DIR) {

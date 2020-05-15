@@ -8,7 +8,7 @@
     "sim2h:start": "sim2h_server -p 9000 &> sim2h-server.log &",
     "sim2h:clear-local": "kill -9 $(lsof -t -i:9000)",
     "happ:start": "npm run start",
-    "happ:generate": "npm run happ:remove && cp -r src/setup happ && npm run ui:generate && npm run hc:generate-dna && npm run happ:install && cd happ && npm run hc:package && cd .. && npm run hc:generate-conductor && mv ./.cargo ./happ/.cargo && mv ./.target ./happ/.target",
+    "happ:generate": "src/setup/happ-generate.sh",
     "happ:install": "npm i && cd happ/dna-src/test && npm i && cd ../../ui-src && npm i && cd ..",
     "happ:refresh": "npm run hc:clean-storage && npm run sim2h:clear-local",
     "happ:remove": "npm run hc:clean-storage && rm -rf happ",

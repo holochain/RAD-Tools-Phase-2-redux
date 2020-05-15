@@ -1,5 +1,5 @@
 const mapObject = require('./render-utils').mapObject
-const { toCamelCase } = require('../../utils.js')
+const { toCamelCase } = require('../../setup/utils.js')
 
 function renderTypePage (typeName, { definition: fields }) {
   const name = typeName
@@ -10,9 +10,9 @@ function renderTypePage (typeName, { definition: fields }) {
 
   const fieldsForGQL = `      id
 ${mapObject(fields, fieldName => {
-  const formattedFieldName = toCamelCase(fieldName)
-  return `      ${formattedFieldName}`
-}).join('\n')}`
+    const formattedFieldName = toCamelCase(fieldName)
+    return `      ${formattedFieldName}`
+  }).join('\n')}`
   const fieldsForArray = mapObject(fields, fieldName => `'${toCamelCase(fieldName)}'`).join(', ')
   const fieldsForObject = mapObject(fields, fieldName => `${toCamelCase(fieldName)}`).join(', ')
   const fieldsForObjectWithDefaults = mapObject(fields, fieldName => `${toCamelCase(fieldName)}: ''`).join(', ')

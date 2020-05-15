@@ -1,5 +1,5 @@
 const mapObject = require('./render-utils').mapObject
-const { toCamelCase } = require('../../setup/scripts/utils.js')
+const { toCamelCase } = require('../../setup/utils.js')
 
 function renderSchema ({ types }) {
   return `import gql from 'graphql-tag'

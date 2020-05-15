@@ -1,7 +1,7 @@
 const fs = require('fs')
 const { promisify } = require('util')
 const exec = promisify(require('child_process').exec)
-const { promiseMapOverObject, toSnakeCase } = require('../../utils.js')
+const { promiseMapOverObject, toSnakeCase } = require('../../setup/utils.js')
 const generateMod = require('./generate-entry-module')
 const generateHandlers = require('./generate-entry-handlers')
 const generateValidation = require('./generate-entry-validation')
