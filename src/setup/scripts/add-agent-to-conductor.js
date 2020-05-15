@@ -3,7 +3,7 @@ const util = require('util')
 const path = require('path')
 const exec = util.promisify(require('child_process').exec);
 const toml = require('toml')
-const { insertSpacesInString, toSnakeCase, capitalize, toKebabCase } = require('../../utils.js')
+const { insertSpacesInString, toSnakeCase, capitalize, toKebabCase } = require('./utils.js')
 
 const agentName = process.argv[2]
 const formattedName = insertSpacesInString(capitalize(toSnakeCase(agentName)), 'underscore')

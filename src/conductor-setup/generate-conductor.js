@@ -1,19 +1,22 @@
 const util = require('util')
 const exec = util.promisify(require('child_process').exec)
+const { toCamelCase } = require('../setup/scripts/utils')
 const chalk = require('chalk')
 const path = require('path')
-const { toCamelCase } = require('../../utils.js')
 const fs = require('fs')
 const toml = require('toml')
 
+const ROOT_DIR = path.resolve(`./`)
+const DESTINATION_PATH = `${ROOT_DIR}/happ`
+
 async function updateUiDotEnv (instanceId, wsPort) {
-  const uiDotEnvPath = path.resolve('./ui-src', '.env')
+  const uiDotEnvPath = path.resolve(`${ROOT_DIR}/ui-src`, '.env')
   await exec(`sed -i "s/<INSTANCE_ID>/${instanceId}/" ${uiDotEnvPath}`)
   await exec(`sed -i "s/<WS_PORT>/${wsPort}/" ${uiDotEnvPath}`)
 }
 
 async function updateConductorWithPackagedDna (dnaHash) {
-  const conductorConfigPath = path.resolve('./', 'conductor-config.toml')
+  const conductorConfigPath = path.resolve(ROOT_DIR, 'conductor-config.toml')
   const appName = toCamelCase(path.basename(path.dirname(conductorConfigPath)))
   const dnaName = appName || dnaHash
 
@@ -22,7 +25,7 @@ async function updateConductorWithPackagedDna (dnaHash) {
 
   await updateUiDotEnv(`${dnaName}-instance-1`, port)
 
-  const { stderr } = await exec(`sed -i "s/<DNA_HASH>/${dnaHash}/" ${conductorConfigPath}; sed -i "s/<DNA_NAME>/${dnaName}/" ${conductorConfigPath}`)
+  const { stderr } = await exec(`sed -i "s/<DNA_HASH>/${dnaHash}/" ${conductorConfigPath}; sed -i "s/<DNA_NAME>/${dnaName}/" ${conductorConfigPath} && mv ${ROOT_DIR}/conductor-config.toml ${DESTINATION_PATH}/conductor-config.toml`)
   if (stderr) {
     return console.error(`exec stderr: \n${chalk.red(stderr)}`)
   } else {
@@ -47,7 +50,7 @@ async function packageDNA () {
 }
 
 async function generateConductor () {
-  const { stderr, stdout } = await exec(`sh ./src/setup/conductor-setup/scripts/generate-conductor.sh`)
+  const { stderr, stdout } = await exec(`sh ${ROOT_DIR}/src/setup/conductor-setup/scripts/generate-conductor.sh`)
   if (stderr) return stderr
   else return console.log(`\n${chalk.cyan(stdout)}`)
 }

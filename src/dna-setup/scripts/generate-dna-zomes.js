@@ -2,7 +2,7 @@ const { promisify } = require('util')
 const exec = promisify(require('child_process').exec)
 const fs = require('fs')
 const path = require('path')
-const { promiseMapOverObject, replaceNamePlaceHolders, toCamelCase, toSnakeCase } = require('../../utils.js')
+const { promiseMapOverObject, replaceNamePlaceHolders, toCamelCase, toSnakeCase } = require('../../setup/scripts/utils.js')
 const { DNA_NAME, ZOME_NAME } = require('../variables.js')
 const generateZomeEntries = require('./generate-zome-entries')
 const generateZomeLib = require('./generate-zome-lib')
@@ -25,21 +25,21 @@ async function findTestDirPath (zomeDir) {
   }
 }
 
-const renderZomeCargoToml = (zomeName, zomeDir) => {
+const renderZomeCargoToml = (zomeName, zomeDir, DNA_SETUP_DIR) => {
   const pathAsArray = zomeDir.split('/')
   const zomeCodeDir = pathAsArray.splice(0, pathAsArray.length - 2).join('/')
-  const cargoTomlTemplatePath = path.resolve('src/dna-setup/zome-template', 'Cargo.toml')
+  const cargoTomlTemplatePath = path.resolve(`${DNA_SETUP_DIR}/zome-template`, 'Cargo.toml')
   const cargoTomlTemplate = fs.readFileSync(cargoTomlTemplatePath, 'utf8')
   const cargoToml = replaceNamePlaceHolders(cargoTomlTemplate, ZOME_NAME, zomeName)
   const writeCargoToml = fs.writeFileSync(`${zomeCodeDir}/Cargo.toml`, cargoToml)
   return writeCargoToml
 }
 
-const renderNixSetup = (dnaName, zomeDir) => {
+const renderNixSetup = (dnaName, zomeDir, DNA_SETUP_DIR) => {
   const happDnaName = toCamelCase(dnaName)
   const pathAsArray = zomeDir.split('/')
   const dnaSrcDir = pathAsArray.splice(0, pathAsArray.length - 5).join('/')
-  const defaultNixTemplatePath = path.resolve('src/dna-setup/zome-template', 'default.nix')
+  const defaultNixTemplatePath = path.resolve(`${DNA_SETUP_DIR}/zome-template`, 'default.nix')
   const defaultNix = fs.readFileSync(defaultNixTemplatePath, 'utf8')
   fs.writeFileSync(`${dnaSrcDir}/default.nix`, defaultNix)
   const configNixTemplatePath = path.resolve('src/dna-setup/zome-template', 'config.nix')
@@ -54,9 +54,9 @@ async function formatZome (zomeDir) {
   if (stderr) console.error('stderr:', stderr)
 }
 
-async function createZomeDir (zomeNameRaw, entryTypesWrapper) {
+async function createZomeDir (zomeNameRaw, entryTypesWrapper, DNA_SETUP_DIR) {
   const zomeName = toSnakeCase(zomeNameRaw).toLowerCase()
-  const { stderr, stdout } = await exec(`hc generate zomes/${zomeName} rust-proc | sed -ne 's/lib.rs\.*//p' | xargs -I {} echo $(pwd -P){}`)
+  const { stderr, stdout } = await exec(`cd ./dna-src && hc generate zomes/${zomeName} rust-proc | sed -ne 's/lib.rs\.*//p' | xargs -I {} echo $(pwd -P){}`)
   if (stderr) {
     console.error('stderr:', stderr)
   } else {
@@ -66,7 +66,7 @@ async function createZomeDir (zomeNameRaw, entryTypesWrapper) {
     await generateZomeEntries(zomeName, zomeEntryTypes)
     await generateZomeLib(zomeName, zomeEntryTypes, zomeDir)
     await formatZome(zomeDir)
-    renderZomeCargoToml(zomeName, zomeDir)
+    renderZomeCargoToml(zomeName, zomeDir, DNA_SETUP_DIR)
     console.log(`${chalk.cyan(' Finished creating ' + zomeName.toUpperCase() + ' ZOME')}\n`)
 
     return {
@@ -76,7 +76,7 @@ async function createZomeDir (zomeNameRaw, entryTypesWrapper) {
   }
 }
 
-const generateDnaZomes = (typeSpec, destinationPath) => {
+const generateDnaZomes = (typeSpec, DNA_SETUP_DIR) => {
   let { zomes } = typeSpec
   // a zomes placeholder for before type-schema format is updated:
   if (isEmpty(zomes)) {
@@ -85,20 +85,15 @@ const generateDnaZomes = (typeSpec, destinationPath) => {
     zomes = { [zomeName]: { types } }
   }
 
-  // go into dna directory
-  process.chdir(destinationPath)
-
-  return promiseMapOverObject(zomes, createZomeDir)
+  return promiseMapOverObject(zomes, (zomeNameRaw, entryTypesWrapper) => createZomeDir(zomeNameRaw, entryTypesWrapper, DNA_SETUP_DIR))
     .then(async zomeDirResults => {
-      // go back up out of happ directory
-      process.chdir('../..')
       if (zomeDirResults.length > 1) {
         const { zomeDir } = zomeDirResults[0]
         const testingEntries = zomeDirResults.reduce((acc, { testingEntries }) => acc.concat(testingEntries), [])
         const dnaName = await findDnaName(zomeDir)
         const testDir = await findTestDirPath(zomeDir)
-        await generateTestIndex(dnaName, testingEntries, testDir)
-        renderNixSetup(dnaName, zomeDir)
+        await generateTestIndex(dnaName, testingEntries, testDir, DNA_SETUP_DIR)
+        renderNixSetup(dnaName, zomeDir, DNA_SETUP_DIR)
       }
     })
 }

@@ -7,7 +7,9 @@ const typeSpecPath = process.argv[2]
 const defaultTypeSpecPath = path.resolve('src/setup/type-specs', 'sample-type-spec.json')
 const defaultTypeSpec = require(defaultTypeSpecPath)
 
-const DESTINATION_PATH = './happ/dna-src'
+const ROOT_DIR = path.resolve(`./`)
+const DESTINATION_PATH = `${ROOT_DIR}/happ`
+const DNA_SETUP_DIR = `${ROOT_DIR}/src/dna-setup`
 
 let typeSpec
 if (!typeSpecPath) {
@@ -18,10 +20,14 @@ if (!typeSpecPath) {
 }
 
 async function genDNA () {
-  // CD INTO DESTINATION_APTH
-  // everything that happens in these two functions assumes we're already in the correct directory  
-  await generateDnaShell(DESTINATION_PATH)
-  await generateDnaZomes(typeSpec, DESTINATION_PATH)
+  // go into happ directory
+  process.chdir(DESTINATION_PATH)
+
+  await generateDnaShell()
+  await generateDnaZomes(typeSpec, DNA_SETUP_DIR)
+
+  // go back up out of happ directory to root level
+  process.chdir('../')
 }
 
 genDNA()
@@ -35,3 +41,4 @@ genDNA()
       console.error(`${chalk.red(e)}`)
     }
   })
+

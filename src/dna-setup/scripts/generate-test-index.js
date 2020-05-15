@@ -7,10 +7,10 @@ const { replaceContentPlaceHolders,
 } = require('../../utils.js')
 const { ENTRY_TEST_IMPORTS, DNA_NAME } = require('../variables.js')
 
-const testIndexTemplatePath = path.resolve("src/dna-setup/test-template", "index.js");
-const testIndexTemplate = fs.readFileSync(testIndexTemplatePath, 'utf8')
+function generateTestIndex (dnaName, zomeEntryNames, testDir, DNA_SETUP_DIR) {
+  const testIndexTemplatePath = path.resolve(`${DNA_SETUP_DIR}/test-template`, 'index.js');
+  const testIndexTemplate = fs.readFileSync(testIndexTemplatePath, 'utf8')
 
-function generateTestIndex (dnaName, zomeEntryNames, testDir) {
   const dnaTitle = toCamelCase(dnaName)
   const entryTestImports = zomeEntryNames.map(zomeEntryName => renderTestEntryContent(zomeEntryName)).join('')  
   const completedTestIndex = generateTestIndexFile(testIndexTemplate, dnaTitle, entryTestImports)
