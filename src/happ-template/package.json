@@ -17,7 +17,7 @@
       "hc:clean-storage": "rm -rf ./.holochain/holo/storage",
       "hc:keygen": "node scripts/create-new-agent",
       "hc:config-add-agent": "node scripts/add-agent-to-conductor",
-      "test:integration": "nix-shell --command 'REACT_APP_INTEGRATION_TEST=true react-scripts test -- --config=./ui-src/jest.integration.config.js'",
+      "test:integration": "nix-shell --command 'REACT_APP_INTEGRATION_TEST=true react-scripts test'",
       "test:wait-for-conductor": "node ui-src/wait-for-conductor.js"
     },
     "devDependencies": {},
@@ -37,6 +37,55 @@
     "bugs": {
       "url": "https://github.com/holochain/RAD-Tools-Phase-2/issues"
     },
-    "homepage": "https://github.com/holochain/RAD-Tools-Phase-2#readme"
+    "homepage": "https://github.com/holochain/RAD-Tools-Phase-2#readme",
+    "jest": {
+      "clearMocks": true,
+      "collectCoverageFrom": [
+        "src/**/*.{js,jsx,ts,tsx}",
+        "!src/**/*.d.ts"
+      ],
+      "setupFiles": [
+        "react-app-polyfill/jsdom",
+        "regenerator-runtime/runtime"
+      ],
+      "testMatch": [
+        "<rootDir>/ui-src/**/__integration_tests__/**/*.{js,jsx,ts,tsx}",
+        "<rootDir>/ui-src/**/*.integration.{spec,test}.{js,jsx,ts,tsx}"
+      ],
+      "testEnvironment": "jest-environment-jsdom-fourteen",
+      "transform": {
+        "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
+        "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+        "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+      },
+      "transformIgnorePatterns": [
+        "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
+        "^.+\\.module\\.(css|sass|scss)$"
+      ],
+      "modulePaths": [
+        "<rootDir>/ui-src/src/",
+        "<rootDir>"
+      ],
+      "moduleNameMapper": {
+        "^react-native$": "react-native-web",
+        "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      },
+      "moduleFileExtensions": [
+        "web.js",
+        "js",
+        "web.ts",
+        "ts",
+        "web.tsx",
+        "tsx",
+        "json",
+        "web.jsx",
+        "jsx",
+        "node"
+      ],
+      "watchPlugins": [
+        "jest-watch-typeahead/filename",
+        "jest-watch-typeahead/testname"
+      ]
+    }
   }
   
