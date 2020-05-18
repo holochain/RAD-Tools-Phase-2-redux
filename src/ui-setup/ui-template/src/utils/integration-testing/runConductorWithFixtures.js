@@ -5,18 +5,18 @@ const rimraf = require('rimraf')
 const wait = require('waait')
 
 const UI_DIR = path.resolve('./')
-export const DEFAULT_HOLOCHAIN_STORAGE = `${UI_DIR}/../.holochain/holo/storage/agent-1`
+export const DEFAULT_HOLOCHAIN_TEST_STORAGE = `${UI_DIR}/../.holochain/holo/storage/agent-1/test`
 
 export function runConductorWithFixtures (testFn) {
   return async function () {
     console.log('Creating Testing Environment')
     
-    const manageStorageFiles = async () => rimraf(DEFAULT_HOLOCHAIN_STORAGE, async (e) => {
-      if (e) console.log("Couldn't find holochain storage to remove at", DEFAULT_HOLOCHAIN_STORAGE)
+    const manageStorageFiles = async () => rimraf(DEFAULT_HOLOCHAIN_TEST_STORAGE, async (e) => {
+      if (e) console.log("Couldn't find holochain storage to remove at", DEFAULT_HOLOCHAIN_TEST_STORAGE)
     })
     const startAndAwaitConductor = async () => {
       process.chdir(`${UI_DIR}/..`)
-      const { stdout, stderr } = await exec('npm run test:wait-for-conductor')
+      const { stdout, stderr } = await exec('npm run hc:start-log && npm run test:wait-for-conductor')
       if (stderr) console.error('Error starting conductor : ', stderr)
       console.log(stdout)
     }

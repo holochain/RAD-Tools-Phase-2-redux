@@ -24,8 +24,8 @@ ${mapObject(types, renderLink).join('\n')}
 }
 
 function renderLink (typeName) {
-  const path = `/${typeName.toLowerCase()}s`
-  const text = `${typeName}s`
+  const path = `/${typeName.toLowerCase()}`
+  const text = `${typeName}`
   return `    <div className='type-page-link'><Link to='${path}'>${text}</Link></div>`
 }
 

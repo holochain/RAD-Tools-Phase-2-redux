@@ -29,11 +29,11 @@ serviceWorker.unregister()
 }
 
 function renderPageImport (typeName) {
-  return `import ${typeName}sPage from './pages/${typeName}sPage'`
+  return `import ${typeName}sPage from './pages/${typeName}Page'`
 }
 
 function renderRoute (typeName) {
-  return `        <Route path='/${typeName.toLowerCase()}s' exact component={${typeName}sPage} />`
+  return `        <Route path='/${typeName.toLowerCase()}' exact component={${typeName}Page} />`
 }
 
 module.exports = renderIndex

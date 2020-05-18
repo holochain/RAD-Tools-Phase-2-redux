@@ -27,7 +27,6 @@ id = "test-instance"
 path = ".holochain/holo/storage/agent-1/test"
 type = "file"
 
-
 [[interfaces]]
 id = "websocket-interface"
 
@@ -37,6 +36,9 @@ type = "websocket"
 
 [[interfaces.instances]]
 id = "<DNA_NAME>-instance-1"
+
+[[interfaces.instances]]
+id = "test-instance"
 
 [[interfaces]]
 admin = true
@@ -48,6 +50,9 @@ type = "http"
 
 [[interfaces.instances]]
 id = "<DNA_NAME>-instance-1"
+
+[[interfaces.instances]]
+id = "test-instance"
 
 [logger]
 type = "debug"
