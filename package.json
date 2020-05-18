@@ -10,6 +10,7 @@
     "happ:start": "npm run start",
     "happ:generate": "src/setup/happ-generate.sh",
     "happ:install": "npm i && cd happ/dna-src/test && npm i && cd ../../ui-src && npm i && cd ..",
+    "happ:build": "cd ./happ && npm run hc:package && npm run ui:build",
     "happ:refresh": "npm run hc:clean-storage && npm run sim2h:clear-local",
     "happ:remove": "npm run hc:clean-storage && rm -rf happ",
     "ui:start": "cd ./happ/ui-src && npm run ui:wait-for-conductor start-ui",

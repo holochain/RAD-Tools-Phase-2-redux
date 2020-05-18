@@ -10,6 +10,7 @@
       "happ:refresh": "npm run hc:clean-storage && npm run sim2h:clear-local",
       "happ:install": "npm i && cd dna-src/test && npm i && cd ../../ui-src && npm i && cd ..",
       "ui:start": "cd ui-src && npm run ui:wait-for-conductor",
+      "ui:build": "cd ui-src && npm run build",
       "ui:wait-for-conductor": "cd ui-src && npm run wait-for-conductor",
       "hc:start-log": "holochain -c conductor-config.toml &> conductor.log &",
       "hc:start": "holochain -c conductor-config.toml",
