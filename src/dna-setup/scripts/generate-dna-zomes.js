@@ -36,15 +36,17 @@ const renderZomeCargoToml = (zomeName, zomeDir, DNA_SETUP_DIR) => {
 }
 
 const renderNixSetup = (dnaName, zomeDir, DNA_SETUP_DIR) => {
+  // write nix-shell setup for dna and root - for integration testing
   const happDnaName = toCamelCase(dnaName)
   const pathAsArray = zomeDir.split('/')
   const dnaSrcDir = pathAsArray.splice(0, pathAsArray.length - 5).join('/')
   const defaultNixTemplatePath = path.resolve(`${DNA_SETUP_DIR}/zome-template`, 'default.nix')
-  const defaultNix = fs.readFileSync(defaultNixTemplatePath, 'utf8')
-  fs.writeFileSync(`${dnaSrcDir}/../default.nix`, defaultNix)
+  const defaultNixTemplate = fs.readFileSync(defaultNixTemplatePath, 'utf8')
+  fs.writeFileSync(`${dnaSrcDir}/default.nix`, defaultNixTemplate)
   const configNixTemplatePath = path.resolve(`${DNA_SETUP_DIR}/zome-template`, 'config.nix')
   const configNixTemplate = fs.readFileSync(configNixTemplatePath, 'utf8')
-  const configNix = replaceNamePlaceHolders(configNixTemplate, DNA_NAME, happDnaName)
+  const configNix = replaceNamePlaceHolders(configNixTemplate, DNA_NAME, happDnaName)  
+  fs.writeFileSync(`${dnaSrcDir}/config.nix`, configNix)
   fs.writeFileSync(`${dnaSrcDir}/../config.nix`, configNix)
 }
 

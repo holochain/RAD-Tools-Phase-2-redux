@@ -6,6 +6,7 @@ const renderSchema = require('./renderSchema')
 const renderResolvers = require('./renderResolvers')
 const renderHomePage = require('./renderHomePage')
 const renderTypePage = require('./renderTypePage')
+const renderTypePageTest = require('./renderTypePageTest')
 const renderIndex = require('./renderIndex')
 const mapObject = require('./render-utils').mapObject
 const typeSpecPath = process.argv[2]
@@ -46,10 +47,16 @@ ncp(SOURCE_PATH, DESTINATION_PATH, err => {
     fs.writeFileSync(path, renderFunction(typeSpec)))
 
   mapObject(typeSpec.types, generateTypePage)
+  mapObject(typeSpec.types, generateTypePageTest)
   console.log(`\n ${chalk.cyan.bold(' UI Generation Complete')} \n`)
 })
 
 function generateTypePage (typeName, type) {
-  const path = PAGES_PATH + typeName + 'sPage.js'
+  const path = PAGES_PATH + typeName + 'Page.js'
   fs.writeFileSync(path, renderTypePage(typeName, type))
+}
+
+function generateTypePageTest (typeName, type) {
+  const path = PAGES_PATH + typeName + 'Page.test.js'
+  fs.writeFileSync(path, renderTypePageTest(typeName, type))
 }

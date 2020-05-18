@@ -1,13 +1,14 @@
 const faker = require('faker')
 faker.seed(1)
 const mapObject = require('./render-utils').mapObject
+const { toCamelCase } = require('../../setup/utils.js')
 
-function renderTypePageTest (typeName, fields) {
+function renderTypePageTest (typeName, { definition: fields }) {
   const name = typeName
   const namePlural = name + 's'
   const capsName = typeName.toUpperCase()
   const capsNamePlural = capsName + 'S'
-  const lowerName = typeName.toLowerCase()
+  const lowerName = toCamelCase(typeName.toLowerCase())
   const lowerNamePlural = lowerName + 's'
 
   return `import React from 'react'
@@ -96,7 +97,7 @@ it('calls the create mutation', async () => {
 
   act(() => {
 ${mapObject(fields, fieldName =>
-    `    fireEvent.change(getByLabelText('${fieldName}'), { target: { value: ${lowerName}.${fieldName} } })`).join('\n')}
+    `    fireEvent.change(getByLabelText('${toCamelCase(fieldName)}'), { target: { value: ${lowerName}.${toCamelCase(fieldName)} } })`).join('\n')}
   })
 
   await act(async () => {
@@ -151,7 +152,7 @@ ${renderPopulatedFields(fields)}
 
   act(() => {
 ${mapObject(fields, fieldName =>
-    `    fireEvent.change(getByDisplayValue(${lowerNamePlural}[0].${fieldName}), { target: { value: new${name}.${fieldName} } })`).join('\n')}
+    `    fireEvent.change(getByDisplayValue(${lowerNamePlural}[0].${toCamelCase(fieldName)}), { target: { value: new${name}.${toCamelCase(fieldName)} } })`).join('\n')}
   })
 
   const submitButton = getAllByText('Submit')[1]
@@ -208,7 +209,7 @@ it('calls the delete mutation', async () => {
 }
 
 function renderPopulatedFields (fields, indentation = '    ') {
-  return mapObject(fields, fieldName => `${indentation}${fieldName}: '${faker.lorem.words()}'`).join(',\n')
+  return mapObject(fields, fieldName => `${indentation}${toCamelCase(fieldName)}: '${faker.lorem.words()}'`).join(',\n')
 }
 
 module.exports = renderTypePageTest

@@ -89,7 +89,7 @@ See:
    owner = "holochain";
 
    # repository name on github that release are deployed to
-   repo = "{DnaName}";
+   repo = "{dna-name}";
 
    # canonical local upstream name as per `git remote -v`
    upstream = "origin";

@@ -8,7 +8,7 @@
       "happ:start": "npm run start",
       "happ:refresh": "npm run hc:clean-storage && npm run sim2h:clear-local",
       "happ:install": "npm i && cd dna-src/test && npm i && cd ../../ui-src && npm i && cd ..",
-      "ui:start": "cd ui-src && npm run ui:wait-for-conductor start-ui",
+      "ui:start": "cd ui-src && npm run wait-for-conductor start-ui",
       "hc:start": "holochain -c conductor-config.toml &> conductor.log &",
       "hc:test": "cd dna-src && RUST_BACKTRACE=1 HC_IGNORE_SIM2H_URL_PROPERTY=true hc test | node test/node_modules/faucet/bin/cmd.js",
       "hc:package": "cd dna-src && hc package",

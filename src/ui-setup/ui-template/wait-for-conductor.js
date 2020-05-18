@@ -37,7 +37,7 @@ function waitForConductor (onStarted = () => {}) {
 function waitForConductorAndStartUi () {
   const startUi = () => {
     console.log('Starting UI, connecting to port :', port)
-    exec('npm run ui:start-agent', (error, stdout, stderr) => {
+    exec('npm run start-agent', (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`)
         return

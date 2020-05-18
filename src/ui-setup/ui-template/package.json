@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "ui:start": "npm run ui:start-live",
-    "ui:start-mock": "REACT_APP_MOCK_DNA_CONNECTION='true' react-scripts start",
-    "ui:start-live": "REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts start",
-    "ui:start-agent": "PORT=3100 npm run ui:start-live",
-    "ui:build": "react-scripts build",
-    "ui:test": "react-scripts test --config=./jest.unit.config.js",
-    "ui:eject": "react-scripts eject",
-    "ui:wait-for-conductor": "node wait-for-conductor"
+    "start": "npm run start-live",
+    "start-mock": "REACT_APP_MOCK_DNA_CONNECTION='true' react-scripts start",
+    "start-live": "REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts start",
+    "start-agent": "PORT=3100 npm run start-live",
+    "build": "react-scripts build",
+    "test": "react-scripts test --config=./jest.unit.config.js",
+    "eject": "react-scripts eject",
+    "wait-for-conductor": "node wait-for-conductor"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",

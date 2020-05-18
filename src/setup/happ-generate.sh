@@ -12,4 +12,4 @@ cd happ
 npm run hc:package
 cd ..
 npm run hc:generate-conductor
-mv ./.cargo ./happ/.cargo && mv ./.target ./happ/.target
+mv ./.cargo ./happ/.cargo && mv ./target ./happ/target
