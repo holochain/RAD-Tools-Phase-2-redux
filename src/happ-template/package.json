@@ -3,13 +3,16 @@
     "version": "0.1.0",
     "description": "The second tier of RAD tools, automating a UI GraphQL and DNA generation based on a JSON schema file.",
     "scripts": {
-      "start": "npm run start:sim2h && npm run hc:start; npm run ui:start",
+      "start": "npm run start:sim2h && npm run hc:start-log; npm run ui:start",
       "start:sim2h": "sim2h_server -p 9000 &> sim2h-server.log &",
+      "sim2h:clear-local": "kill -9 $(lsof -t -i:9000)",
       "happ:start": "npm run start",
       "happ:refresh": "npm run hc:clean-storage && npm run sim2h:clear-local",
       "happ:install": "npm i && cd dna-src/test && npm i && cd ../../ui-src && npm i && cd ..",
-      "ui:start": "cd ui-src && npm run wait-for-conductor start-ui",
-      "hc:start": "holochain -c conductor-config.toml &> conductor.log &",
+      "ui:start": "cd ui-src && npm run ui:wait-for-conductor",
+      "ui:wait-for-conductor": "cd ui-src && npm run wait-for-conductor",
+      "hc:start-log": "holochain -c conductor-config.toml &> conductor.log &",
+      "hc:start": "holochain -c conductor-config.toml",
       "hc:test": "cd dna-src && RUST_BACKTRACE=1 HC_IGNORE_SIM2H_URL_PROPERTY=true hc test | node test/node_modules/faucet/bin/cmd.js",
       "hc:package": "cd dna-src && hc package",
       "hc:build": "npm run hc:package",
@@ -17,8 +20,8 @@
       "hc:clean-storage": "rm -rf ./.holochain/holo/storage",
       "hc:keygen": "node scripts/create-new-agent",
       "hc:config-add-agent": "node scripts/add-agent-to-conductor",
-      "test:integration": "nix-shell --command 'REACT_APP_INTEGRATION_TEST=true react-scripts test'",
-      "test:wait-for-conductor": "node ui-src/wait-for-conductor.js"
+      "test:wait-for-conductor": "cd ui-src && npm run test:wait-for-conductor",
+      "test:integration": "nix-shell --command 'cd ui-src && npm run test:integration'"    
     },
     "devDependencies": {},
     "dependencies": {
@@ -26,8 +29,7 @@
       "lodash": "^4.17.15",
       "ncp": "^2.0.0",
       "toml": "^3.0.0",
-      "util": "^0.12.2",
-      "react-scripts": "3.4.0"
+      "util": "^0.12.2"
     },
     "repository": {
       "type": "git",

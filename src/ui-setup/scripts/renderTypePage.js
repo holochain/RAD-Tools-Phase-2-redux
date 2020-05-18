@@ -22,7 +22,7 @@ import { useHistory } from 'react-router-dom'
 import gql from 'graphql-tag'
 import { pick } from 'lodash/fp'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import './type-page.css'
+import './@type-page.css'
 
 export const LIST_${capsNamePlural}_QUERY = gql\`
   query List${namePlural} {
