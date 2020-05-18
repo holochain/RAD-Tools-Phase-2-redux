@@ -16,7 +16,13 @@ import wait from 'waait'
 import { fireEvent, act } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { renderAndWait } from '../utils'
-import ${namePlural}Page, { LIST_${capsNamePlural}_QUERY, CREATE_${capsName}_MUTATION, UPDATE_${capsName}_MUTATION, DELETE_${capsName}_MUTATION } from './${namePlural}Page'
+import ${name}Page, { LIST_${capsNamePlural}_QUERY, CREATE_${capsName}_MUTATION, UPDATE_${capsName}_MUTATION, DELETE_${capsName}_MUTATION } from './${name}Page'
+
+jest.mock('react-router-dom', () => ({
+  useHistory: () => ({
+    push: jest.fn()
+  })
+}))
 
 const ${lowerNamePlural} = [
   {
@@ -33,13 +39,13 @@ const ${lowerName} = {
 ${renderPopulatedFields(fields, '  ')}
 }
 
-it('renders "${namePlural}" title', async () => {
+it('renders "${name}" title', async () => {
   const mocks = []
   const { getByText } = await renderAndWait(<MockedProvider mocks={mocks} addTypename={false}>
-    <${namePlural}Page />
+    <${name}Page />
   </MockedProvider>)
 
-  const title = getByText('${namePlural}')
+  const title = getByText('${name} Entry')
   expect(title).toBeInTheDocument()
 })
 
@@ -56,7 +62,7 @@ it('renders a list of ${namePlural}', async () => {
   }
   const mocks = [listMock]
   const { getAllByTestId } = await renderAndWait(<MockedProvider mocks={mocks} addTypename={false}>
-    <${namePlural}Page />
+    <${name}Page />
   </MockedProvider>)
 
   const ${lowerName}Cards = getAllByTestId('${lowerName}-card')
@@ -92,7 +98,7 @@ it('calls the create mutation', async () => {
 
   const mocks = [createMock, listMock, listMock]
   const { getByLabelText, getByText } = await renderAndWait(<MockedProvider mocks={mocks} addTypename={false}>
-    <${namePlural}Page />
+    <${name}Page />
   </MockedProvider>)
 
   act(() => {
@@ -141,7 +147,7 @@ ${renderPopulatedFields(fields)}
 
   const mocks = [updateMock, listMock, listMock]
   const { getByDisplayValue, getAllByText } = await renderAndWait(<MockedProvider mocks={mocks} addTypename={false}>
-    <${namePlural}Page />
+    <${name}Page />
   </MockedProvider>)
 
   const editButton = getAllByText('Edit')[0]
@@ -193,7 +199,7 @@ it('calls the delete mutation', async () => {
 
   const mocks = [deleteMock, listMock, listMock]
   const { getAllByText } = await renderAndWait(<MockedProvider mocks={mocks} addTypename={false}>
-    <${namePlural}Page />
+    <${name}Page />
   </MockedProvider>)
 
   const removeButton = getAllByText('Remove')[0]

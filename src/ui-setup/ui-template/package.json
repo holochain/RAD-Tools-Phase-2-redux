@@ -8,7 +8,7 @@
     "start-live": "REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts start",
     "start-agent": "PORT=3100 npm run start-live",
     "build": "react-scripts build",
-    "test": "react-scripts test --config=./jest.unit.config.js",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "wait-for-conductor": "node wait-for-conductor"
   },

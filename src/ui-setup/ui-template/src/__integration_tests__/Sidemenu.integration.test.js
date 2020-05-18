@@ -1,29 +1,29 @@
-// import React from 'react'
-// import { fireEvent, wait } from '@testing-library/react'
-// import { renderAndWait } from 'utils/test-utils'
-// import { HPAdminApp } from 'root'
-// import runHposApi from 'utils/integration-testing/runHposApiWithSetup'
-// import HposInterface from 'data-interfaces/HposInterface'
+import React from 'react'
+import { fireEvent, wait } from '@testing-library/react'
+import { renderAndWait } from 'utils/test-utils'
+import { HPAdminApp } from 'root'
+import runHposApi from 'utils/integration-testing/runHposApiWithSetup'
+import HposInterface from 'data-interfaces/HposInterface'
 
-// jest.mock('react-media-hook')
-// jest.mock('react-identicon-variety-pack')
-// jest.unmock('react-router-dom')
+jest.mock('react-media-hook')
+jest.mock('react-identicon-variety-pack')
+jest.unmock('react-router-dom')
 
-// describe.skip('HP Admin : Sidemenu', () => {
-//   it('Contains the host HPOS API PubKey and Name', runHposApi(async () => {
-//     const hposSettings = await HposInterface.os.settings()
+describe.skip('HP Admin : Sidemenu', () => {
+  it('Contains the host HPOS API PubKey and Name', runHposApi(async () => {
+    const hposSettings = await HposInterface.os.settings()
 
-//     const { getByTestId, getByText, debug } = await renderAndWait(<HPAdminApp />)
+    const { getByTestId, getByText, debug } = await renderAndWait(<HPAdminApp />)
 
-//     debug()
+    debug()
 
-//     const menuButton = getByTestId('menu-button')
-//     fireEvent.click(menuButton)
+    const menuButton = getByTestId('menu-button')
+    fireEvent.click(menuButton)
 
-//     await wait(() => getByText('HP Admin'))
-//     await wait(() => getByText(hposSettings.hostName))
-//   }), 150000)
-// })
+    await wait(() => getByText('HP Admin'))
+    await wait(() => getByText(hposSettings.hostName))
+  }), 150000)
+})
 
 // scenario("delete_user", async (s, t) => {
 //   const {alice, bob} = await s.players({alice: conductorConfig, bob: conductorConfig}, true)

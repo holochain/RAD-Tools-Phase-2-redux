@@ -150,7 +150,7 @@ ${mapObject(fields, fieldName => `      ${toCamelCase(fieldName)}: ''`).join(',\
   return <div className='type-form'>
     <h3>{formTitle}</h3>
 ${mapObject(fields, fieldName => `    <div className='form-row'>
-      <label htmlFor='${fieldName}'>${toCamelCase(fieldName)}</label>
+      <label htmlFor='${toCamelCase(fieldName)}'>${toCamelCase(fieldName)}</label>
       <input id='${toCamelCase(fieldName)}' name='${toCamelCase(fieldName)}' value={${toCamelCase(fieldName)}} onChange={setField('${toCamelCase(fieldName)}')} />
     </div>
 `).join('')}
