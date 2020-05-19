@@ -3,8 +3,7 @@ import waait from 'waait'
 import { fireEvent, within, act, wait } from '@testing-library/react'
 import { renderAndWait } from '../utils'
 import { runConductorWithFixtures } from '../utils/integration-testing/runConductorWithFixtures'
-import { HApp } from '../index.js'
-
+import { HomePage } from '../HomePage.js'
 
 // scenario('Book Endpoints', async (scenario, jest) => {
 //   await scenario.players({alice: conductorConfig}, true)
@@ -17,7 +16,7 @@ import { HApp } from '../index.js'
 
 describe('Book Endpoints', () => {
   it('Renders Book Page and List of Book Entries', runConductorWithFixtures(async () => {
-    const { getByText } = await renderAndWait(<HApp />)
+    const { getByText } = await renderAndWait(<HomePage />)
     const welcomeMsg = 'Welcome to your generated Happ UI'
     expect(getByText(welcomeMsg)).toBeInTheDocument()
 
