@@ -13,7 +13,7 @@
     "wait-for-conductor": "node wait-for-conductor start-ui",
     "test:wait-for-conductor": "node wait-for-conductor",
     "test:integration": "REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts test",
-    "test:tryorama-integration": "REACT_APP_MOCK_DNA_CONNECTION='false' node src/utils/integration-testing/tryoramaIntegration"
+    "test:tryorama-integration": "REACT_APP_MOCK_DNA_CONNECTION='false' node ui-src/src/utils/integration-testing/tryoramaIntegration"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
