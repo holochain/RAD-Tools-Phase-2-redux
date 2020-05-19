@@ -40,3 +40,4 @@ function renderRoute (typeName) {
   return `        <Route path='/${typeName.toLowerCase()}' exact component={${typeName}Page} />`
 }
 
+module.exports = renderIndex
