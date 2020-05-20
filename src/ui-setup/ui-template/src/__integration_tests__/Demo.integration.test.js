@@ -3,6 +3,7 @@ import waait from 'waait'
 import { fireEvent, within, act, wait } from '@testing-library/react'
 import { renderAndWait } from '../utils'
 import { runConductorWithFixtures } from '../utils/integration-testing/runConductorWithFixtures'
+import { orchestrator, conductorConfig } from '../utils/integration-testing/tryoramaIntegration'
 import { HApp } from '../index.js'
 
 // scenario('Book Endpoints', async (scenario, jest) => {
@@ -25,37 +26,45 @@ describe('Book Endpoints', () => {
   //   // expect(getByText('Book Entry')).toBeInTheDocument()
   // }), 15000)
 
-  it('Creates new Book Entries', runConductorWithFixtures(async () => {
-    const { getByText, getByLabelText } = await renderAndWait(<HApp />)
+  it('Creates new Book Entries', async () => {
 
-    await act(async () => {
-      fireEvent.click(getByText('Book'))
-    })
-    await waait(0)
-    await wait(() => getByText('Book Entry'))
+    orchestrator.registerScenario('test scenario 1', async s => {
+      console.log("---------->>");
+      await s.players({alice: conductorConfig}, true)
+      const { getByText, getByLabelText } = await renderAndWait(<HApp />)
 
-    const newBook = {
-      author: 'ut nulla quam',
-      title: 'ipsam nobis cupiditate',
-      topic: 'sed dignissimos debitis'
-    }
-
-    act(() => {
-      fireEvent.change(getByLabelText('author'), { target: { value: newBook.author } })
-      fireEvent.change(getByLabelText('title'), { target: { value: newBook.title } })
-      fireEvent.change(getByLabelText('topic'), { target: { value: newBook.topic } })
-    })
-
-    await act(async () => {
-      fireEvent.click(getByText('Submit'))
+      await act(async () => {
+        fireEvent.click(getByText('Book'))
+      })
       await waait(0)
-    })
+      await wait(() => getByText('Book Entry'))
 
-    await waait(5000)
+      const newBook = {
+        author: 'ut nulla quam',
+        title: 'ipsam nobis cupiditate',
+        topic: 'sed dignissimos debitis'
+      }
 
-    expect(getByText(newBook.author)).toBeInTheDocument()
-    expect(getByText(newBook.title)).toBeInTheDocument()
-    expect(getByText(newBook.topic)).toBeInTheDocument()
-  }), 60000)
+      act(() => {
+        fireEvent.change(getByLabelText('author'), { target: { value: newBook.author } })
+        fireEvent.change(getByLabelText('title'), { target: { value: newBook.title } })
+        fireEvent.change(getByLabelText('topic'), { target: { value: newBook.topic } })
+      })
+
+      await act(async () => {
+        fireEvent.click(getByText('Submit'))
+        await waait(0)
+      })
+
+      await waait(5000)
+      expect(getByText(newBook.author)).toBeInTheDocument()
+      expect(getByText(newBook.title)).toBeInTheDocument()
+      expect(getByText(newBook.topic)).toBeInTheDocument()
+      console.log("Test Ended...");
+
+      })
+    await orchestrator.run()
+
+  }, 60000)
 
 })
