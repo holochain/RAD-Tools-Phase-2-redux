@@ -41,9 +41,9 @@ describe('Book Endpoints', () => {
       await wait(() => getByText('Book Entry'))
 
       const newBook = {
-        author: 'ut nulla quam',
-        title: 'ipsam nobis cupiditate',
-        topic: 'sed dignissimos debitis'
+        author: 'jack ut nulla quam',
+        title: 'jack ipsam nobis cupiditate',
+        topic: 'jack sed dignissimos debitis'
       }
 
       act(() => {
@@ -56,15 +56,13 @@ describe('Book Endpoints', () => {
         await waait(0)
       })
       await s.consistency()
-
       await waait(5000)
       expect(getByText(newBook.author)).toBeInTheDocument()
       expect(getByText(newBook.title)).toBeInTheDocument()
       expect(getByText(newBook.topic)).toBeInTheDocument()
-      console.log("Test Ended...");
       debug()
+      console.log("Test Ended...");
       await alice.kill()
-
   }, 60000)
 })
 })
