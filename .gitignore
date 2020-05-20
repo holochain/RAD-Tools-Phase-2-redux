@@ -28,8 +28,6 @@ target/
 .DS_STORE
 
 keystores
-dna-src
-ui-src
 conductor-config.toml
 conductor.log
 sim2h-server.log
