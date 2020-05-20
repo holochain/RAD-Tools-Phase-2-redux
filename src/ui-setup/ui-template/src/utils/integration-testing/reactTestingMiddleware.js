@@ -26,4 +26,4 @@ const reactTestingExecutor = (jestDom, react, userEvent) => (run, scenarioFn) =>
 console.log('typeof reactTestingExecutor : ', typeof reactTestingExecutor)
 console.log('reactTestingExecutor : ', reactTestingExecutor)
 
-module.exports = reactTestingExecutor
+module.exports = {reactTestingExecutor}

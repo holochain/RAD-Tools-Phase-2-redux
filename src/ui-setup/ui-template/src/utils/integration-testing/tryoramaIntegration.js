@@ -18,8 +18,8 @@ const orchestrator = new Orchestrator({
     // tapeExecutor(require('tape')),
 
     reactTestingExecutor(
-      require('@testing-library/jest-dom'), 
-      require('@testing-library/react'), 
+      require('@testing-library/jest-dom'),
+      require('@testing-library/react'),
       require('@testing-library/user-event')
     ),
 
@@ -33,7 +33,7 @@ const dna = Config.dna(dnaPath, 'test-instance')
 const conductorConfig = Config.gen({'test-instance': dna})
 const integrationTestPath = '../../__integration_tests__'
 
-require(`${integrationTestPath}/Demo.integration.test.js`)(orchestrator.registerScenario, conductorConfig)
+require(`${integrationTestPath}/TryoramaDemo.integration.test.js`)(orchestrator.registerScenario, conductorConfig)
 // require(`${integrationTestPath}/Book.integration.test.js`)(orchestrator.registerScenario, conductorConfig)
 // require(`${integrationTestPath}/User.integration.test.js`)(orchestrator.registerScenario, conductorConfig)
 
