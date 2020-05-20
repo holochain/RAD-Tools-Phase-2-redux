@@ -15,6 +15,8 @@ import { HApp } from '../index.js'
 //   jest.expect(getByText('Book Entry')).toBeInTheDocument()
 // })
 
+orchestrator.registerScenario('test scenario 1', async s => {
+
 describe('Book Endpoints', () => {
   // it('Renders Book Page and List of Book Entries', runConductorWithFixtures(async () => {
   //   const { getByText } = await renderAndWait(<HomePage />)
@@ -28,11 +30,10 @@ describe('Book Endpoints', () => {
 
   it('Creates new Book Entries', async () => {
 
-    orchestrator.registerScenario('test scenario 1', async s => {
       console.log("---------->>");
-      await s.players({alice: conductorConfig}, true)
-      const { getByText, getByLabelText } = await renderAndWait(<HApp />)
+      const {alice} = await s.players({alice: conductorConfig}, true)
 
+      const { getByText, getByLabelText, debug } = await renderAndWait(<HApp />)
       await act(async () => {
         fireEvent.click(getByText('Book'))
       })
@@ -50,21 +51,21 @@ describe('Book Endpoints', () => {
         fireEvent.change(getByLabelText('title'), { target: { value: newBook.title } })
         fireEvent.change(getByLabelText('topic'), { target: { value: newBook.topic } })
       })
-
       await act(async () => {
         fireEvent.click(getByText('Submit'))
         await waait(0)
       })
+      await s.consistency()
 
       await waait(5000)
       expect(getByText(newBook.author)).toBeInTheDocument()
       expect(getByText(newBook.title)).toBeInTheDocument()
       expect(getByText(newBook.topic)).toBeInTheDocument()
       console.log("Test Ended...");
-
-      })
-    await orchestrator.run()
+      debug()
+      await alice.kill()
 
   }, 60000)
-
 })
+})
+orchestrator.run()
