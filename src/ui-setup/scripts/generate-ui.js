@@ -7,6 +7,7 @@ const renderResolvers = require('./renderResolvers')
 const renderHomePage = require('./renderHomePage')
 const renderTypePage = require('./renderTypePage')
 const renderTypePageTest = require('./renderTypePageTest')
+const renderTypePageIntegrationTest = require('./renderTypePageIntegrationTest')
 const renderIndex = require('./renderIndex')
 const mapObject = require('./render-utils').mapObject
 const typeSpecPath = process.argv[2]
@@ -29,6 +30,7 @@ const RESOLVERS_PATH = `${DESTINATION_PATH}/src/resolvers.js`
 const HOME_PAGE_PATH = `${DESTINATION_PATH}/src/HomePage.js`
 const INDEX_PATH = `${DESTINATION_PATH}/src/index.js`
 const PAGES_PATH = `${DESTINATION_PATH}/src/pages/`
+const INTEGRATION_PATH = `${DESTINATION_PATH}/src/__integration_tests__/`
 
 const renderers = [
   [renderSchema, SCHEMA_PATH],
@@ -48,6 +50,7 @@ ncp(SOURCE_PATH, DESTINATION_PATH, err => {
 
   mapObject(typeSpec.types, generateTypePage)
   mapObject(typeSpec.types, generateTypePageTest)
+  mapObject(typeSpec.types, generateTypePageIntegrationTest)
   console.log(`\n ${chalk.cyan.bold(' UI Generation Complete')} \n`)
 })
 
@@ -59,4 +62,9 @@ function generateTypePage (typeName, type) {
 function generateTypePageTest (typeName, type) {
   const path = PAGES_PATH + typeName + 'Page.test.js'
   fs.writeFileSync(path, renderTypePageTest(typeName, type))
+}
+
+function generateTypePageIntegrationTest (typeName, type) {
+  const path = INTEGRATION_PATH + typeName + 'Page.integration.test.js'
+  fs.writeFileSync(path, renderTypePageIntegrationTest(typeName, type))
 }
