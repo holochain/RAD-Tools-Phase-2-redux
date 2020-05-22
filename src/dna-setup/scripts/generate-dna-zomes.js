@@ -41,12 +41,13 @@ const renderNixSetup = (dnaName, zomeDir, DNA_SETUP_DIR) => {
   const pathAsArray = zomeDir.split('/')
   const dnaSrcDir = pathAsArray.splice(0, pathAsArray.length - 5).join('/')
   const defaultNixTemplatePath = path.resolve(`${DNA_SETUP_DIR}/zome-template`, 'default.nix')
-  const defaultNixTemplate = fs.readFileSync(defaultNixTemplatePath, 'utf8')
-  fs.writeFileSync(`${dnaSrcDir}/default.nix`, defaultNixTemplate)
+  
+  const { stderr } = await exec(`rm -rf ${defaultNixTemplatePath}`)
+  if (stderr) console.error('stderr:', stderr)
+
   const configNixTemplatePath = path.resolve(`${DNA_SETUP_DIR}/zome-template`, 'config.nix')
   const configNixTemplate = fs.readFileSync(configNixTemplatePath, 'utf8')
   const configNix = replaceNamePlaceHolders(configNixTemplate, DNA_NAME, happDnaName)  
-  fs.writeFileSync(`${dnaSrcDir}/config.nix`, configNix)
   fs.writeFileSync(`${dnaSrcDir}/../config.nix`, configNix)
 }
 
