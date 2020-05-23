@@ -1,8 +1,8 @@
 import { render, act } from '@testing-library/react'
 import wait from 'waait'
 
-export const runTestType = (processTestType, testType, testFn) => {
-  if (testType === processTestType) return testFn()
+export const runTestType =  async (processTestType, testType, testFn) => {
+  if (testType === processTestType) return await testFn()
   else return test.skip('', () => {})
 }
 
