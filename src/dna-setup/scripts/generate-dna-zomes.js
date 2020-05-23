@@ -35,17 +35,17 @@ const renderZomeCargoToml = (zomeName, zomeDir, DNA_SETUP_DIR) => {
   return writeCargoToml
 }
 
-const renderNixSetup = (dnaName, zomeDir, DNA_SETUP_DIR) => {
+const renderNixSetup = async (dnaName, zomeDir, DNA_SETUP_DIR) => {
   // write nix-shell setup for dna and root - for integration testing
   const happDnaName = toCamelCase(dnaName)
   const pathAsArray = zomeDir.split('/')
   const dnaSrcDir = pathAsArray.splice(0, pathAsArray.length - 5).join('/')
   const defaultNixTemplatePath = path.resolve(`${DNA_SETUP_DIR}/zome-template`, 'default.nix')
   
-  const { stderr } = await exec(`rm -rf ${defaultNixTemplatePath}`)
+  const { stderr } = await exec(`rm -rf ${dnaSrcDir}/default.nix`)
   if (stderr) console.error('stderr:', stderr)
 
-  const configNixTemplatePath = path.resolve(`${DNA_SETUP_DIR}/zome-template`, 'config.nix')
+  const configNixTemplatePath = path.resolve(`${DNA_SETUP_DIR}/../happ-template`, 'config.nix')
   const configNixTemplate = fs.readFileSync(configNixTemplatePath, 'utf8')
   const configNix = replaceNamePlaceHolders(configNixTemplate, DNA_NAME, happDnaName)  
   fs.writeFileSync(`${dnaSrcDir}/../config.nix`, configNix)
@@ -95,7 +95,7 @@ const generateDnaZomes = (typeSpec, DNA_SETUP_DIR) => {
         const dnaName = await findDnaName(zomeDir)
         const testDir = await findTestDirPath(zomeDir)
         await generateTestIndex(dnaName, testingEntries, testDir, DNA_SETUP_DIR)
-        renderNixSetup(dnaName, zomeDir, DNA_SETUP_DIR)
+        await renderNixSetup(dnaName, zomeDir, DNA_SETUP_DIR)
       }
     })
 }
