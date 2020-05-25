@@ -40,8 +40,6 @@ const renderNixSetup = async (dnaName, zomeDir, DNA_SETUP_DIR) => {
   const happDnaName = toCamelCase(dnaName)
   const pathAsArray = zomeDir.split('/')
   const dnaSrcDir = pathAsArray.splice(0, pathAsArray.length - 5).join('/')
-  const defaultNixTemplatePath = path.resolve(`${DNA_SETUP_DIR}/zome-template`, 'default.nix')
-  
   const { stderr } = await exec(`rm -rf ${dnaSrcDir}/default.nix`)
   if (stderr) console.error('stderr:', stderr)
 

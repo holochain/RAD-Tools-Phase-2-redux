@@ -1,4 +1,4 @@
-const React = require('react')
+import React from 'react'
 import waait from 'waait'
 import { fireEvent, act, wait } from '@testing-library/react'
 import { renderAndWait, runTestType } from '../utils'

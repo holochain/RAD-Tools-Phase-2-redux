@@ -1,9 +1,11 @@
-const generateDnaShell = require('./generate-dna-shell')
-const generateDnaZomes = require('./generate-dna-zomes')
 const fs = require('fs')
 const path = require('path')
 const chalk = require('chalk')
 const typeSpecPath = process.argv[2]
+const { promisify } = require('util')
+const exec = promisify(require('child_process').exec)
+const generateDnaShell = require('./generate-dna-shell')
+const generateDnaZomes = require('./generate-dna-zomes')
 const defaultTypeSpecPath = path.resolve('src/setup/type-specs', 'sample-type-spec.json')
 const defaultTypeSpec = require(defaultTypeSpecPath)
 
@@ -20,13 +22,14 @@ if (!typeSpecPath) {
 }
 
 async function genDNA () {
-  // go into happ directory
-  process.chdir(DESTINATION_PATH)
+  // ensure happ directory exists and go into happ directory
+  const { stderr } = await exec(`[ ! -d ${DESTINATION_PATH} ] && mkdir ${DESTINATION_PATH}; cd ${DESTINATION_PATH}`)
+  if (stderr) console.error('stderr:', stderr)
 
   await generateDnaShell()
   await generateDnaZomes(typeSpec, DNA_SETUP_DIR)
 
-  // go back up out of happ directory to root level
+  // go back to root level
   process.chdir('../')
 }
 

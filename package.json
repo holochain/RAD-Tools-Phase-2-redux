@@ -16,8 +16,6 @@
     "ui:generate": "node src/ui-setup/scripts/generate-ui",
     "ui:remove": "rm -rf ./happ/ui-src",
     "hc:clean-storage": "rm -rf ./happ/.holochain/holo",
-    "hc:config-add-agent": "node src/setup/scripts/add-agent-to-conductor",
-    "hc:keygen": "node src/setup/scripts/create-new-agent",
     "hc:generate-conductor": "node src/conductor-setup/generate-conductor",
     "hc:generate-dna": "node src/dna-setup/scripts/generate-dna",
     "hc:package": "cd ./happ/dna-src && hc package",
