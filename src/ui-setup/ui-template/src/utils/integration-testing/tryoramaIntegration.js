@@ -9,4 +9,11 @@ export const orchestrator = new Orchestrator({
 })
 
 const dna = Config.dna(dnaPath, 'test-instance')
-export const conductorConfig = Config.gen({'test-instance': dna})
+
+export const conductorConfig = Config.gen({'test-instance': dna}, {
+  logger: Config.logger(false),
+  network: {
+    type: 'sim2h',
+    sim2h_url: 'ws://localhost:9000'
+  }
+})
