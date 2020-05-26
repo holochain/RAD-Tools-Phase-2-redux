@@ -67,7 +67,7 @@ async function createZomeDir (zomeNameRaw, entryTypesWrapper, DNA_SETUP_DIR) {
     await generateZomeLib(zomeName, zomeEntryTypes, zomeDir)
     await formatZome(zomeDir)
     renderZomeCargoToml(zomeName, zomeDir, DNA_SETUP_DIR)
-    console.log(`${chalk.cyan(' Finished creating ' + zomeName.toUpperCase() + ' ZOME')}\n`)
+    console.log(`${chalk.cyan(' Finished creating ' + zomeName.toUpperCase() + ' Zome')}\n`)
 
     return {
       testingEntries,

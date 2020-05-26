@@ -22,9 +22,12 @@ if (!typeSpecPath) {
 }
 
 async function genDNA () {
-  // ensure happ directory exists and go into happ directory
-  const { stderr } = await exec(`[ ! -d ${DESTINATION_PATH} ] && mkdir ${DESTINATION_PATH}; cd ${DESTINATION_PATH}`)
+  // // ensure happ directory exists and go into happ directory
+  const { stderr } = await exec(`[ ! -d ${DESTINATION_PATH} ] && mkdir ${DESTINATION_PATH}; echo $(pwd -P)`)
   if (stderr) console.error('stderr:', stderr)
+  else {
+    process.chdir(DESTINATION_PATH)
+  }
 
   await generateDnaShell()
   await generateDnaZomes(typeSpec, DNA_SETUP_DIR)

@@ -1,7 +1,8 @@
-const ncp = require('ncp')
 const fs = require('fs')
+const fse = require('fs-extra')
 const chalk = require('chalk')
 const path = require('path')
+const { exec } = require('child_process')
 const renderSchema = require('./renderSchema')
 const renderResolvers = require('./renderResolvers')
 const renderHomePage = require('./renderHomePage')
@@ -39,8 +40,20 @@ const renderers = [
   [renderIndex, INDEX_PATH]
 ]
 
-ncp(SOURCE_PATH, DESTINATION_PATH, err => {
-  if (err) {
+fse.copy(SOURCE_PATH, DESTINATION_PATH, err => {
+  //if cannot find happ dir, create one and signal error
+  if (err && err[0].errno === -2) {
+    exec('[ ! -d ./happ ] && mkdir ./happ', (error, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`)
+      } else if (stderr) {
+        console.error(`stderr: ${stderr}`)
+      } else {
+        console.error("Error: Missing happ directory.\n\nNote: A new happ directory has now been pre-populated for you.  Please run 'ui:generate' once again to generate the ui.")
+      }
+    })
+    return
+  } else if (err) {
     console.error(err)
     return
   }
@@ -53,6 +66,7 @@ ncp(SOURCE_PATH, DESTINATION_PATH, err => {
   mapObject(typeSpec.types, generateTypePageIntegrationTest)
   console.log(`\n ${chalk.cyan.bold(' UI Generation Complete')} \n`)
 })
+
 
 function generateTypePage (typeName, type) {
   const path = PAGES_PATH + typeName + 'Page.js'
