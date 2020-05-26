@@ -5,6 +5,7 @@ const { Orchestrator, Config, combine, localOnly } = require('@holochain/tryoram
 export const orchestrator = new Orchestrator({
   middleware: combine(
     localOnly,
+    // callSync
   ),
 })
 

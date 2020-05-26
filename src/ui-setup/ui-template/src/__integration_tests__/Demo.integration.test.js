@@ -9,6 +9,7 @@ const testDescription = 'Book Endpoints'
 
 orchestrator.registerScenario(`${testDescription} Scenario`, async s => {
   it('Arrives at Book Entries Page with Display Title', async () => {
+    // const { alice } = await s.players({ "localhost:9000": { alice: conductorConfig } })
     const { alice } = await s.players({alice: conductorConfig}, true)
     // const { getByText, getByLabelText, getByDisplayValue, getAllByText, debug } = await renderAndWait(<HApp />)
     // const welcomeMsg = 'Welcome to your generated Happ UI'
