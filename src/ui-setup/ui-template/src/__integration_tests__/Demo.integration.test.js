@@ -1,5 +1,6 @@
 import React from 'react'
 import waait from 'waait'
+import { exec } from 'child_process'
 import { fireEvent, act, wait } from '@testing-library/react'
 import { renderAndWait, runTestType } from '../utils'
 import { orchestrator, conductorConfig } from '../utils/integration-testing/tryoramaIntegration'
@@ -9,11 +10,23 @@ const testDescription = 'Book Endpoints'
 
 orchestrator.registerScenario(`${testDescription} Scenario`, async s => {
   it('Arrives at Book Entries Page with Display Title', async () => {
+    afterEach(() => {
+      exec('npm run hc:stop', (error, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`)
+          return
+        } else if (stderr) {
+          console.error(`stderr: ${stderr}`)
+          return
+        }
+      })
+    })
+
     // const { alice } = await s.players({ "localhost:9000": { alice: conductorConfig } })
     const { alice } = await s.players({alice: conductorConfig}, true)
-    // const { getByText, getByLabelText, getByDisplayValue, getAllByText, debug } = await renderAndWait(<HApp />)
-    // const welcomeMsg = 'Welcome to your generated Happ UI'
-    // expect(getByText(welcomeMsg)).toBeInTheDocument()
+    const { getByText, getByLabelText, getByDisplayValue, getAllByText, debug } = await renderAndWait(<HApp />)
+    const welcomeMsg = 'Welcome to your generated Happ UI'
+    expect(getByText(welcomeMsg)).toBeInTheDocument()
     
     // await act(async () => {
     //   fireEvent.click(getByText('Book'))
