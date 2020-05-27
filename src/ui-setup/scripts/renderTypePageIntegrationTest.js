@@ -24,7 +24,7 @@ orchestrator.registerScenario(\`\${testDescription} Scenario\`, async s => {
       else if (stderr) throw new Error(\`stderr: \${stderr}\`) 
     })
   })
-  it('Arrives at ${name} Entries Page with Display Title', async () => {
+  it(\`Tests all \${testDescription} e2e. - Integration Test.\`, async () => {
     const { alice } = await s.players({alice: conductorConfig}, true)
     const { getByText, getByLabelText, getByDisplayValue, getAllByText, debug } = await renderAndWait(<HApp />)
     const welcomeMsg = 'Welcome to your generated Happ UI'
@@ -84,7 +84,7 @@ orchestrator.registerScenario(\`\${testDescription} Scenario\`, async s => {
 
     await s.consistency()
     ${mapObject(fields, fieldName =>`
-    expect(getByText(${lowerName}.${toCamelCase(fieldName)})).toBeInTheDocument()`).join('')}
+    expect(getByText(${capitalizedLowerName}.${toCamelCase(fieldName)})).not.toBeInTheDocument()`).join('')}
 
     debug()
     await alice.kill()
