@@ -145,7 +145,7 @@ Example: Below is an example of a happ that will have a single zome with three e
       }
     }
     ```
-   *NB: If no zomes object is provided, a single zome will be generated. Currently, only the DNA is compatible with generating muliptle zomes.*
+   *NB: If no zomes object is provided, a single zome will be generated. Currently, only the DNA is compatible with multiple zomes input from the Type Spec JSON.*
 
 ##### Run your DNA tests:
 1. Test your DNA
