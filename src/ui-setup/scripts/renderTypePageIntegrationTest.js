@@ -10,23 +10,26 @@ function renderTypePageIntegrationTest (typeName, { definition: fields }) {
 
   return `import React from 'react'
 import waait from 'waait'
+import { exec } from 'child_process'
 import { fireEvent, act, wait } from '@testing-library/react'
-import { renderAndWait, runTestType } from '../utils'
+import { renderAndWait, runTestType, closeTestConductor } from '../utils'
 import { orchestrator, conductorConfig } from '../utils/integration-testing/tryoramaIntegration'
 import { HApp } from '../index.js'
 
 const testDescription = '${name} Endpoints'
 
 orchestrator.registerScenario(\`\${testDescription} Scenario\`, async s => {
-  afterEach(() => {
-    exec('npm run hc:stop', (error, stderr) => {
-      if (error) throw new Error(\`exec error: \${error}\`)
-      else if (stderr) throw new Error(\`stderr: \${stderr}\`) 
-    })
-  })
+  let aliceInstance
+  const configureNewTestInstance = async () => {
+    const { alice } = await s.players({alice: conductorConfig}, true)
+    aliceInstance = alice
+    return { alice }
+  }
+  afterEach(() => closeTestConductor(aliceInstance, '${name}'))
+
   it(\`Tests all \${testDescription} e2e. - Integration Test.\`, async () => {
     const { alice } = await s.players({alice: conductorConfig}, true)
-    const { getByText, getByLabelText, getByDisplayValue, getAllByText, debug } = await renderAndWait(<HApp />)
+    const { getByText, getByLabelText, getByDisplayValue, getAllByText, queryByText } = await renderAndWait(<HApp />)
     const welcomeMsg = 'Welcome to your generated Happ UI'
     expect(getByText(welcomeMsg)).toBeInTheDocument()
   
@@ -48,7 +51,11 @@ orchestrator.registerScenario(\`\${testDescription} Scenario\`, async s => {
       await waait(0)
     })
 
-    await s.consistency()
+    await act(async () => await s.consistency())
+    await act(async () => {
+      fireEvent.click(getByText('Refetch ${name} List'))
+      await waait(1500)
+    })
     ${mapObject(fields, fieldName =>`
     expect(getByText(${lowerName}.${toCamelCase(fieldName)})).toBeInTheDocument()`).join('')}
 
@@ -57,9 +64,9 @@ orchestrator.registerScenario(\`\${testDescription} Scenario\`, async s => {
   
     // update ${name}
     const editButton = getByText('Edit')
-
-    act(() => {
+    await act(async () => {
       fireEvent.click(editButton)
+      await waait(0)
     })
 
     act(() => { ${mapObject(fields, fieldName =>`
@@ -71,23 +78,31 @@ orchestrator.registerScenario(\`\${testDescription} Scenario\`, async s => {
       await waait(0)
     })
 
-    await s.consistency()
+    await act(async () => await s.consistency())
+    await act(async () => {
+      fireEvent.click(getByText('Refetch ${name} List'))
+      await waait(1500)
+    })
     ${mapObject(fields, fieldName =>`
     expect(getByText(new${capitalizedLowerName}.${toCamelCase(fieldName)})).toBeInTheDocument()`).join('')} 
 
+    ${mapObject(fields, fieldName =>`
+    expect(queryByText(new${lowerName}.${toCamelCase(fieldName)})).not.toBeInTheDocument()`).join('')} 
+
     // delete ${name}
-    const removeButton = getAllByText('Remove')[0]
+    const removeButton = getByText('Remove')
     await act(async () => {
       fireEvent.click(removeButton)
       await waait(0)
     })
 
-    await s.consistency()
+    await act(async () => await s.consistency())
+    await act(async () => {
+      fireEvent.click(getByText('Refetch Book List'))
+      await waait(1500)
+    })
     ${mapObject(fields, fieldName =>`
-    expect(getByText(${capitalizedLowerName}.${toCamelCase(fieldName)})).not.toBeInTheDocument()`).join('')}
-
-    debug()
-    await alice.kill()
+    expect(queryByText(new${capitalizedLowerName}.${toCamelCase(fieldName)})).not.toBeInTheDocument()`).join('')}
   })
 })
 

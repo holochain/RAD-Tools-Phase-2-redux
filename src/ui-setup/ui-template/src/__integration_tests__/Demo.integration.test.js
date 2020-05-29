@@ -1,28 +1,30 @@
 import React from 'react'
 import waait from 'waait'
-import { exec } from 'child_process'
 import { fireEvent, act, wait } from '@testing-library/react'
-import { renderAndWait, runTestType } from '../utils'
+import { renderAndWait, runTestType, closeTestConductor } from '../utils'
 import { orchestrator, conductorConfig } from '../utils/integration-testing/tryoramaIntegration'
 import { HApp } from '../index.js'
 
 const testDescription = 'Book Endpoints'
 
 orchestrator.registerScenario(`${testDescription} Scenario`, async s => {
-  afterEach(() => {
-    exec('npm run hc:stop')
-  })
-  it(`Tests all ${testDescription} e2e. - Integration Test`, async () => {
-    // const { alice } = await s.players({ "localhost:9000": { alice: conductorConfig } })
+  let aliceInstance
+  const configureNewTestInstance = async () => {
     const { alice } = await s.players({alice: conductorConfig}, true)
-    const { getByText, getByLabelText, getByDisplayValue, getAllByText, debug } = await renderAndWait(<HApp />)
+    aliceInstance = alice
+    return { alice }
+  }
+  afterEach(() => closeTestConductor(aliceInstance))
+
+  it(`Tests all ${testDescription} e2e. - Integration Test`, async () => {
+    await configureNewTestInstance()
+    const { getByText, getByLabelText, getByDisplayValue, getAllByText, queryByText } = await renderAndWait(<HApp />)
     const welcomeMsg = 'Welcome to your generated Happ UI'
     expect(getByText(welcomeMsg)).toBeInTheDocument()
 
     await act(async () => {
       fireEvent.click(getByText('Book'))
     })
-    // expect(getByText('Book Entry')).toBeInTheDocument()
     await wait(() => getByText('Book Entry'))
 
     const book = {
@@ -41,60 +43,74 @@ orchestrator.registerScenario(`${testDescription} Scenario`, async s => {
       fireEvent.click(getByText('Submit'))
       await waait(0)
     })
-    await s.consistency()
-    const list_books_result = await alice.call('test-instance', 'zome', "list_books", {})
-    console.log(">", list_books_result);
-    await waait(100)
+
+    await act(async () => await s.consistency())
+    await act(async () => {
+      fireEvent.click(getByText('Refetch Book List'))
+      await waait(1000)
+    })
 
     expect(getByText(book.author)).toBeInTheDocument()
     expect(getByText(book.title)).toBeInTheDocument()
     expect(getByText(book.topic)).toBeInTheDocument()
 
-    // const newBook = {
-    //   author: 'incidunt accusantium sed',
-    //   title: 'libero repudiandae esse',
-    //   topic: 'blanditiis natus et'
-    // }
-    //
-    // // update book
-    // const editButton = getByText('Edit')
-    //
-    // act(() => {
-    //   fireEvent.click(editButton)
-    // })
-    //
-    // act(() => {
-    //   fireEvent.change(getByDisplayValue(book.author), { target: { value: newBook.author } })
-    //   fireEvent.change(getByDisplayValue(book.title), { target: { value: newBook.title } })
-    //   fireEvent.change(getByDisplayValue(book.topic), { target: { value: newBook.topic } })
-    // })
-    //
-    // const submitButton = getAllByText('Submit')[1]
-    //
-    // await act(async () => {
-    //   fireEvent.click(submitButton)
-    //   await waait(0)
-    // })
-    //
-    // await s.consistency()
-    // expect(getByText(newBook.author)).toBeInTheDocument()
-    // expect(getByText(newBook.title)).toBeInTheDocument()
-    // expect(getByText(newBook.topic)).toBeInTheDocument()
+    const newBook = {
+      author: 'incidunt accusantium sed',
+      title: 'libero repudiandae esse',
+      topic: 'blanditiis natus et'
+    }
 
-    // // delete book
-    // const removeButton = getAllByText('Remove')[0]
-    // await act(async () => {
-    //   fireEvent.click(removeButton)
-    //   await waait(0)
-    // })
+    // update book
+    const editButton = getByText('Edit')
+    await act(async () => {
+      fireEvent.click(editButton)
+      await waait(0)     
+    })
 
-    // await s.consistency()
-    // expect(getByText(newBook.author)).not.toBeInTheDocument()
-    // expect(getByText(newBook.title)).not.toBeInTheDocument()
-    // expect(getByText(newBook.topic)).not.toBeInTheDocument()
+    act(() => {
+      fireEvent.change(getByDisplayValue(book.author), { target: { value: newBook.author } })
+      fireEvent.change(getByDisplayValue(book.title), { target: { value: newBook.title } })
+      fireEvent.change(getByDisplayValue(book.topic), { target: { value: newBook.topic } })
+    })
+    const submitButton = getAllByText('Submit')[1]
+    
+    await act(async () => {
+      fireEvent.click(submitButton)
+      await waait(0)
+    })
 
-    debug()
-    await alice.kill()
+    await act(async () => await s.consistency())
+    
+    await act(async () => {
+      fireEvent.click(getByText('Refetch Book List'))
+      await waait(1000)
+    })
+
+    expect(getByText(newBook.author)).toBeInTheDocument()
+    expect(getByText(newBook.title)).toBeInTheDocument()
+    expect(getByText(newBook.topic)).toBeInTheDocument()
+
+    expect(queryByText(book.author)).not.toBeInTheDocument()
+    expect(queryByText(book.title)).not.toBeInTheDocument()
+    expect(queryByText(book.topic)).not.toBeInTheDocument()
+
+    // delete book
+    const removeButton = getByText('Remove')
+    await act(async () => {
+      fireEvent.click(removeButton)
+      await waait(1000)
+    })
+    
+    await act(async () => await s.consistency())
+
+    await act(async () => {
+      fireEvent.click(getByText('Refetch Book List'))
+      await waait(1000)
+    })
+
+    expect(queryByText(newBook.author)).not.toBeInTheDocument()
+    expect(queryByText(newBook.title)).not.toBeInTheDocument()
+    expect(queryByText(newBook.topic)).not.toBeInTheDocument()
   })
 })
 

@@ -57,7 +57,7 @@ ${fieldsForGQL}
 \`
 
 function ${namePlural}Page () {
-  const { data } = useQuery(LIST_${capsNamePlural}_QUERY)
+  const { data, refetch } = useQuery(LIST_${capsNamePlural}_QUERY)
 
   const list${namePlural} = (data && data.list${namePlural}) || []
 
@@ -76,6 +76,8 @@ function ${namePlural}Page () {
   <br/>
     <h1>${name} Entry</h1>
     <h2>Endpoint Testing</h2>
+    <button className='button' onClick={() => refetch()}>Refetch ${name} List</button>
+
     <${name}Form
       formAction={({ ${lowerName}Input }) => create${name}({ variables: { ${lowerName}Input } })}
       formTitle='Create ${name}' />
