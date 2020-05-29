@@ -13,6 +13,7 @@
     "happ:refresh": "npm run hc:clean-storage && npm run sim2h:clear-local",
     "happ:remove": "npm run hc:clean-storage && rm -rf happ",
     "ui:start": "cd ./happ/ui-src && npm run wait-for-conductor start-ui",
+    "ui:test": "cd ./happ/ui-src && npm run test",
     "ui:generate": "node src/ui-setup/scripts/generate-ui",
     "ui:remove": "rm -rf ./happ/ui-src",
     "hc:clean-storage": "rm -rf ./happ/.holochain/holo",

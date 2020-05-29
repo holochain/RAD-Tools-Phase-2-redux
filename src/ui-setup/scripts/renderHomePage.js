@@ -7,9 +7,12 @@ import './HomePage.css'
 
 function HomePage () {
   return <div className='index-page container'>
-    <h3 className='title'>Welcome to your generated Happ UI</h3>
-    <h5 className='subtitle'>Test all endpoints for each Zome Entry by clicking on the Entry Link below</h5>
+    <div className='background' />
+    <div className='background-overlay'>
+      <h1 className='title'>Welcome to your generated Happ UI</h1>
+      <h3 className='subtitle'>Test all endpoints for each Zome Entry by clicking on the Entry Link below</h3>
 ${renderLinks(types)}
+    </div>
   </div>
 }
 
@@ -26,7 +29,7 @@ ${mapObject(types, renderLink).join('\n')}
 function renderLink (typeName) {
   const path = `/${typeName.toLowerCase()}`
   const text = `${typeName}`
-  return `    <div className='type-page-link'><Link to='${path}'>${text}</Link></div>`
+  return `        <div className='list-item'><Link className='list-text' to='${path}'>${text}</Link></div>`
 }
 
 module.exports = renderHomePage
