@@ -1,4 +1,5 @@
 const mapObject = require('./render-utils').mapObject
+const { capitalize } = require('../../setup/utils.js')
 
 function renderHomePage ({ types }) {
   return `import React from 'react'
@@ -28,7 +29,7 @@ ${mapObject(types, renderLink).join('\n')}
 
 function renderLink (typeName) {
   const path = `/${typeName.toLowerCase()}`
-  const text = `${typeName}`
+  const text = `${capitalize(typeName)}`
   return `        <div className='list-item'><Link className='list-text' to='${path}'>${text}</Link></div>`
 }
 

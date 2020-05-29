@@ -1,5 +1,5 @@
 const mapObject = require('./render-utils').mapObject
-const { toCamelCase } = require('../../setup/utils.js')
+const { toCamelCase, capitalize } = require('../../setup/utils.js')
 
 function renderTypePage (typeName, { definition: fields }) {
   const name = typeName
@@ -7,6 +7,8 @@ function renderTypePage (typeName, { definition: fields }) {
   const capsName = typeName.toUpperCase()
   const capsNamePlural = capsName + 'S'
   const lowerName = toCamelCase(typeName.toLowerCase())
+  const capitalizedLowerName = capitalize(lowerName)
+  const capitalizedLowerNamePlural = capitalize(lowerName + 's')
 
   const fieldsForGQL = `      id
 ${mapObject(fields, fieldName => {
@@ -33,37 +35,37 @@ ${fieldsForGQL}
 \`
 
 export const CREATE_${capsName}_MUTATION = gql\`
-  mutation Create${name}($${lowerName}Input: ${name}Input) {
-    create${name} (${lowerName}Input: $${lowerName}Input) {
+  mutation Create${capitalizedLowerName}($${lowerName}Input: ${capitalizedLowerName}Input) {
+    create${capitalizedLowerName} (${lowerName}Input: $${lowerName}Input) {
 ${fieldsForGQL}
     }
   }
 \`
 
 export const UPDATE_${capsName}_MUTATION = gql\`
-  mutation Update${name}($id: String, $${lowerName}Input: ${name}Input) {
-    update${name} (id: $id, ${lowerName}Input: $${lowerName}Input) {
+  mutation Update${capitalizedLowerName}($id: String, $${lowerName}Input: ${capitalizedLowerName}Input) {
+    update${capitalizedLowerName} (id: $id, ${lowerName}Input: $${lowerName}Input) {
 ${fieldsForGQL}
     }
   }
 \`
 
 export const DELETE_${capsName}_MUTATION = gql\`
-  mutation Delete${name}($id: String) {
-    delete${name} (id: $id) {
+  mutation Delete${capitalizedLowerName}($id: String) {
+    delete${capitalizedLowerName} (id: $id) {
 ${fieldsForGQL}
     }
   }
 \`
 
-function ${namePlural}Page () {
+function ${capitalizedLowerNamePlural}Page () {
   const { data, refetch } = useQuery(LIST_${capsNamePlural}_QUERY)
 
   const list${namePlural} = (data && data.list${namePlural}) || []
 
-  const [create${name}] = useMutation(CREATE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
-  const [update${name}] = useMutation(UPDATE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
-  const [delete${name}] = useMutation(DELETE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
+  const [create${capitalizedLowerName}] = useMutation(CREATE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
+  const [update${capitalizedLowerName}] = useMutation(UPDATE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
+  const [delete${capitalizedLowerName}] = useMutation(DELETE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
 
   // the id of the ${lowerName} currently being edited
   const [editingId, setEditingId] = useState()
@@ -74,52 +76,52 @@ function ${namePlural}Page () {
   <div className='background-block'/>
   <button className='button home-btn' onClick={() => push('/')}>Home Page</button>
   <br/>
-    <h1 className='title'>${name} Entry</h1>
+    <h1 className='title'>${capitalizedLowerName} Entry</h1>
     <h2 className='subtitle'>Endpoint Testing</h2>
-    <button className='button' onClick={() => refetch()}>Refetch ${name} List</button>
+    <button className='button' onClick={() => refetch()}>Refetch ${capitalizedLowerName} List</button>
 
-    <${name}Form
-      formAction={({ ${lowerName}Input }) => create${name}({ variables: { ${lowerName}Input } })}
-      formTitle='Create ${name}' />
+    <${capitalizedLowerName}Form
+      formAction={({ ${lowerName}Input }) => create${capitalizedLowerName}({ variables: { ${lowerName}Input } })}
+      formTitle='Create ${capitalizedLowerName}' />
 
     <div className='type-list'>
       {list${namePlural}.map(${lowerName} =>
-        <${name}Row
+        <${capitalizedLowerName}Row
           key={${lowerName}.id}
           ${lowerName}={${lowerName}}
           editingId={editingId}
           setEditingId={setEditingId}
-          delete${name}={delete${name}}
-          update${name}={update${name}} />)}
+          delete${capitalizedLowerName}={delete${capitalizedLowerName}}
+          update${capitalizedLowerName}={update${capitalizedLowerName}} />)}
     </div>
   </div>
 }
 
-function ${name}Row ({ ${lowerName}, editingId, setEditingId, update${name}, delete${name} }) {
+function ${capitalizedLowerName}Row ({ ${lowerName}, editingId, setEditingId, update${capitalizedLowerName}, delete${capitalizedLowerName} }) {
   const { id } = ${lowerName}
 
   if (id === editingId) {
-    return <${name}Form
+    return <${capitalizedLowerName}Form
       ${lowerName}={${lowerName}}
-      formTitle='Update ${name}'
+      formTitle='Update ${capitalizedLowerName}'
       setEditingId={setEditingId}
-      formAction={({ ${lowerName}Input }) => update${name}({ variables: { id, ${lowerName}Input } })} />
+      formAction={({ ${lowerName}Input }) => update${capitalizedLowerName}({ variables: { id, ${lowerName}Input } })} />
   }
 
-  return <${name}Card ${lowerName}={${lowerName}} setEditingId={setEditingId} delete${name}={delete${name}} />
+  return <${capitalizedLowerName}Card ${lowerName}={${lowerName}} setEditingId={setEditingId} delete${capitalizedLowerName}={delete${capitalizedLowerName}} />
 }
 
-function ${name}Card ({ ${lowerName}: { id, ${fieldsForObject} }, setEditingId, delete${name} }) {
+function ${capitalizedLowerName}Card ({ ${lowerName}: { id, ${fieldsForObject} }, setEditingId, delete${capitalizedLowerName} }) {
   return <div className='type-card' data-testid='${lowerName}-card'>
 ${mapObject(fields, fieldName => `
     <div className='entry-field'><span className='field-label'>${toCamelCase(fieldName)}: </span><span className='field-content'>{${toCamelCase(fieldName)}}</span></div>`).join('')}
     <br/>
     <button className='button' onClick={() => setEditingId(id)}>Edit</button>
-    <button onClick={() => delete${name}({ variables: { id } })}>Remove</button>
+    <button onClick={() => delete${capitalizedLowerName}({ variables: { id } })}>Remove</button>
   </div>
 }
 
-function ${name}Form ({ ${lowerName} = { ${fieldsForObjectWithDefaults} }, formTitle, formAction, setEditingId = () => {} }) {
+function ${capitalizedLowerName}Form ({ ${lowerName} = { ${fieldsForObjectWithDefaults} }, formTitle, formAction, setEditingId = () => {} }) {
   const [formState, setFormState] = useState(pick([${fieldsForArray}], ${lowerName}))
   const { ${fieldsForObject} } = formState
 
@@ -163,7 +165,7 @@ ${mapObject(fields, fieldName => `    <div className='form-row'>
   </div>
 }
 
-export default ${namePlural}Page
+export default ${capitalizedLowerNamePlural}Page
 `
 }
 
