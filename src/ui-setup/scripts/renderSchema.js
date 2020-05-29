@@ -38,7 +38,7 @@ ${mapObject(types, renderTypeQueries).join('')}}
 }
 
 function renderTypeQueries (typeName) {
-  return `  get${capitalize(typeName)}(id: ID): ${typeName}
+  return `  get${capitalize(typeName)}(id: ID): ${capitalize(typeName)}
   list${capitalize(typeName)}s: [${capitalize(typeName)}]
 `
 }
@@ -50,9 +50,9 @@ ${mapObject(types, renderTypeMutations).join('')}}
 }
 
 function renderTypeMutations (typeName) {
-  return `  create${typeName}(${toCamelCase(typeName)}Input: ${capitalize(typeName)}Input): ${typeName}
-  update${typeName}(id: ID, ${toCamelCase(typeName)}Input: ${capitalize(typeName)}Input): ${typeName}
-  delete${typeName}(id: ID): ${typeName}
+  return `  create${capitalize(typeName)}(${toCamelCase(typeName)}Input: ${capitalize(typeName)}Input): ${capitalize(typeName)}
+  update${capitalize(typeName)}(id: ID, ${toCamelCase(typeName)}Input: ${capitalize(typeName)}Input): ${capitalize(typeName)}
+  delete${capitalize(typeName)}(id: ID): ${capitalize(typeName)}
 `
 }
 
