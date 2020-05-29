@@ -14,7 +14,7 @@ orchestrator.registerScenario(`${testDescription} Scenario`, async s => {
     aliceInstance = alice
     return { alice }
   }
-  afterEach(() => closeTestConductor(aliceInstance))
+  afterEach(() => closeTestConductor(aliceInstance, 'Book Demo'))
 
   it(`Tests all ${testDescription} e2e. - Integration Test`, async () => {
     await configureNewTestInstance()

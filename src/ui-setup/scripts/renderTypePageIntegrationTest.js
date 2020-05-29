@@ -10,7 +10,6 @@ function renderTypePageIntegrationTest (typeName, { definition: fields }) {
 
   return `import React from 'react'
 import waait from 'waait'
-import { exec } from 'child_process'
 import { fireEvent, act, wait } from '@testing-library/react'
 import { renderAndWait, runTestType, closeTestConductor } from '../utils'
 import { orchestrator, conductorConfig } from '../utils/integration-testing/tryoramaIntegration'
@@ -28,7 +27,7 @@ orchestrator.registerScenario(\`\${testDescription} Scenario\`, async s => {
   afterEach(() => closeTestConductor(aliceInstance, '${name}'))
 
   it(\`Tests all \${testDescription} e2e. - Integration Test.\`, async () => {
-    const { alice } = await s.players({alice: conductorConfig}, true)
+    await configureNewTestInstance()
     const { getByText, getByLabelText, getByDisplayValue, getAllByText, queryByText } = await renderAndWait(<HApp />)
     const welcomeMsg = 'Welcome to your generated Happ UI'
     expect(getByText(welcomeMsg)).toBeInTheDocument()
@@ -70,7 +69,7 @@ orchestrator.registerScenario(\`\${testDescription} Scenario\`, async s => {
     })
 
     act(() => { ${mapObject(fields, fieldName =>`
-      fireEvent.change(getByDisplayValue('${lowerName}.${toCamelCase(fieldName)}'), { target: { value: new${capitalizedLowerName}.${toCamelCase(fieldName)} } })`).join('')}
+      fireEvent.change(getByDisplayValue(${lowerName}.${toCamelCase(fieldName)}), { target: { value: new${capitalizedLowerName}.${toCamelCase(fieldName)} } })`).join('')}
     })
     const submitButton = getAllByText('Submit')[1]
     await act(async () => {
@@ -87,18 +86,18 @@ orchestrator.registerScenario(\`\${testDescription} Scenario\`, async s => {
     expect(getByText(new${capitalizedLowerName}.${toCamelCase(fieldName)})).toBeInTheDocument()`).join('')} 
 
     ${mapObject(fields, fieldName =>`
-    expect(queryByText(new${lowerName}.${toCamelCase(fieldName)})).not.toBeInTheDocument()`).join('')} 
+    expect(queryByText(${lowerName}.${toCamelCase(fieldName)})).not.toBeInTheDocument()`).join('')} 
 
     // delete ${name}
     const removeButton = getByText('Remove')
     await act(async () => {
       fireEvent.click(removeButton)
-      await waait(0)
+      await waait(1000)
     })
 
     await act(async () => await s.consistency())
     await act(async () => {
-      fireEvent.click(getByText('Refetch Book List'))
+      fireEvent.click(getByText('Refetch ${name} List'))
       await waait(1500)
     })
     ${mapObject(fields, fieldName =>`

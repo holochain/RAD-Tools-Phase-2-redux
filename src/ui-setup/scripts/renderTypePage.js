@@ -74,8 +74,8 @@ function ${namePlural}Page () {
   <div className='background-block'/>
   <button className='button' onClick={() => push('/')}>Home Page</button>
   <br/>
-    <h1>${name} Entry</h1>
-    <h2>Endpoint Testing</h2>
+    <h1 className='title'>${name} Entry</h1>
+    <h2 className='subtitle'>Endpoint Testing</h2>
     <button className='button' onClick={() => refetch()}>Refetch ${name} List</button>
 
     <${name}Form
