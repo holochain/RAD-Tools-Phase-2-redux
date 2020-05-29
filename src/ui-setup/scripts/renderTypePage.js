@@ -72,7 +72,7 @@ function ${namePlural}Page () {
 
   return <div className='type-page'>
   <div className='background-block'/>
-  <button className='button' onClick={() => push('/')}>Home Page</button>
+  <button className='button home-btn' onClick={() => push('/')}>Home Page</button>
   <br/>
     <h1 className='title'>${name} Entry</h1>
     <h2 className='subtitle'>Endpoint Testing</h2>
