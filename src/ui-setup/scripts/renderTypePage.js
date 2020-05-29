@@ -2,8 +2,6 @@ const mapObject = require('./render-utils').mapObject
 const { toCamelCase, capitalize } = require('../../setup/utils.js')
 
 function renderTypePage (typeName, { definition: fields }) {
-  const name = typeName
-  const namePlural = name + 's'
   const capsName = typeName.toUpperCase()
   const capsNamePlural = capsName + 'S'
   const lowerName = toCamelCase(typeName.toLowerCase())
@@ -27,8 +25,8 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import './@type-page.css'
 
 export const LIST_${capsNamePlural}_QUERY = gql\`
-  query List${namePlural} {
-    list${namePlural} {
+  query List${capitalizedLowerNamePlural} {
+    list${capitalizedLowerNamePlural} {
 ${fieldsForGQL}
     }
   }
@@ -61,13 +59,13 @@ ${fieldsForGQL}
 function ${capitalizedLowerNamePlural}Page () {
   const { data, refetch } = useQuery(LIST_${capsNamePlural}_QUERY)
 
-  const list${namePlural} = (data && data.list${namePlural}) || []
+  const list${capitalizedLowerNamePlural} = (data && data.list${capitalizedLowerNamePlural}) || []
 
   const [create${capitalizedLowerName}] = useMutation(CREATE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
   const [update${capitalizedLowerName}] = useMutation(UPDATE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
   const [delete${capitalizedLowerName}] = useMutation(DELETE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
 
-  // the id of the ${lowerName} currently being edited
+  // the id of the ${capitalizedLowerName} currently being edited
   const [editingId, setEditingId] = useState()
   
   const { push } = useHistory()
@@ -85,7 +83,7 @@ function ${capitalizedLowerNamePlural}Page () {
       formTitle='Create ${capitalizedLowerName}' />
 
     <div className='type-list'>
-      {list${namePlural}.map(${lowerName} =>
+      {list${capitalizedLowerNamePlural}.map(${lowerName} =>
         <${capitalizedLowerName}Row
           key={${lowerName}.id}
           ${lowerName}={${lowerName}}

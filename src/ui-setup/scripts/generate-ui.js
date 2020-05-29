@@ -14,6 +14,7 @@ const mapObject = require('./render-utils').mapObject
 const typeSpecPath = process.argv[2]
 const defaultTypeSpecPath = path.resolve('src/setup/type-specs', 'sample-type-spec.json')
 const defaultTypeSpec = require(defaultTypeSpecPath)
+const { capitalize } = require('../../setup/utils.js')
 
 let typeSpec
 if (!typeSpecPath) {
@@ -69,16 +70,16 @@ fse.copy(SOURCE_PATH, DESTINATION_PATH, err => {
 
 
 function generateTypePage (typeName, type) {
-  const path = PAGES_PATH + typeName + 'Page.js'
+  const path = PAGES_PATH + capitalize(typeName) + 'Page.js'
   fs.writeFileSync(path, renderTypePage(typeName, type))
 }
 
 function generateTypePageTest (typeName, type) {
-  const path = PAGES_PATH + typeName + 'Page.test.js'
+  const path = PAGES_PATH + capitalize(typeName) + 'Page.test.js'
   fs.writeFileSync(path, renderTypePageTest(typeName, type))
 }
 
 function generateTypePageIntegrationTest (typeName, type) {
-  const path = INTEGRATION_PATH + typeName + 'Page.integration.test.js'
+  const path = INTEGRATION_PATH + capitalize(typeName) + 'Page.integration.test.js'
   fs.writeFileSync(path, renderTypePageIntegrationTest(typeName, type))
 }
