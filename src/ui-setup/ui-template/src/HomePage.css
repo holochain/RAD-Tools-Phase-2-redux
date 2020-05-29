@@ -40,13 +40,14 @@
   opacity: 1;
   font-size: 20px;
   padding: 20px;
+  padding-top: 0px;
   text-align: center;
 }
 
 .background {
   display: flex;
   flex-direction: column;
-  top: 20px;
+  top: 0px;
   right: -20vw;
   height: 100vh;
   width: 100vw;

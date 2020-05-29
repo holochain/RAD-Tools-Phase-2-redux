@@ -12,4 +12,4 @@ cd happ
 npm run hc:package
 cd ..
 npm run hc:generate-conductor
- rm -rf ./target ./.cargo
+rm -rf ./target ./.cargo
