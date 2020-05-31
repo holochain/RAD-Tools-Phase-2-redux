@@ -32,17 +32,20 @@ orchestrator.registerScenario('Tryorama Runs ${name} Endpoints Scenario', async 
       })
       await wait(() => getByText('${name} Entry'))
 
-      const ${lowerName} = { ${renderPopulatedFields(fields)}
+      const ${lowerName}1 = { ${renderPopulatedFields(fields)}
       }
 
-      // create ${name}
+      const ${lowerName}2 = { ${renderPopulatedFields(fields)}
+    }
+
+      // create ${name} #1
       act(() => { ${mapObject(fields, fieldName =>`
-        fireEvent.change(getByLabelText('${toCamelCase(fieldName)}'), { target: { value: ${lowerName}.${toCamelCase(fieldName)} } })`).join('')}
+        fireEvent.change(getByLabelText('${toCamelCase(fieldName)}'), { target: { value: ${lowerName}1.${toCamelCase(fieldName)} } })`).join('')}
       })
 
       await act(async () => {
         fireEvent.click(getByText('Submit'))
-        await waait(0)
+        await waait(1500)
       })
 
       await act(async () => await scenario.consistency())
@@ -51,25 +54,43 @@ orchestrator.registerScenario('Tryorama Runs ${name} Endpoints Scenario', async 
         await waait(1500)
       })
       ${mapObject(fields, fieldName =>`
-      expect(getByText(${lowerName}.${toCamelCase(fieldName)})).toBeInTheDocument()`).join('')}
+      expect(getByText(${lowerName}1.${toCamelCase(fieldName)})).toBeInTheDocument()`).join('')}
+
+      // create ${name} #2
+      act(() => { ${mapObject(fields, fieldName =>`
+        fireEvent.change(getByLabelText('${toCamelCase(fieldName)}'), { target: { value: ${lowerName}2.${toCamelCase(fieldName)} } })`).join('')}
+      })
+
+      await act(async () => {
+        fireEvent.click(getByText('Submit'))
+        await waait(1500)
+      })
+
+      await act(async () => await scenario.consistency())
+      await act(async () => {
+        fireEvent.click(getByText('Refetch ${name} List'))
+        await waait(1500)
+      })
+      ${mapObject(fields, fieldName =>`
+      expect(getByText(${lowerName}2.${toCamelCase(fieldName)})).toBeInTheDocument()`).join('')}
 
       const new${capitalizedLowerName} = { ${renderPopulatedFields(fields)}
       }
     
       // update ${name}
-      const editButton = getByText('Edit')
+      const editButton = getAllByText('Edit')[0]
       await act(async () => {
         fireEvent.click(editButton)
-        await waait(0)
+        await waait(1500)
       })
 
       act(() => { ${mapObject(fields, fieldName =>`
-        fireEvent.change(getByDisplayValue(${lowerName}.${toCamelCase(fieldName)}), { target: { value: new${capitalizedLowerName}.${toCamelCase(fieldName)} } })`).join('')}
+        fireEvent.change(getByDisplayValue(${lowerName}2.${toCamelCase(fieldName)}), { target: { value: new${capitalizedLowerName}.${toCamelCase(fieldName)} } })`).join('')}
       })
       const submitButton = getAllByText('Submit')[1]
       await act(async () => {
         fireEvent.click(submitButton)
-        await waait(0)
+        await waait(1500)
       })
 
       await act(async () => await scenario.consistency())
@@ -81,13 +102,16 @@ orchestrator.registerScenario('Tryorama Runs ${name} Endpoints Scenario', async 
       expect(getByText(new${capitalizedLowerName}.${toCamelCase(fieldName)})).toBeInTheDocument()`).join('')} 
 
       ${mapObject(fields, fieldName =>`
-      expect(queryByText(${lowerName}.${toCamelCase(fieldName)})).not.toBeInTheDocument()`).join('')} 
+      expect(getByText(${lowerName}1.${toCamelCase(fieldName)})).toBeInTheDocument()`).join('')}
+
+      ${mapObject(fields, fieldName =>`
+      expect(queryByText(${lowerName}2.${toCamelCase(fieldName)})).not.toBeInTheDocument()`).join('')} 
 
       // delete ${name}
-      const removeButton = getByText('Remove')
+      const removeButton = getAllByText('Remove')[0]
       await act(async () => {
         fireEvent.click(removeButton)
-        await waait(1000)
+        await waait(1500)
       })
 
       await act(async () => await scenario.consistency())
@@ -97,6 +121,9 @@ orchestrator.registerScenario('Tryorama Runs ${name} Endpoints Scenario', async 
       })
       ${mapObject(fields, fieldName =>`
       expect(queryByText(new${capitalizedLowerName}.${toCamelCase(fieldName)})).not.toBeInTheDocument()`).join('')}
+
+      ${mapObject(fields, fieldName =>`
+      expect(getByText(${lowerName}1.${toCamelCase(fieldName)})).toBeInTheDocument()`).join('')}
     })
   })
 })
