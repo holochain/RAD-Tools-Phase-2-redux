@@ -31,7 +31,6 @@ with holonix.pkgs;
   ;
 
   shellHook = ''
-    rm -rf .holochain/holo/storage/agent-1/test
     trap cleanup EXIT
   '';
  });

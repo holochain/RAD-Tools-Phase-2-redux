@@ -26,7 +26,6 @@ function insertSpacesInString (string, spaceDelimiter) {
   if (delimiter.test(string)) {
     return string.replace(space, match => ' '.concat(match.toLowerCase()))
   } else {
-    console.log(`Notice: There are no ${spaceDelimiter}s to replace in provided string,`, string)
     return string
   }
 }
@@ -36,7 +35,6 @@ function replaceSpacesInString (string, replacement) {
   if (space.test(string)) {
     return string.replace(space, match => replacement.concat(match.toLowerCase()))
   } else {
-    console.log('Notice: There are no spaces to replace in provided string.')
     return string
   }
 }
@@ -88,9 +86,7 @@ function toSnakeCase (camelCaseString) {
   }
   if (underscore.test(cleanCamelCaseString) || hyphen.test(cleanCamelCaseString)) {
     const nonCamelCaseString = cleanCamelCaseString
-    console.error(`\nProvided string is not in camelCase: ${nonCamelCaseString}`)
     camelCaseString = toCamelCase(nonCamelCaseString)
-    console.log(`Converted String to camelCase : ${camelCaseString}\n`)
   }
   const capLetter = /([A-Z]+)/g
   const snakeCase = cleanCamelCaseString.replace(capLetter, match => '_'.concat(match.toLowerCase()))

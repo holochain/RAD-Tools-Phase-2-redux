@@ -10,11 +10,6 @@ export const closeTestConductor = (alice, testName) => {
   }
 }
 
-export const runTestType =  async (processTestType, testType, testFn) => {
-  if (testType === processTestType) return await testFn()
-  else return test.skip('', () => {})
-}
-
 export async function renderAndWait (ui, ms = 0, options = {}) {
   let queries
   await act(async () => {

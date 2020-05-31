@@ -20,7 +20,7 @@ async function generateConductor () {
 
 // nb: this is currently a work around to manage warning errors that cause successfull builds to return an error
 async function packageDNA () {
-  console.log('building DNA...')
+  console.log(chalk.blue('building DNA...'))
   const { stdout } = await exec(`cd ${DESTINATION_PATH}/dna-src && hc package`)
   let dnaHash
   const dnaPackage = /(DNA hash: )/gi

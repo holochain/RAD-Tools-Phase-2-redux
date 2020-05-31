@@ -11,10 +11,9 @@
     "build": "react-scripts build",
     "test": "REACT_APP_TEST_TYPE='unit' REACT_APP_MOCK_DNA_CONNECTION='true' react-scripts test",
     "eject": "react-scripts eject",
-    "wait-for-conductor": "node wait-for-conductor start-ui",
+    "wait-and-start": "node wait-for-conductor-and-start-ui",
     "hc:stop": "kill -9 $(ps -ef | grep \"holochain\" | grep -v grep | awk '{print $2}')",
-    "test:wait-for-conductor": "node wait-for-conductor",
-    "test:integration": "npm run start:sim2h && TRYORAMA_LOG_LEVEL=0 REACT_APP_TEST_TYPE='integration' REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts test --runInBand --testTimeout=15000"
+    "test:integration": "npm run hc:stop; npm run start:sim2h && TRYORAMA_LOG_LEVEL=0 REACT_APP_TEST_TYPE='integration' REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts test --runInBand --testTimeout=15000"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",

@@ -11,7 +11,7 @@ const defaultTypeSpec = require(defaultTypeSpecPath)
 
 const ROOT_DIR = path.resolve(`./`)
 const DESTINATION_PATH = `${ROOT_DIR}/happ`
-const DNA_SETUP_DIR = `${ROOT_DIR}/src/dna-setup`
+const DNA_TEMPLATE_DIR = `${ROOT_DIR}/src/dna-setup`
 
 let typeSpec
 if (!typeSpecPath) {
@@ -30,7 +30,7 @@ async function genDNA () {
   }
 
   await generateDnaShell()
-  await generateDnaZomes(typeSpec, DNA_SETUP_DIR)
+  await generateDnaZomes(typeSpec, DNA_TEMPLATE_DIR)
 
   // go back to root level
   process.chdir('../')

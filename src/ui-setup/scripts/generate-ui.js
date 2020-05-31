@@ -42,21 +42,11 @@ const renderers = [
 ]
 
 fse.copy(SOURCE_PATH, DESTINATION_PATH, err => {
-  //if cannot find happ dir, create one and signal error
+  // if cannot find happ dir, throw specific error
   if (err && err[0].errno === -2) {
-    exec('[ ! -d ./happ ] && mkdir ./happ', (error, stderr) => {
-      if (error) {
-        console.error(`exec error: ${error}`)
-      } else if (stderr) {
-        console.error(`stderr: ${stderr}`)
-      } else {
-        console.error("Error: Missing happ directory.\n\nNote: A new happ directory has now been pre-populated for you.  Please run 'ui:generate' once again to generate the ui.")
-      }
-    })
-    return
+    throw new Error("Error: Missing happ directory.\n\nNote: A new happ directory has now been pre-populated for you.  Please run 'ui:generate' once again to generate the ui.")
   } else if (err) {
-    console.error(err)
-    return
+    throw new Error(err)
   }
 
   renderers.forEach(([renderFunction, path]) =>

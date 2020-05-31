@@ -9,20 +9,18 @@
       "happ:start": "npm run start",
       "happ:refresh": "npm run hc:clean-storage && npm run sim2h:clear-local",
       "happ:install": "cd ui-src && npm i && cd .. && npm i ",
-      "ui:start": "cd ui-src && npm run wait-for-conductor",
+      "ui:start": "cd ui-src && npm run wait-and-start",
       "ui:test": "cd ui-src && npm run test",
-      "ui:wait-for-conductor": "cd ui-src && npm run wait-for-conductor",
       "hc:start-log": "npm run start:sim2h && holochain -c conductor-config.toml &> conductor.log &",
       "hc:start": "npm run start:sim2h && holochain -c conductor-config.toml",
-      "hc:test": "cd dna-src && RUST_BACKTRACE=1 HC_IGNORE_SIM2H_URL_PROPERTY=true hc test | node test/node_modules/faucet/bin/cmd.js",
+      "hc:test": "cd dna-src && RUST_BACKTRACE=1 hc test | node test/node_modules/faucet/bin/cmd.js",
       "hc:package": "cd dna-src && hc package",
       "hc:build": "npm run hc:package",
       "hc:stop": "kill -9 $(ps -ef | grep \"holochain\" | grep -v grep | awk '{print $2}')",
       "hc:clean-storage": "rm -rf ./.holochain/holo",
       "hc:keygen": "node scripts/create-new-agent",
       "hc:config-add-agent": "node scripts/add-agent-to-conductor",
-      "test:wait-for-conductor": "cd ui-src && npm run test:wait-for-conductor",
-      "test:integration": "cd ui-src && npm run test:integration"
+      "test:integration": "npm run hc:stop; cd ui-src && npm run test:integration"
     },
     "devDependencies": {},
     "dependencies": {

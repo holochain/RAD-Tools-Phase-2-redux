@@ -11,7 +11,7 @@ hdk = "=0.0.49-alpha1"
 hdk_proc_macros = "=0.0.49-alpha1"
 holochain_wasm_utils = "=0.0.49-alpha1"
 holochain_json_derive = "=0.0.23"
-holochain_anchors = { git = "https://github.com/JettTech/holochain-anchors",  branch = "2020-05-28/bump-hdk-crate-version" }
+holochain_anchors = { git = "https://github.com/holochain/holochain-anchors",  branch = "master" }
 
 [lib]
 path = "src/lib.rs"
