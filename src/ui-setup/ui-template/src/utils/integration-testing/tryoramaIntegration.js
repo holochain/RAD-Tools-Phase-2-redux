@@ -12,8 +12,8 @@ export const orchestrator = new Orchestrator({
     hardTimeout: 99999999
   }
 })
-const dna = Config.dna(dnaPath, 'test-instance')
+const dna = Config.dna(dnaPath, process.env.REACT_APP_TEST_INSTANCE_ID)
 
-export const conductorConfig = Config.gen({'test-instance': dna}, {
+export const conductorConfig = Config.gen({[process.env.REACT_APP_TEST_INSTANCE_ID]: dna}, {
   logger: Config.logger(false)
 })
