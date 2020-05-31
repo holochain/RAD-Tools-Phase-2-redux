@@ -1,5 +1,5 @@
 const mapObject = require('./render-utils').mapObject
-const { toCamelCase, capitalize } = require('../../setup/utils.js')
+const { toCamelCase } = require('../../setup/utils.js')
 
 function renderSchema ({ types }) {
   return `import gql from 'graphql-tag'
@@ -12,12 +12,12 @@ ${renderMutationDef(types)}\`
 }
 
 function renderTypeDef (typeName, { definition: type }) {
-  return `type ${capitalize(typeName)} {
+  return `type ${typeName} {
   id: ID
 ${mapObject(type, renderField).join('\n')}
 }
 
-input ${capitalize(typeName)}Input {
+input ${typeName}Input {
 ${mapObject(type, renderField).join('\n')}      
 }
 `
@@ -38,8 +38,8 @@ ${mapObject(types, renderTypeQueries).join('')}}
 }
 
 function renderTypeQueries (typeName) {
-  return `  get${capitalize(typeName)}(id: ID): ${capitalize(typeName)}
-  list${capitalize(typeName)}s: [${capitalize(typeName)}]
+  return `  get${typeName}(id: ID): ${typeName}
+  list${typeName}s: [${typeName}]
 `
 }
 
@@ -50,9 +50,9 @@ ${mapObject(types, renderTypeMutations).join('')}}
 }
 
 function renderTypeMutations (typeName) {
-  return `  create${capitalize(typeName)}(${toCamelCase(typeName)}Input: ${capitalize(typeName)}Input): ${capitalize(typeName)}
-  update${capitalize(typeName)}(id: ID, ${toCamelCase(typeName)}Input: ${capitalize(typeName)}Input): ${capitalize(typeName)}
-  delete${capitalize(typeName)}(id: ID): ${capitalize(typeName)}
+  return `  create${typeName}(${toCamelCase(typeName)}Input: ${typeName}Input): ${typeName}
+  update${typeName}(id: ID, ${toCamelCase(typeName)}Input: ${typeName}Input): ${typeName}
+  delete${typeName}(id: ID): ${typeName}
 `
 }
 

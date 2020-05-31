@@ -1,5 +1,4 @@
 const mapObject = require('./render-utils').mapObject
-const { capitalize } = require('../../setup/utils.js')
 
 function renderResolvers ({ types }) {
   return `import { createZomeCall } from './holochainClient'
@@ -27,10 +26,10 @@ function renderQueryResolvers (types) {
 
 function renderQueryResolversForType (typeName) {
   const lowerTypeName = typeName.toLowerCase()
-  return `    get${capitalize(typeName)}: (_, { id }) =>
+  return `    get${typeName}: (_, { id }) =>
       createZomeCall(dnaPath('get_${lowerTypeName}'))({ id }),
 
-    list${capitalize(typeName)}s: () =>
+    list${typeName}s: () =>
       createZomeCall(dnaPath('list_${lowerTypeName}s'))(),`
 }
 
@@ -43,13 +42,13 @@ function renderMutationResolversForType (typeName) {
   const inputVariableName = `${lowerTypeName}Input`
   const inputParamName = `${lowerTypeName}_input`
 
-  return `    create${capitalize(typeName)}: (_, { ${inputVariableName} }) =>
+  return `    create${typeName}: (_, { ${inputVariableName} }) =>
       createZomeCall(dnaPath('create_${lowerTypeName}'))({ ${inputParamName}: ${inputVariableName} }),
 
-    update${capitalize(typeName)}: (_, { id, ${inputVariableName} }) =>
+    update${typeName}: (_, { id, ${inputVariableName} }) =>
       createZomeCall(dnaPath('update_${lowerTypeName}'))({ id, ${inputParamName}: ${inputVariableName} }),
 
-    delete${capitalize(typeName)}: (_, { id }) =>
+    delete${typeName}: (_, { id }) =>
       createZomeCall(dnaPath('delete_${lowerTypeName}'))({ id }),`
 }
 

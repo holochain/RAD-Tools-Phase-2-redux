@@ -4,7 +4,7 @@ const mapObject = require('./render-utils').mapObject
 const { toCamelCase, capitalize } = require('../../setup/utils.js')
 
 function renderTypePageIntegrationTest (typeName, { definition: fields }) {
-  const name = capitalize(typeName)
+  const name = typeName
   const lowerName = toCamelCase(typeName.toLowerCase())
   const capitalizedLowerName = capitalize(lowerName)
 

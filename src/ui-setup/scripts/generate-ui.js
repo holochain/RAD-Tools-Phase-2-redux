@@ -14,14 +14,23 @@ const mapObject = require('./render-utils').mapObject
 const typeSpecPath = process.argv[2]
 const defaultTypeSpecPath = path.resolve('src/setup/type-specs', 'sample-type-spec.json')
 const defaultTypeSpec = require(defaultTypeSpecPath)
-const { capitalize } = require('../../setup/utils.js')
+const { capitalize, toCamelCase } = require('../../setup/utils.js')
+
+const formCSTypeSpec = typeSpec => {
+  const rawTypeSpecTypesMap = mapObject(typeSpec.types, (typeName, type) => [capitalize(toCamelCase(typeName)), type])
+  const rawTypeSpec = { types: Object.fromEntries(rawTypeSpecTypesMap) }
+  return rawTypeSpec
+}
 
 let typeSpec
 if (!typeSpecPath) {
   console.log(chalk.blue('> No type spec JSON file provided. \n  Using default type spec JSON file located within the setup directory.\n'))
-  typeSpec = defaultTypeSpec
+  const updatedTypeSpec = formCSTypeSpec(defaultTypeSpec)
+  typeSpec = updatedTypeSpec
 } else {
-  typeSpec = JSON.parse(fs.readFileSync(typeSpecPath))
+  const rawTypeSpec = JSON.parse(fs.readFileSync(typeSpecPath))
+  const updatedTypeSpec = formCSTypeSpec(rawTypeSpec)
+  typeSpec = updatedTypeSpec
 }
 
 const SOURCE_PATH = './src/ui-setup/ui-template'
@@ -44,7 +53,7 @@ const renderers = [
 fse.copy(SOURCE_PATH, DESTINATION_PATH, err => {
   // if cannot find happ dir, throw specific error
   if (err && err[0].errno === -2) {
-    throw new Error("Error: Missing happ directory.\n\nNote: A new happ directory has now been pre-populated for you.  Please run 'ui:generate' once again to generate the ui.")
+    throw new Error("Error: Missing happ directory.")
   } else if (err) {
     throw new Error(err)
   }
@@ -60,16 +69,16 @@ fse.copy(SOURCE_PATH, DESTINATION_PATH, err => {
 
 
 function generateTypePage (typeName, type) {
-  const path = PAGES_PATH + capitalize(typeName) + 'Page.js'
+  const path = PAGES_PATH + typeName + 'Page.js'
   fs.writeFileSync(path, renderTypePage(typeName, type))
 }
 
 function generateTypePageTest (typeName, type) {
-  const path = PAGES_PATH + capitalize(typeName) + 'Page.test.js'
+  const path = PAGES_PATH + typeName + 'Page.test.js'
   fs.writeFileSync(path, renderTypePageTest(typeName, type))
 }
 
 function generateTypePageIntegrationTest (typeName, type) {
-  const path = INTEGRATION_PATH + capitalize(typeName) + 'Page.integration.test.js'
+  const path = INTEGRATION_PATH + typeName + 'Page.integration.test.js'
   fs.writeFileSync(path, renderTypePageIntegrationTest(typeName, type))
 }

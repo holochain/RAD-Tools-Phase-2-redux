@@ -1,5 +1,4 @@
 const mapObject = require('./render-utils').mapObject
-const { capitalize } = require('../../setup/utils.js')
 
 function renderIndex ({ types }) {
   return `import React from 'react'
@@ -35,11 +34,11 @@ serviceWorker.unregister()
 }
 
 function renderPageImport (typeName) {
-  return `import ${capitalize(typeName)}Page from './pages/${capitalize(typeName)}Page'`
+  return `import ${typeName}Page from './pages/${typeName}Page'`
 }
 
 function renderRoute (typeName) {
-  return `        <Route path='/${typeName.toLowerCase()}' exact component={${capitalize(typeName)}Page} />`
+  return `        <Route path='/${typeName.toLowerCase()}' exact component={${typeName}Page} />`
 }
 
 module.exports = renderIndex

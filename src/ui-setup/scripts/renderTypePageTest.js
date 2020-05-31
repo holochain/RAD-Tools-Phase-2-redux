@@ -219,7 +219,7 @@ const runUnitTest = () => {
 }
 
 if (process.env.REACT_APP_TEST_TYPE === 'unit') {
-  orchestrator.run()
+  runUnitTest()
 } else {
   test.skip('', () => {})
 }
