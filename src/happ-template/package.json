@@ -20,7 +20,7 @@
       "hc:clean-storage": "rm -rf ./.holochain/holo",
       "hc:keygen": "node scripts/create-new-agent",
       "hc:config-add-agent": "node scripts/add-agent-to-conductor",
-      "test:integration": "npm run hc:stop; cd ui-src && npm run test:integration"
+      "test:integration": "sh'npm run hc:stop &> /dev/null &'; cd ui-src && npm run test:integration"
     },
     "devDependencies": {},
     "dependencies": {

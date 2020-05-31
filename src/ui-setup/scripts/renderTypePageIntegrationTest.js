@@ -15,17 +15,16 @@ import { renderAndWait, closeTestConductor } from '../utils'
 import { orchestrator, conductorConfig } from '../utils/integration-testing/tryoramaIntegration'
 import { HApp } from '../index.js'
 
-orchestrator.registerScenario('${name} Endpoints Scenario', async scenario => {
+orchestrator.registerScenario('Tryorama Runs ${name} Endpoints Scenario', async scenario => {
   let aliceInstance
-  const configureNewTestInstance = async () => {
+  beforeEach(async () => {
     const { alice } = await scenario.players({alice: conductorConfig}, true)
     aliceInstance = alice
     return { alice }
-  }
+  })
   afterEach(() => closeTestConductor(aliceInstance, '${name}'))
   describe('${name} Page', () => {
     it('All endpoints work e2e with DNA.', async () => {
-      await configureNewTestInstance()
       const { getByText, getByLabelText, getByDisplayValue, getAllByText, queryByText } = await renderAndWait(<HApp />)
     
       await act(async () => {

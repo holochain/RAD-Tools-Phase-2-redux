@@ -1,7 +1,7 @@
 const fs = require('fs')
 const { promisify } = require('util')
 const exec = promisify(require('child_process').exec)
-const { promiseMapOverObject, toSnakeCase } = require('../../setup/utils.js')
+const { promiseMapOverObject, capitalize, toSnakeCase } = require('../../setup/utils.js')
 const generateMod = require('./generate-entry-module')
 const generateHandlers = require('./generate-entry-handlers')
 const generateValidation = require('./generate-entry-validation')
@@ -34,7 +34,7 @@ const renderEntry = async (zomeEntryType, zomeEntry, zomeName) => {
   const resolvePath = fileName => fileName === 'index' ? `${TEST_PATH}/${fileName}.js` : `${ZOME_ENTRY_PATH}/${fileName}.rs`
 
   renderers.forEach(([renderFunction, filename]) => fs.writeFileSync(resolvePath(filename), renderFunction(zomeEntryName, zomeEntry, zomeName)))
-  return console.log(`${chalk.cyan(' Finished creating ' + zomeEntryName.toLowerCase() + ' entry')}\n`)
+  return console.log(`${chalk.cyan(' Finished creating ' + capitalize(zomeEntryName) + ' Entry')}\n`)
 }
 
 const generateZomeEntries = (zomeName, zomeEntryTypes) => promiseMapOverObject(zomeEntryTypes, (zomeEntryType, zomeEntry) => renderEntry(zomeEntryType, zomeEntry, zomeName))

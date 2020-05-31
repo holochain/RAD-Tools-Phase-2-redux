@@ -2,7 +2,7 @@ const { promisify } = require('util')
 const exec = promisify(require('child_process').exec)
 const fs = require('fs')
 const path = require('path')
-const { promiseMapOverObject, replaceNamePlaceHolders, toCamelCase, toSnakeCase } = require('../../setup/utils.js')
+const { promiseMapOverObject, replaceNamePlaceHolders, capitalize, toCamelCase, toSnakeCase } = require('../../setup/utils.js')
 const { DNA_NAME } = require('../variables.js')
 const generateZomeEntries = require('./generate-zome-entries')
 const generateZomeLib = require('./generate-zome-lib')
@@ -73,7 +73,7 @@ async function createZomeDir (zomeNameRaw, entryTypesWrapper, dnaTemplateDir) {
     await generateZomeLib(zomeName, zomeEntryTypes, zomeDir)
     await formatZome(zomeDir)
     updateZomeCargoToml(zomeDir)
-    console.log(`${chalk.cyan(' Finished creating ' + zomeName.toUpperCase() + ' Zome')}\n`)
+    console.log(`${chalk.cyan(' Finished creating ' + capitalize(zomeName) + ' Zome')}\n`)
 
     return {
       testingEntries,
