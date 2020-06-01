@@ -53,6 +53,8 @@ const renderers = [
 const verifyDestinationPath = async () => {
   const { stderr } = await exec('[ ! -d ./happ ] && mkdir ./happ; echo $(pwd -P)')
   if (stderr) throw new Error(stderr)
+  console.log('made happ dir')
+  return
 }
 
 verifyDestinationPath()
