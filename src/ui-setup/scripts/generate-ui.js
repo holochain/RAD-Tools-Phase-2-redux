@@ -17,22 +17,20 @@ const defaultTypeSpec = require(defaultTypeSpecPath)
 const { capitalize, toCamelCase } = require('../../setup/utils.js')
 
 // map over type spec to ensure the types are all capitalized before feeding the name to the UI generation
-const formCSTypeSpec = typeSpec => {
-  const rawTypeSpecTypesMap = mapObject(typeSpec.types, (typeName, type) => [capitalize(toCamelCase(typeName)), type])
-  const rawTypeSpec = { types: Object.fromEntries(rawTypeSpecTypesMap) }
+const capitalizeTypeNames = typeSpec => {
+  const capitalizedTypeArray = mapObject(typeSpec.types, (typeName, type) => [capitalize(toCamelCase(typeName)), type])
+  const rawTypeSpec = { types: Object.fromEntries(capitalizedTypeArray) }
   return rawTypeSpec
 }
 
-let typeSpec
 if (!typeSpecPath) {
   console.log(chalk.blue('> No type spec JSON file provided. \n Using default type spec JSON file located within the setup directory.\n'))
-  const updatedTypeSpec = formCSTypeSpec(defaultTypeSpec)
-  typeSpec = updatedTypeSpec
-} else {
-  const rawTypeSpec = JSON.parse(fs.readFileSync(typeSpecPath))
-  const updatedTypeSpec = formCSTypeSpec(rawTypeSpec)
-  typeSpec = updatedTypeSpec
 }
+
+const rawTypeSpec = !typeSpecPath
+  ? defaultTypeSpec
+  :  JSON.parse(fs.readFileSync(typeSpecPath))
+const typeSpec = capitalizeTypeNames(rawTypeSpec)
 
 const SOURCE_PATH = './src/ui-setup/ui-template'
 const DESTINATION_PATH = './happ/ui-src'

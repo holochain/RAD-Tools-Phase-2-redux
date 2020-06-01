@@ -16,13 +16,13 @@ import { orchestrator, conductorConfig } from '../utils/integration-testing/tryo
 import { HApp } from '../index.js'
 
 orchestrator.registerScenario('Tryorama Runs ${name} Endpoints Scenario', async scenario => {
-  let aliceInstance
+  let agentInstance
   beforeEach(async () => {
-    const { alice } = await scenario.players({alice: conductorConfig}, true)
-    aliceInstance = alice
-    return { alice }
+    const { agent } = await scenario.players({agent: conductorConfig}, true)
+    agentInstance = agent
+    return { agent }
   })
-  afterEach(() => closeTestConductor(aliceInstance, '${name}'))
+  afterEach(() => closeTestConductor(agentInstance, '${name}'))
   describe('${name} Page', () => {
     it('All endpoints work e2e with DNA.', async () => {
       const { getByText, getByLabelText, getByDisplayValue, getAllByText, queryByText } = await renderAndWait(<HApp />)

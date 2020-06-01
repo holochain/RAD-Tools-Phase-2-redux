@@ -2,7 +2,6 @@ const mapObject = require('./render-utils').mapObject
 
 function renderIndex ({ types }) {
   return `import React from 'react'
-import ReactModal from 'react-modal'
 import ReactDOM from 'react-dom'
 import { ApolloProvider } from '@apollo/react-hooks'
 import apolloClient from './apolloClient'
@@ -26,7 +25,6 @@ ${mapObject(types, renderRoute).join('\n')}
 const rootElement = document.getElementById('root')
 if (rootElement) {
   ReactDOM.render(<HApp />, rootElement)
-  ReactModal.setAppElement('#root')
 }
 
 serviceWorker.unregister()

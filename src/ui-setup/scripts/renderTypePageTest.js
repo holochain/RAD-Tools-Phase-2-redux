@@ -39,10 +39,8 @@ const ${lowerName} = {
 ${renderPopulatedFields(fields, '  ')}
 }
 
-const testDescription = \`\${name} Entry Page\`
-
 const runUnitTest = () => {  
-  describe(testDescription, () => {
+  describe('${name} Entry Page', () => {
     it('renders "${name}" title', async () => {
       const mocks = []
       const { getByText } = await renderAndWait(<MockedProvider mocks={mocks} addTypename={false}>
