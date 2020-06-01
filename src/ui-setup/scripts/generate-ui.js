@@ -2,6 +2,8 @@ const fs = require('fs')
 const fse = require('fs-extra')
 const chalk = require('chalk')
 const path = require('path')
+const util = require('util')
+const exec = util.promisify(require('child_process').exec)
 const renderSchema = require('./renderSchema')
 const renderResolvers = require('./renderResolvers')
 const renderHomePage = require('./renderHomePage')
@@ -48,21 +50,29 @@ const renderers = [
   [renderIndex, INDEX_PATH]
 ]
 
-fse.copy(SOURCE_PATH, DESTINATION_PATH, err => {
-  // if cannot find happ dir, throw specific error
-  if (err && err[0].errno === -2) {
-    throw new Error("Error: Missing happ directory.")
-  } else if (err) {
-    throw new Error(err)
-  }
+const verifyDestinationPath = async () => {
+  const { stderr } = await exec('[ ! -d ./happ ] && mkdir ./happ; echo $(pwd -P)')
+  if (stderr) throw new Error(stderr)
+}
 
-  renderers.forEach(([renderFunction, path]) =>
-    fs.writeFileSync(path, renderFunction(typeSpec)))
-
-  mapObject(typeSpec.types, generateTypePage)
-  mapObject(typeSpec.types, generateTypePageTest)
-  mapObject(typeSpec.types, generateTypePageIntegrationTest)
-  console.log(`\n ${chalk.cyan.bold(' UI Generation Complete')} \n`)
+verifyDestinationPath()
+.then (() => {
+  fse.copy(SOURCE_PATH, DESTINATION_PATH, err => {
+    // if cannot find happ dir, throw specific error
+    if (err && err[0].errno === -2) {
+      throw new Error("Error: Missing happ directory.")
+    } else if (err) {
+      throw new Error(err)
+    }
+  
+    renderers.forEach(([renderFunction, path]) =>
+      fs.writeFileSync(path, renderFunction(typeSpec)))
+  
+    mapObject(typeSpec.types, generateTypePage)
+    mapObject(typeSpec.types, generateTypePageTest)
+    mapObject(typeSpec.types, generateTypePageIntegrationTest)
+    console.log(`\n ${chalk.cyan.bold(' UI Generation Complete')} \n`)
+  })
 })
 
 
