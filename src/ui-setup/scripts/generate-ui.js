@@ -16,6 +16,7 @@ const defaultTypeSpecPath = path.resolve('src/setup/type-specs', 'sample-type-sp
 const defaultTypeSpec = require(defaultTypeSpecPath)
 const { capitalize, toCamelCase } = require('../../setup/utils.js')
 
+// map over type spec to ensure the types are all capitalized before feeding the name to the UI generation
 const formCSTypeSpec = typeSpec => {
   const rawTypeSpecTypesMap = mapObject(typeSpec.types, (typeName, type) => [capitalize(toCamelCase(typeName)), type])
   const rawTypeSpec = { types: Object.fromEntries(rawTypeSpecTypesMap) }
@@ -24,7 +25,7 @@ const formCSTypeSpec = typeSpec => {
 
 let typeSpec
 if (!typeSpecPath) {
-  console.log(chalk.blue('> No type spec JSON file provided. \n  Using default type spec JSON file located within the setup directory.\n'))
+  console.log(chalk.blue('> No type spec JSON file provided. \n Using default type spec JSON file located within the setup directory.\n'))
   const updatedTypeSpec = formCSTypeSpec(defaultTypeSpec)
   typeSpec = updatedTypeSpec
 } else {
