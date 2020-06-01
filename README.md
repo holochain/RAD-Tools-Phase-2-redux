@@ -50,7 +50,7 @@ Example: Below is an example of a happ that will have a single zome with three e
           "sharing": "public",
           "definition": {
             "name": "string",
-            "avatarUrl": "string"
+            "avatar_url": "string"
           }
         },
         "author": {
