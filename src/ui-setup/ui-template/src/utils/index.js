@@ -1,9 +1,9 @@
 import { render, act } from '@testing-library/react'
 import wait from 'waait'
 
-export const closeTestConductor = (alice, testName) => {
+export const closeTestConductor = (agent, testName) => {
   try {
-    alice.kill()
+    agent.kill()
   }
   catch(err){
     throw new Error(`Error when killing conductor for the ${testName} test : ${err}`);
