@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const { isEmpty } = require('lodash/fp')
-const { replaceNamePlaceHolders, replaceContentPlaceHolders, mapOverObject, capitalize } = require('../../utils.js')
+const { replaceNamePlaceHolders, replaceContentPlaceHolders, mapOverObject, capitalize } = require('../../setup/utils.js')
 const { ZOME_NAME, ENTRY_IMPORTS, ENTRY_DEFINITIONS, ENTRY_FUNCTION_DEFINITIONS } = require('../variables.js')
 const zomeLibTemplatePath = path.resolve("src/dna-setup/zome-template", "lib.rs");
 const zomeLibTemplate = fs.readFileSync(zomeLibTemplatePath, 'utf8')

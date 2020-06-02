@@ -1,13 +1,13 @@
 const fs = require('fs')
 const util = require('util')
 const path = require('path')
-const exec = util.promisify(require('child_process').exec);
+const exec = util.promisify(require('child_process').exec)
 const toml = require('toml')
-const { insertSpacesInString, toSnakeCase, capitalize, toKebabCase } = require('../../utils.js')
+const { insertSpacesInString, toSnakeCase, capitalize, toKebabCase } = require('./utils.js')
 
 const agentName = process.argv[2]
 const formattedName = insertSpacesInString(capitalize(toSnakeCase(agentName)), 'underscore')
-const conductorConfigPath = path.resolve("./", "conductor-config.toml")
+const conductorConfigPath = path.resolve('./', 'conductor-config.toml')
 const conductorConfig = toml.parse(fs.readFileSync(conductorConfigPath, 'utf-8'))
 
 const generateAgentConfig = (agentName, agentPubKey) => `
@@ -18,21 +18,21 @@ name = "${formattedName}"
 public_address = "${agentPubKey}"
 `
 
-async function locateAgentPubKey() {
+async function locateAgentPubKey () {
   try {
     const { stderr, stdout } = await exec(`find ./keystores/${agentName} -name *.keystore | xargs -I {} basename {}`)
     if (stderr) console.log('stderr:', stderr)
     else {
       const agentPubKey = stdout.trim().split('.')[0]
       console.log(`Agent ${formattedName}'s public key:`, agentPubKey)	
-      return agentPubKey	
+      return agentPubKey
     }
-  } catch (err) { 
+  } catch (err) {
     return console.error(err)
   }
 }
 
-if(agentName) {
+if (agentName) {
   locateAgentPubKey()
     .catch(e => console.log(e))
     .then(agentPubKey => {

@@ -75,7 +75,7 @@ function toKebabCase (snakeCaseString) {
   }
   const cleanSnakeCaseString = snakeCaseString.trim().toLowerCase()
   const underscore = /(_)/g
-  const snakeCase = cleanSnakeCaseString.replace(underscore, match => '-'.concat(match.toLowerCase()))
+  const snakeCase = cleanSnakeCaseString.replace(underscore, '-')
   return snakeCase
 }
 
@@ -118,17 +118,20 @@ function replaceNamePlaceHolders (file, placeHolderName, replacementName) {
   const placeHolderLowerCase = `{${toSnakeCase(placeHolderName).toLowerCase()}}`
   const placeHolderCamelCase = `{${toCamelCase(placeHolderName)}}`
   const placeHolderCapitalized = `{${capitalize(placeHolderName)}}`
+  const placeHolderKebabCase = `{${toKebabCase(toSnakeCase(placeHolderName))}}`
   // relacements
   const replacementAllCaps = toSnakeCase(replacementName).toUpperCase()
   const replacementLowerCase = toSnakeCase(replacementName).toLowerCase()
   const replacementCamelCase = toCamelCase(replacementName)
   const replacementCapitalized = capitalize(replacementName)
-
+  const replacementKebabCase = toKebabCase(toSnakeCase(replacementName))
+  
   return file.replace(new RegExp(placeHolderName, 'g'), replacementName)
     .replace(new RegExp(placeHolderAllCaps, 'g'), replacementAllCaps)
     .replace(new RegExp(placeHolderLowerCase, 'g'), replacementLowerCase)
     .replace(new RegExp(placeHolderCamelCase, 'g'), replacementCamelCase)
     .replace(new RegExp(placeHolderCapitalized, 'g'), replacementCapitalized)
+    .replace(new RegExp(placeHolderKebabCase, 'g'), replacementKebabCase)
 }
 
 function replaceContentPlaceHolders (file, placeHolderContent, replacementContent) {

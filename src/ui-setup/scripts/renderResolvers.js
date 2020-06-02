@@ -3,7 +3,8 @@ const mapObject = require('./render-utils').mapObject
 function renderResolvers ({ types }) {
   return `import { createZomeCall } from './holochainClient'
 
-  const dnaPath = zomeFunc => \`\${process.env.REACT_APP_INSTANCE_ID}/zome/\${zomeFunc}\`
+const currentInstance = process.env.NODE_ENV === 'test' ? process.env.REACT_APP_TEST_INSTANCE_ID : process.env.REACT_APP_INSTANCE_ID
+const dnaPath = zomeFunc => \`\${currentInstance}/zome/\${zomeFunc}\`
   
 export const resolvers = {
   Query: {

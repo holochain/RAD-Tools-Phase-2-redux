@@ -7,22 +7,22 @@ public_address = "<AGENT_1_PUB_KEY>"
 [[dnas]]
 file = "dna-src/dist/dna-src.dna.json"
 hash = "<DNA_HASH>"
-id = "<DNA_NAME>-reference"
+id = "<DNA_NAME>-dna"
 
 [[instances]]
 agent = "agent-1"
-dna = "<DNA_NAME>-reference"
+dna = "<DNA_NAME>-dna"
 id = "<DNA_NAME>-instance-1"
 
 [instances.storage]
-path = ".holochain/holo/storage/agent-1/<DNA_NAME>-reference"
+path = ".holochain/holo/storage/agent-1/<DNA_NAME>-dna"
 type = "file"
 
 [[interfaces]]
 id = "websocket-interface"
 
 [interfaces.driver]
-port = 3407
+port = 33000
 type = "websocket"
 
 [[interfaces.instances]]
@@ -33,7 +33,7 @@ admin = true
 id = "http-interface"
 
 [interfaces.driver]
-port = 3307
+port = 34000
 type = "http"
 
 [[interfaces.instances]]

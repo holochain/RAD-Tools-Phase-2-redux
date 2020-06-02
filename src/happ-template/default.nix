@@ -29,5 +29,9 @@ with holonix.pkgs;
    ++ holonix.shell.buildInputs
    ++ config.buildInputs
   ;
+
+  shellHook = ''
+    trap cleanup EXIT
+  '';
  });
 }

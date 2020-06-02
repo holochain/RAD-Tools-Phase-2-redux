@@ -23,7 +23,7 @@ function renderEntriesObject (typeName) {
   return `const ${typeName.toLowerCase()}Entries = {}`
 }
 
-function renderZomeFunctionsForType (typeName, fields) {
+function renderZomeFunctionsForType (typeName) {
   const name = typeName
   const lowerName = name.toLowerCase()
   const lowerNamePlural = name.toLowerCase() + 's'

@@ -7,7 +7,7 @@ const { replaceContentPlaceHolders,
   toSnakeCase,
   toCamelCase,
   capitalize
-} = require('../../utils.js')
+} = require('../../setup/utils.js')
 const { ENTRY_NAME, CRUD_TESTING } = require('../variables.js')
 
 const entryTestingIndexTemplatePath = path.resolve("src/dna-setup/test-template/entry-test-template", "index.js");

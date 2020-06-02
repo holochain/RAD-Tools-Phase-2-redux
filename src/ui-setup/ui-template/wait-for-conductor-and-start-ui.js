@@ -10,7 +10,7 @@ const port = hcConfig.interfaces[0].driver.port || 3400
 const client = new net.Socket()
 
 let startedConductor = false
-const tryConnection = () => {
+const waitForConductorAndStartUI = () => {
   console.log('hcConfig port:', port)
   client.connect(
     { port },
@@ -19,7 +19,7 @@ const tryConnection = () => {
       if (!startedConductor) {
         startedConductor = true
         console.log('Starting UI, connecting to port :', port)
-        exec('npm run ui:start-agent', (error, stdout, stderr) => {
+        exec('npm run start-agent', (error, stdout, stderr) => {
           if (error) {
             console.error(`exec error: ${error}`)
             return
@@ -28,15 +28,16 @@ const tryConnection = () => {
             return
           }
           console.log(`stdout: ${stdout}`)
+          console.log('Holochain Conductor is up')
         })
       }
     }
   )
 }
 
-tryConnection()
+waitForConductorAndStartUI()
 
 client.on('error', () => {
-  console.log('Waiting for Holochain to configure and boot')
-  setTimeout(tryConnection, 5000)
+  console.log('Waiting for Holochain Conductor to configure and boot')
+  setTimeout(waitForConductorAndStartUI, 5000)
 })
