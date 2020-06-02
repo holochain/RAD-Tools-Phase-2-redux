@@ -27,11 +27,10 @@ async function packageDNA () {
   if (dnaPackage.test(stdout)) {
     dnaHash = stdout.trim().replace(dnaPackage, 'DNA_HASH').split('DNA_HASH')[1]
     console.log(chalk.cyan('Completed DNA build with hc package'))
-    updateConductorWithPackagedDna(dnaHash)
+    return console.log(chalk.cyan('DNA Hash: ' + dnaHash))
   } else {
     throw new Error('hc package error: Unable to locate compiled DNA hash.')
   }
-  return console.log(chalk.cyan('DNA Hash: ' + dnaHash))
 }
 
 async function updateConductorWithPackagedDna (dnaHash) {
@@ -44,7 +43,6 @@ async function updateConductorWithPackagedDna (dnaHash) {
 
   await updateUiDotEnv(`${dnaName}-instance-1`, port)
 
-  console.log('updating conductor')
   const { stderr } = await exec(`sed -i "s/<DNA_HASH>/${dnaHash}/" ${conductorConfigPath}; sed -i "s/<DNA_NAME>/${dnaName}/" ${conductorConfigPath}`)
   if (stderr) {
     return console.error(`exec stderr: \n${chalk.red(stderr)}`)
