@@ -51,14 +51,14 @@ const renderers = [
 ]
 
 const verifyDestinationPath = async () => {
-  const { stderr } = await exec('[ ! -d ./happ ] && mkdir ./happ; echo $(pwd -P)')
+  const { stderr, stdout } = await exec('[ ! -d ./happ ] && mkdir ./happ; echo $(pwd -P)')
   console.log('made happ dir >>> 1')
   if (stderr) throw new Error(stderr)
-  console.log('made happ dir >>')
+  console.log('made happ dir >>', stdout)
   return
 }
 
-verifyDestinationPath()
+await verifyDestinationPath()
 .then (() => {
   fse.copy(SOURCE_PATH, DESTINATION_PATH, err => {
     // if cannot find happ dir, throw specific error
