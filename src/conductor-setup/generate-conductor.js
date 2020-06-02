@@ -44,6 +44,7 @@ async function updateConductorWithPackagedDna (dnaHash) {
 
   await updateUiDotEnv(`${dnaName}-instance-1`, port)
 
+  console.log('updating conductor')
   const { stderr } = await exec(`sed -i "s/<DNA_HASH>/${dnaHash}/" ${conductorConfigPath}; sed -i "s/<DNA_NAME>/${dnaName}/" ${conductorConfigPath}`)
   if (stderr) {
     return console.error(`exec stderr: \n${chalk.red(stderr)}`)
