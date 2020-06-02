@@ -1,6 +1,6 @@
 {
   "types": {
-    "user": {
+    "User": {
       "description": "Create and manage users.",
       "sharing": "public",
       "definition": {
@@ -8,7 +8,7 @@
         "avatar_url": "string"
       }
     },
-    "author": {
+    "Author": {
       "description": "Create and manage authors.",
       "sharing": "public",
       "definition": {
@@ -16,7 +16,7 @@
         "nickname": "string"
       }
     },
-    "book": {
+    "Book": {
       "description": "Create and manage books.",
       "sharing": "public",
       "definition": {
