@@ -3,13 +3,13 @@ const exec = promisify(require('child_process').exec)
 const fs = require('fs')
 const path = require('path')
 const { promiseMapOverObject, replaceNamePlaceHolders, capitalize, toCamelCase, toSnakeCase } = require('../../setup/utils.js')
-const { DNA_NAME } = require('../variables.js')
+const { DNA_NAME, ZOME_NAME } = require('../variables.js')
 const generateZomeEntries = require('./generate-zome-entries')
 const generateZomeLib = require('./generate-zome-lib')
 const generateTestIndex = require('./generate-test-index')
 const { isEmpty } = require('lodash/fp')
 const chalk = require('chalk')
-const toml = require('toml')
+// const toml = require('toml')
 const json2toml = require('json2toml')
 
 async function findDnaName (zomeDir) {
@@ -27,18 +27,26 @@ async function findTestDirPath (zomeDir) {
   }
 }
 
-const updateZomeCargoToml = (zomeDir) => {
+const updateZomeCargoToml = (zomeName, zomeDir, dnaTemplateDir) => {
   const pathAsArray = zomeDir.split('/')
   const zomeCodeDir = pathAsArray.splice(0, pathAsArray.length - 2).join('/')
-  const cargoToml = toml.parse(fs.readFileSync(`${zomeCodeDir}/Cargo.toml`, 'utf8'))    
-  const newCargoTomlDependencies = {
-    ...cargoToml.dependencies,
-    'holochain_anchors': { git: "https://github.com/holochain/holochain-anchors",  branch: "master" }
-  }
-  Object.assign(cargoToml.dependencies, newCargoTomlDependencies)
-  const tomlConvertionCargo = json2toml(cargoToml)
-  fs.writeFileSync(`${zomeCodeDir}/Cargo.toml`, tomlConvertionCargo)
-  return tomlConvertionCargo
+  const cargoTomlTemplatePath = path.resolve(`${dnaTemplateDir}/zome-template`, 'Cargo.toml')
+  const cargoTomlTemplate = fs.readFileSync(cargoTomlTemplatePath, 'utf8')
+  const cargoToml = replaceNamePlaceHolders(cargoTomlTemplate, ZOME_NAME, zomeName)
+  const writeCargoToml = fs.writeFileSync(`${zomeCodeDir}/Cargo.toml`, cargoToml)
+  return writeCargoToml
+
+  // const pathAsArray = zomeDir.split('/')
+  // const zomeCodeDir = pathAsArray.splice(0, pathAsArray.length - 2).join('/')
+  // const cargoToml = toml.parse(fs.readFileSync(`${zomeCodeDir}/Cargo.toml`, 'utf8'))    
+  // const newCargoTomlDependencies = {
+  //   ...cargoToml.dependencies,
+  //   'holochain_anchors': { git: "https://github.com/holochain/holochain-anchors",  branch: "master" }
+  // }
+  // Object.assign(cargoToml.dependencies, newCargoTomlDependencies)
+  // const tomlConvertionCargo = json2toml(cargoToml)
+  // fs.writeFileSync(`${zomeCodeDir}/Cargo.toml`, tomlConvertionCargo)
+  // return tomlConvertionCargo
 }
 
 const renderNixSetup = async (dnaName, zomeDir, dnaTemplateDir) => {
@@ -72,7 +80,7 @@ async function createZomeDir (zomeNameRaw, entryTypesWrapper, dnaTemplateDir) {
     await generateZomeEntries(zomeName, zomeEntryTypes)
     await generateZomeLib(zomeName, zomeEntryTypes, zomeDir)
     await formatZome(zomeDir)
-    updateZomeCargoToml(zomeDir)
+    updateZomeCargoToml(zomeName, zomeDir, dnaTemplateDir)
     console.log(`${chalk.cyan(' Finished creating ' + capitalize(zomeName) + ' Zome')}\n`)
 
     return {
