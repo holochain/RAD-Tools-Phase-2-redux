@@ -27,11 +27,10 @@ async function packageDNA () {
   if (dnaPackage.test(stdout)) {
     dnaHash = stdout.trim().replace(dnaPackage, 'DNA_HASH').split('DNA_HASH')[1]
     console.log(chalk.cyan('Completed DNA build with hc package'))
-    updateConductorWithPackagedDna(dnaHash)
+    return console.log(chalk.cyan('DNA Hash: ' + dnaHash))
   } else {
     throw new Error('hc package error: Unable to locate compiled DNA hash.')
   }
-  return console.log(chalk.cyan('DNA Hash: ' + dnaHash))
 }
 
 async function updateConductorWithPackagedDna (dnaHash) {
