@@ -51,14 +51,16 @@ const renderers = [
 ]
 
 const verifyDestinationPath = () => {
-  exec('[ ! -d ./happ ] && mkdir ./happ; echo $(pwd -P)', (error, stdout, stderr) => {
-    if (error) {
-      throw new Error(`exec error: ${error}`)
-    } else if (stderr) {
-      throw new Error(`stderr: ${stderr}`)
-    }
+  return new Promise((resolve, reject) => {
+    exec('[ ! -d ./happ ] && mkdir ./happ; echo $(pwd -P)', (error, stdout, stderr) => {
+      if (error) {
+        reject(new Error(`exec error: ${error}`))
+      } else if (stderr) {
+        reject(new Error(`stderr: ${stderr}`))
+      }
+    })
+    resolve()
   })
-  return
 }
 
 verifyDestinationPath()
