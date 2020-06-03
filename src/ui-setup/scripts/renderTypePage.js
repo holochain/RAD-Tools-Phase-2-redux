@@ -1,5 +1,5 @@
 const mapObject = require('./render-utils').mapObject
-const { toCamelCase } = require('../../utils.js')
+const { toCamelCase, capitalize } = require('../../setup/utils.js')
 
 function renderTypePage (typeName, { definition: fields }) {
   const name = typeName
@@ -10,9 +10,9 @@ function renderTypePage (typeName, { definition: fields }) {
 
   const fieldsForGQL = `      id
 ${mapObject(fields, fieldName => {
-  const formattedFieldName = toCamelCase(fieldName)
-  return `      ${formattedFieldName}`
-}).join('\n')}`
+    const formattedFieldName = toCamelCase(fieldName)
+    return `      ${formattedFieldName}`
+  }).join('\n')}`
   const fieldsForArray = mapObject(fields, fieldName => `'${toCamelCase(fieldName)}'`).join(', ')
   const fieldsForObject = mapObject(fields, fieldName => `${toCamelCase(fieldName)}`).join(', ')
   const fieldsForObjectWithDefaults = mapObject(fields, fieldName => `${toCamelCase(fieldName)}: ''`).join(', ')
@@ -57,7 +57,7 @@ ${fieldsForGQL}
 \`
 
 function ${namePlural}Page () {
-  const { data } = useQuery(LIST_${capsNamePlural}_QUERY)
+  const { data, refetch } = useQuery(LIST_${capsNamePlural}_QUERY)
 
   const list${namePlural} = (data && data.list${namePlural}) || []
 
@@ -65,17 +65,19 @@ function ${namePlural}Page () {
   const [update${name}] = useMutation(UPDATE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
   const [delete${name}] = useMutation(DELETE_${capsName}_MUTATION, { refetchQueries: [{ query: LIST_${capsNamePlural}_QUERY }] })
 
-  // the id of the ${lowerName} currently being edited
+  // the id of the ${name} currently being edited
   const [editingId, setEditingId] = useState()
   
   const { push } = useHistory()
 
   return <div className='type-page'>
   <div className='background-block'/>
-  <button className='button' onClick={() => push('/')}>Home Page</button>
+  <button className='button home-btn' onClick={() => push('/')}>Home Page</button>
   <br/>
-    <h1>${name} Entry</h1>
-    <h2>Endpoint Testing</h2>
+    <h1 className='title'>${name} Entry</h1>
+    <h2 className='subtitle'>Endpoint Testing</h2>
+    <button className='button' onClick={() => refetch()}>Refetch ${name} List</button>
+
     <${name}Form
       formAction={({ ${lowerName}Input }) => create${name}({ variables: { ${lowerName}Input } })}
       formTitle='Create ${name}' />
@@ -150,7 +152,7 @@ ${mapObject(fields, fieldName => `      ${toCamelCase(fieldName)}: ''`).join(',\
   return <div className='type-form'>
     <h3>{formTitle}</h3>
 ${mapObject(fields, fieldName => `    <div className='form-row'>
-      <label htmlFor='${fieldName}'>${toCamelCase(fieldName)}</label>
+      <label htmlFor='${toCamelCase(fieldName)}'>${toCamelCase(fieldName)}</label>
       <input id='${toCamelCase(fieldName)}' name='${toCamelCase(fieldName)}' value={${toCamelCase(fieldName)}} onChange={setField('${toCamelCase(fieldName)}')} />
     </div>
 `).join('')}

@@ -7,7 +7,7 @@ const { replaceContentPlaceHolders,
   toSnakeCase,
   toCamelCase,
   capitalize
-} = require('../../utils.js')
+} = require('../../setup/utils.js')
 const { ENTRY_NAME, CRUD_VALIDATION_DEFINITIONS } = require('../variables.js')
 
 const entryValidationTemplatePath = path.resolve("src/dna-setup/zome-template/entry-template", "validation.rs");

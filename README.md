@@ -22,28 +22,27 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
     ```
     >*NB: The type-spec.json is optional and will default to the sample-type-spec.json provided in the src/setup/type-specs folder.*
 
-##### Type Spec JSON
-    The type-spec.json file is the schema that informs the DNA zome, entry, and entry test content as well as the UI's Apollo GraphQL data layer and UI page content. 
+#### Type Spec JSON
+The type-spec.json file is the schema that informs the DNA zome, entry, and entry test content as well as the UI's Apollo GraphQL data layer and UI page content. 
     
-    The type-spec.json is structured in a pattern wherein the keys represent the name of the current field and its values are the content of said field.
-  
-    ```JSON
+The type-spec.json is structured in a pattern wherein the keys represent the name of the current field and its values are the content of said field.  
+```JSON
     {
       "types": {
-        <entry-name>: {
-          "description": <entry-description>,
+        "<entry-name>": {
+          "description": "<entry-description>",
           "sharing": "<public | private>",
           "definition": {
-            "<entry-field-name>": <entry-field-type>
+            "<entry-field-name>": "<entry-field-type>"
           }
         }
       }
     }
-    ```
+```
 
-    Example: Below is an example of a happ that will have a single zome with three entries: user, author and books:
+Example: Below is an example of a happ that will have a single zome with three entries: user, author and books:
 
-    ```JSON
+```JSON
     {
       "types": {
         "user": {
@@ -51,7 +50,7 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
           "sharing": "public",
           "definition": {
             "name": "string",
-            "avatarUrl": "string"
+            "avatar_url": "string"
           }
         },
         "author": {
@@ -73,7 +72,7 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
         }
       }
     }
-    ```
+```
 
 ### Run your custom happ:
 
@@ -125,20 +124,20 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
     ```JSON
     {
       "zomes": {
-        <zome-name>: {
+        "<zome-name>": {
           "types": {
-            <entry-name>: {
-              "description": <entry-description>,
+            "<entry-name>": {
+              "description": "<entry-description>",
               "sharing": "<public | private>",
               "definition": {
-                "<entry-field-name>": <entry-field-type>
+                "<entry-field-name>": "<entry-field-type>"
               },
               "functions": {
-                "create": <boolean>,
-                "update": <boolean>,
-                "delete": <boolean>,
-                "get": <boolean>,
-                "list": <boolean>
+                "create": "<boolean>",
+                "update": "<boolean>",
+                "delete": "<boolean>",
+                "get": "<boolean>",
+                "list": "<boolean>"
               }
             }
           }
@@ -146,7 +145,7 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
       }
     }
     ```
-   *NB: If no zomes object is provided, a single zome will be generated. Currently, only the DNA is compatible with generating muliptle zomes.*
+   *NB: If no zomes object is provided, a single zome will be generated. Currently, only the DNA is compatible with multiple zomes input from the Type Spec JSON.*
 
 ##### Run your DNA tests:
 1. Test your DNA

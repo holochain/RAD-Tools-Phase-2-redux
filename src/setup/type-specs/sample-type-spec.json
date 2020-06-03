@@ -6,13 +6,14 @@
       "definition": {
         "name": "string",
         "avatar_url": "string"
-      },
-      "functions": {
-        "create": true,
-        "update": true,
-        "delete": true,
-        "get": true,
-        "list": true
+      }
+    },
+    "Author": {
+      "description": "Create and manage authors.",
+      "sharing": "public",
+      "definition": {
+        "user": "string",
+        "nickname": "string"
       }
     },
     "Book": {
@@ -22,13 +23,6 @@
         "author": "string",
         "title": "string",
         "topic": "string"
-      },
-      "functions": {
-        "create": true,
-        "update": true,
-        "delete": true,
-        "get": true,
-        "list": true
       }
     }
   }
