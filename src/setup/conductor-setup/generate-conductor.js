@@ -39,7 +39,8 @@ async function packageDNA () {
   if (dnaPackage.test(stdout)) {
     dnaHash = stdout.trim().replace(dnaPackage, 'DNA_HASH').split('DNA_HASH')[1]
     console.log(chalk.cyan('Completed DNA build with hc package'))
-    updateConductorWithPackagedDna(dnaHash)
+    console.log(chalk.cyan('DNA Hash: ' + dnaHash))
+    return dnaHash
   } else {
     throw new Error('hc package error: Unable to locate compiled DNA hash.')
   }
@@ -54,7 +55,7 @@ async function generateConductor () {
 
 generateConductor()
   .then(() => packageDNA())
-  .then(() => updateConductorWithPackagedDna())
+  .then(dnaHash => updateConductorWithPackagedDna(dnaHash))
   .catch(e => {
     if (e.stderr === '/bin/sh: 1: hc: not found\n') {
       console.error(`  ${chalk.red(e.stderr)} \n${chalk.yellow('> Hint: You are probably not running this command in nix-shell. \n  Be sure to enter into nix-shell prior to running any Holochain command.')}`)
