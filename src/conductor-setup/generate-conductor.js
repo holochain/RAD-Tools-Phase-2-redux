@@ -42,6 +42,7 @@ async function updateConductorWithPackagedDna (dnaHash) {
   const port = hcConfig.interfaces[0].driver.port || 33000
 
   await updateUiDotEnv(`${dnaName}-instance-1`, port)
+  console.log(chalk.yellow('dnaHash : ', dnaHash))
 
   const { stderr } = await exec(`sed -i "s/<DNA_HASH>/${dnaHash}/" ${conductorConfigPath}; sed -i "s/<DNA_NAME>/${dnaName}/" ${conductorConfigPath}`)
   if (stderr) {
