@@ -1,0 +1,62 @@
+[[agents]]
+id = "agent-1"
+keystore_file = "keystores/agent1/<AGENT_1_PUB_KEY>.keystore"
+name = "Agent 1"
+public_address = "<AGENT_1_PUB_KEY>"
+
+[[dnas]]
+file = "dna-src/dist/dna-src.dna.json"
+hash = "<DNA_HASH>"
+id = "<DNA_NAME>-dna"
+
+[[instances]]
+agent = "agent-1"
+dna = "<DNA_NAME>-dna"
+id = "<DNA_NAME>-instance-1"
+
+[instances.storage]
+path = ".holochain/holo/storage/agent-1/<DNA_NAME>-dna"
+type = "file"
+
+[[interfaces]]
+id = "websocket-interface"
+
+[interfaces.driver]
+port = 33000
+type = "websocket"
+
+[[interfaces.instances]]
+id = "<DNA_NAME>-instance-1"
+
+[[interfaces]]
+admin = true
+id = "http-interface"
+
+[interfaces.driver]
+port = 34000
+type = "http"
+
+[[interfaces.instances]]
+id = "<DNA_NAME>-instance-1"
+
+[logger]
+type = "debug"
+
+[logger.rules]
+
+[[logger.rules.rules]]
+color = "red"
+exclude = false
+pattern = "^err/"
+
+[[logger.rules.rules]]
+color = "white"
+exclude = false
+pattern = "^debug/dna"
+
+[network]
+sim2h_url = "ws://localhost:9000"
+type = "sim2h"
+
+bridges = []
+persistence_dir = ".holochain/holo"
