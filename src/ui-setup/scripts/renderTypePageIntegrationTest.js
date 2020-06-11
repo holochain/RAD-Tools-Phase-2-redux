@@ -12,7 +12,7 @@ function renderTypePageIntegrationTest (typeName, { definition: fields }) {
 import waait from 'waait'
 import { fireEvent, act, wait } from '@testing-library/react'
 import { renderAndWait, closeTestConductor } from '../utils'
-import { orchestrator, conductorConfig } from '../utils/integration-testing/tryoramaIntegration'
+import { orchestrator, conductorConfig } from '../utils/integration-testing/tryorama-integration'
 import { HApp } from '../index.js'
 
 orchestrator.registerScenario('Tryorama Runs ${name} Endpoints Scenario', async scenario => {
