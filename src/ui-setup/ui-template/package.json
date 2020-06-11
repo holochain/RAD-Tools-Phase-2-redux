@@ -14,7 +14,7 @@
     "wait-and-start": "node wait-for-conductor-and-start-ui",
     "hc:stop": "kill -9 $(ps -ef | grep \"holochain\" | grep -v grep | awk '{print $2}')",
     "test:integration": "sh'npm run hc:stop &> /dev/null &'; npm run start:sim2h && TRYORAMA_LOG_LEVEL=0 REACT_APP_TEST_TYPE='integration' REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts test --runInBand --testTimeout=15000",
-    "ci:integration": "sh'npm run hc:stop &> /dev/null &'; npm run start:sim2h && TRYORAMA_LOG_LEVEL=0 REACT_APP_TEST_TYPE='integration' REACT_APP_MOCK_DNA_CONNECTION='false' react-scripts test --runInBand --testTimeout=15000 --watchAll --forceExit"
+    "ci:integration": "sh'npm run hc:stop &> /dev/null &'; npm run start:sim2h && TRYORAMA_LOG_LEVEL=0 REACT_APP_TEST_TYPE='integration' REACT_APP_MOCK_DNA_CONNECTION='false' CI=true react-scripts test --runInBand --testTimeout=15000"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
