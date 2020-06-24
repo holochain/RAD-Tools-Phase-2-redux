@@ -1,5 +1,5 @@
 # RAD Tools Phase 2
-The second tier of RAD tools, automating a UI GraphQL and DNA generation based on a JSON schema file.
+The second tier of RAD tools, automating a UI [GraphQL](https://graphql.org/) and [DNA](https://developer.holochain.org/docs/concepts/2_application_architecture/#layers-of-the-application-stack) generation based on a JSON schema file.
 
 ---
 ## Tutorial: Generate your custom Holochain hApp
@@ -9,13 +9,13 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
 You can get and use this tool either by:
 
 1. cloning this repo and using `npm` commands, or
-2. using [Holonix](https://github.com/holochain/holonix), the Holochain development environment, which includes a single-line command.
+2. using [Holonix](https://github.com/holochain/holonix), the Holochain development environment, which includes a single-line command for this tool.
 
 The first option is more versatile -- for instance, you can generate UI and DNA separately. The second option is simpler to use. From now on we'll call option 1 'Repo' and option 2 'Holonix'.
 
 ### 1. Getting the tool
 
-We'll assume you already have the Nix package manager, which we're using to distribute Holochain developer tools. If you're on macOS, Linux, or Windows 10, follow our [installation guide](https://developer.holochain.org/docs/install/).
+We'll assume you already have the Nix package manager, which we're using to distribute Holochain developer tools. If you don't, you can follow our [installation guide](https://developer.holochain.org/docs/install/) for macOS, Linux, and Windows.
 
 * **Repo**
 
@@ -46,8 +46,8 @@ The type-spec.json file is the schema that informs the DNA zome, entry, and entr
 Within each named entry type, there are three properties:
 
 * `"description"`: A human-readable description of what this entry type is for.
-* `"sharing"`: Whether entries of this type should be `"public"` (shared on the DHT) or `"private"` (kept in the authoring agent's source chain only).
-* `"definition"`: A list of the fields for this entry type, along with the field types. These types can be any [Rust type](https://doc.rust-lang.org/reference/types.html) that can be automatically serialized to JSON.
+* `"sharing"`: Whether entries of this type should be `"public"` (shared on the [DHT](https://developer.holochain.org/docs/concepts/4_public_data_on_the_dht/)) or `"private"` (kept in the authoring agent's [source chain](https://developer.holochain.org/docs/concepts/3_private_data/) only).
+* `"definition"`: A list of the fields for this entry type, along with the fields' types. These types can be any [Rust type](https://doc.rust-lang.org/reference/types.html) that can be automatically serialized to JSON.
 
 ```JSON
     {
@@ -109,7 +109,7 @@ Below is an example of a hApp that will have a single zome with three entries: u
     ```
     $ hc-happ-scaffold <type-spec.json> <new-project-folder>
     ```
-    This command accepts local file paths or URLs for the type-spec.json file, and creates the folder specified by `<new-project-folder>` for you.
+    This command accepts local file paths or URLs for the type-spec.json file, and scaffolds it into a folder specified by `<new-project-folder>` for you.
 
 The source code is scaffolded immediately, but it'll take a while to compile the DNA initially.
 
@@ -128,14 +128,14 @@ The source code is scaffolded immediately, but it'll take a while to compile the
         ```
     2. Start your Holochain hApp.
         ```
-        $ npm start
+        $ npm run start
         ```
 
 ---
 
 ## Run the Automated UI Command Only
 
-This feature is currently only available directly through this repo, not the Holonix command.
+This feature is currently only available directly if you clone this repo, not if you use the Holonix `hc-happ-scaffold` command.
 
 ### Generate a UI from type-spec
 1. Generate your new ui in the `ui-src` directory.
@@ -155,7 +155,7 @@ This feature is currently only available directly through this repo, not the Hol
 
 ## Run the Automated DNA Command Only
 
-This feature is currently only available directly through this repo, not the Holonix command.
+This feature is currently only available directly if you clone this repo, not if you use the Holonix `hc-happ-scaffold` command.
 
 ### Generate a DNA from type-spec
 1. Enter nix-shell
