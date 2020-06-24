@@ -2,7 +2,7 @@
 The second tier of RAD tools, automating a UI GraphQL and DNA generation based on a JSON schema file.
 
 ---
-## Generate your custom Holochain Happ:
+## Generate your custom Holochain hApp:
 1. Clone the repo
     ```
     $ git clone https://github.com/holochain/RAD-Tools-Phase-2.git
@@ -16,16 +16,16 @@ The second tier of RAD tools, automating a UI GraphQL and DNA generation based o
     $ npm i
     ```
 
-4. Generate your custom Holochain Happ according to the type-spec.json file.
+4. Generate your custom Holochain hApp according to the type-spec.json file.
     ```
-    $ npm run happ:generate <type-spec.json>
+    $ npm run hApp:generate <type-spec.json>
     ```
     >*NB: The type-spec.json is optional and will default to the sample-type-spec.json provided in the src/setup/type-specs folder.*
 
 #### Type Spec JSON
-The type-spec.json file is the schema that informs the DNA zome, entry, and entry test content as well as the UI's Apollo GraphQL data layer and UI page content. 
-    
-The type-spec.json is structured in a pattern wherein the keys represent the name of the current field and its values are the content of said field.  
+The type-spec.json file is the schema that informs the DNA zome, entry, and entry test content as well as the UI's Apollo GraphQL data layer and UI page content.
+
+The type-spec.json is structured in a pattern wherein the keys represent the name of the current field and its values are the content of said field.
 ```JSON
     {
       "types": {
@@ -40,7 +40,7 @@ The type-spec.json is structured in a pattern wherein the keys represent the nam
     }
 ```
 
-Example: Below is an example of a happ that will have a single zome with three entries: user, author and books:
+Example: Below is an example of a hApp that will have a single zome with three entries: user, author and books:
 
 ```JSON
     {
@@ -74,9 +74,9 @@ Example: Below is an example of a happ that will have a single zome with three e
     }
 ```
 
-### Run your custom happ:
+### Run your custom hApp:
 
-1.  Start your Holochain Happ
+1.  Start your Holochain hApp
     ```
     $ npm run start
     ```
