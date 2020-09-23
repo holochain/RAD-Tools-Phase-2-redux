@@ -1,6 +1,6 @@
 {
   "name": "holochain-rad-tools-phase-2",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The second tier of RAD tools, automating a UI GraphQL and DNA generation based on a JSON schema file.",
   "main": "index.js",
   "scripts": {
