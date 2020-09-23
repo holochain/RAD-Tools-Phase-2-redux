@@ -33,7 +33,7 @@ const updateZomeCargoToml = (zomeDir) => {
   const cargoToml = toml.parse(fs.readFileSync(`${zomeCodeDir}/Cargo.toml`, 'utf8'))    
   const newCargoTomlDependencies = {
     ...cargoToml.dependencies,
-    'holochain_anchors': { git: "https://github.com/holochain/holochain-anchors",  tag: "v0.2.7" }
+    'holochain_anchors': { git: "https://github.com/holochain/holochain-anchors",  tag: "v0.2.8" }
   }
   Object.assign(cargoToml.dependencies, newCargoTomlDependencies)
   const tomlConvertionCargo = json2toml(cargoToml)
